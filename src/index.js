@@ -1,5 +1,5 @@
 import mutation from './mutation';
 
-export default {
+module.exports = {
   mutation,
 };

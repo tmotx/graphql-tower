@@ -1,11 +1,12 @@
 {
   "name": "graphql-tower",
-  "version": "1.1.0",
+  "version": "1.1.6",
   "description": "A package to easy use graphql for server",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf build/* && babel src --ignore __tests__ --out-dir build"
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,9 @@
     "url": "https://github.com/yutin1987/graphql-tower/issues"
   },
   "homepage": "https://github.com/yutin1987/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
