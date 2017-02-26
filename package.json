@@ -1,10 +1,11 @@
 {
   "name": "graphql-tower",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A package to easy use graphql for server",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf build/* && babel src --ignore __tests__ --out-dir build"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,13 @@
     "url": "https://github.com/yutin1987/graphql-tower/issues"
   },
   "homepage": "https://github.com/yutin1987/graphql-tower#readme",
-  "dependencies": {
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "^19.0.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-react-native": "^1.9.1",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
