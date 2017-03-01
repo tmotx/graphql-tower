@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A package to easy use graphql for server",
   "main": "lib/index.js",
   "scripts": {
@@ -21,10 +21,6 @@
   "files": [
     "lib"
   ],
-  "dependencies": {
-    "faker": "^4.1.0",
-    "graphql": "^0.9.1"
-  },
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
@@ -37,6 +33,11 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
-    "jest": "^19.0.2"
+    "jest": "^19.0.2",
+    "faker": "^4.1.0",
+    "graphql": "^0.9.1"
+  },
+  "peerDependencies": {
+    "graphql": ">=0.9.1"
   }
 }

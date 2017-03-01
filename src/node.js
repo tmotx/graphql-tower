@@ -16,7 +16,7 @@ class GlobalId {
 }
 
 export function toGlobalId(type, id) {
-  return new Buffer(`${type}:${id}`, 'utf8').toString('base64')
+  return new Buffer(`${type}:${id}`, 'utf8').toString('base64');
 }
 
 export function fromGlobalId(globalId) {
