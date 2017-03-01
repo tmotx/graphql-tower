@@ -9,12 +9,12 @@ export default function mutation(config) {
 
   const outputType = new GraphQLObjectType({
     name: `${name}Payload`,
-    fields: resolveMaybeThunk(inputFields),
+    fields: resolveMaybeThunk(outputFields),
   });
 
   const inputType = new GraphQLInputObjectType({
     name: `${name}Input`,
-    fields: resolveMaybeThunk(outputFields),
+    fields: resolveMaybeThunk(inputFields),
   });
 
   return {
