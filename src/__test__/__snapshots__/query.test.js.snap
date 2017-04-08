@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`query queryWithConnection 1`] = `
+Object {
+  "args": Object {
+    "after": Object {
+      "type": "String",
+    },
+    "first": Object {
+      "type": "Int",
+    },
+    "offset": Object {
+      "type": "Int",
+    },
+  },
+  "type": "[Int]",
+}
+`;

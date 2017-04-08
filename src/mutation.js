@@ -4,8 +4,8 @@ function resolveMaybeThunk(thingOrThunk) {
   return typeof thingOrThunk === 'function' ? thingOrThunk() : thingOrThunk;
 }
 
-export default function mutation(config) {
-  const { name, inputFields, outputFields, ...otherConfig } = config;
+export default function mutation(configs) {
+  const { name, inputFields, outputFields, ...otherConfigs } = configs;
 
   const outputType = new GraphQLObjectType({
     name: `${name}Payload`,
@@ -22,6 +22,6 @@ export default function mutation(config) {
     args: {
       input: { type: new GraphQLNonNull(inputType) },
     },
-    ...otherConfig,
+    ...otherConfigs,
   };
 }
