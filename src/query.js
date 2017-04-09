@@ -3,6 +3,26 @@ import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
 
 export default class Query {
 
+  constructor() {
+    Object.defineProperty(this, 'resolve', {
+      enumerable: true,
+      set: handler => (this._.resolve = handler),
+      get: () => async (payload, args, context, info) => {
+        await this._.middleware.reduce(async (prev, middleware) => {
+          await prev;
+          await middleware(payload, args, context, info);
+        }, Promise.resolve());
+
+        const results = await this._.afterware.reduce(async (prev, afterware) => {
+          const reply = await afterware(payload, args, context, info, await prev);
+          return reply;
+        }, this._.resolve(payload, args, context, info));
+
+        return results;
+      },
+    });
+  }
+
   args = {};
 
   _ = {
@@ -28,26 +48,6 @@ export default class Query {
 
     throw new Error('afterware a function array is required');
   }
-
-  set resolve(handler) {
-    this._.resolve = handler;
-  }
-
-  get resolve() {
-    return async (payload, args, context, info) => {
-      await this._.middleware.reduce(async (prev, middleware) => {
-        await prev;
-        await middleware(payload, args, context, info);
-      }, Promise.resolve());
-
-      const results = await this._.afterware.reduce(async (prev, afterware) => {
-        const reply = await afterware(payload, args, context, info, await prev);
-        return reply;
-      }, this._.resolve(payload, args, context, info));
-
-      return results;
-    };
-  }
 }
 
 export class QueryWithConnection extends Query {
@@ -60,13 +60,11 @@ export class QueryWithConnection extends Query {
       offset: { type: GraphQLInt },
       after: { type: GraphQLString },
     });
-  }
 
-  get type() {
-    return this._.type;
-  }
-
-  set type(value) {
-    this._.type = new GraphQLList(value);
+    Object.defineProperty(this, 'type', {
+      enumerable: true,
+      set: value => (this._.type = new GraphQLList(value)),
+      get: () => this._.type,
+    });
   }
 }

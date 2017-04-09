@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import faker from 'faker';
-import { GraphQLInt } from 'graphql';
+import { GraphQLInt, GraphQLList } from 'graphql';
 import Query, { QueryWithConnection } from '../query';
 
 describe('query', () => {
@@ -20,6 +20,9 @@ describe('query', () => {
     resolve.mockClear();
     expect(await queryResolve.resolve()).toEqual(data);
     expect(resolve).toHaveBeenCalledTimes(1);
+
+    const queryExtend = _.extend({}, queryResolve);
+    expect(queryExtend.resolve).not.toBeUndefined();
   });
 
   it('Query setup middleware', async () => {
@@ -120,6 +123,11 @@ describe('query', () => {
     const QueryConnection = class extends QueryWithConnection {
       type = GraphQLInt;
     };
-    expect(new QueryConnection()).toMatchSnapshot();
+    const query = new QueryConnection();
+    expect(query).toMatchSnapshot();
+
+    const queryExtend = _.extend({}, query);
+    expect(queryExtend.type).not.toBeUndefined();
+    expect(queryExtend.resolve).not.toBeUndefined();
   });
 });
