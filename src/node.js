@@ -37,7 +37,7 @@ export class GraphQLGlobalIdField {
   }
 
   resolve = (payload, args, context, info) => {
-    const value = payload[info.fieldName || 'id'];
+    const value = payload[info.fieldName];
     const typeName = this.typeName || info.parentType.name;
 
     return toGlobalId(typeName, value);

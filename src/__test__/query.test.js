@@ -1,27 +1,125 @@
 import _ from 'lodash';
+import faker from 'faker';
 import { GraphQLInt } from 'graphql';
-import { queryWithConnection, queryWithPagination } from '../query';
+import Query, { QueryWithConnection } from '../query';
 
 describe('query', () => {
-  it('queryWithConnection', () => {
-    expect(queryWithConnection({ type: GraphQLInt })).toMatchSnapshot();
+  it('Query', async () => {
+    const data = { id: faker.random.number() };
+    const resolve = jest.fn(() => Promise.resolve(data));
+
+    const QueryNode = class extends Query {};
+    const queryNode = new QueryNode();
+    expect(queryNode).toMatchSnapshot();
+    expect(await queryNode.resolve()).toBeUndefined();
+
+    const QueryResolve = class extends Query {
+      resolve = resolve;
+    };
+    const queryResolve = new QueryResolve();
+    resolve.mockClear();
+    expect(await queryResolve.resolve()).toEqual(data);
+    expect(resolve).toHaveBeenCalledTimes(1);
   });
 
-  it('queryWithConnection', async () => {
-    const resolve = jest.fn(() => _.range(1, 2000));
-    const query = queryWithPagination({ type: GraphQLInt, resolve });
+  it('Query setup middleware', async () => {
+    const data = { id: faker.random.number() };
+    const resolve = jest.fn(() => Promise.resolve(data));
+    const middleware = jest.fn();
 
-    expect(await query.resolve({}, {})).toEqual(_.range(1, 1001));
+    const QueryMiddleware = class extends Query {
+      middleware = middleware;
+      resolve = resolve;
+    };
+    const queryMiddleware = new QueryMiddleware();
 
-    expect(await query.resolve({}, { first: 100 })).toEqual(_.range(1, 101));
-    expect(await query.resolve({}, { offset: 100 })).toEqual(_.range(101, 1101));
-    expect(await query.resolve({}, { offset: 100, first: 100 })).toEqual(_.range(101, 201));
+    middleware.mockClear();
+    resolve.mockClear();
+    expect(await queryMiddleware.resolve()).toEqual(data);
+    expect(middleware).toHaveBeenCalledTimes(1);
+    expect(resolve).toHaveBeenCalledTimes(1);
 
-    resolve.mockImplementation(() => _.range(1, 2000).map(id => ({ id: `${id}` })));
-    expect(await query.resolve({}, { after: '10' })).toEqual(_.range(10, 1010).map(id => ({ id: `${id}` })));
-    expect(await query.resolve({}, { after: '120', first: 100 })).toEqual(_.range(120, 220).map(id => ({ id: `${id}` })));
+    const middlewarePromise = [];
+    const QueryDeepMiddleware = class extends QueryMiddleware {
+      middleware = [
+        () => new Promise(done => setImmediate(() => {
+          middlewarePromise.push(1);
+          done();
+        })),
+        () => (middlewarePromise.push(2)),
+      ];
+      resolve = resolve;
+    };
+    const queryDeepMiddleware = new QueryDeepMiddleware();
 
-    resolve.mockImplementation(() => _.range(1, 2000).map(cursor => ({ cursor: `${cursor}` })));
-    expect(await query.resolve({}, { after: '120', first: 100 })).toEqual(_.range(120, 220).map(cursor => ({ cursor: `${cursor}` })));
+    middleware.mockClear();
+    resolve.mockClear();
+    expect(await queryDeepMiddleware.resolve()).toEqual(data);
+    expect(middleware).toHaveBeenCalledTimes(1);
+    expect(resolve).toHaveBeenCalledTimes(1);
+    expect(middlewarePromise).toEqual([1, 2]);
+
+    expect(() => {
+      const QueryFailed = class extends Query {
+        middleware = faker.lorem.word();
+        resolve = resolve;
+      };
+      const queryFailed = new QueryFailed();
+      queryFailed.resolve();
+    }).toThrowError('middleware a function array is required');
+  });
+
+  it('Query setup afterware', async () => {
+    const data = { id: faker.random.number() };
+    const reply = { id: faker.random.number() };
+    const resolve = jest.fn(() => Promise.resolve(data));
+    const afterware = jest.fn(() => Promise.resolve(reply));
+
+    const QueryAfterware = class extends Query {
+      afterware = afterware;
+      resolve = resolve;
+    };
+    const queryAfterware = new QueryAfterware();
+
+    afterware.mockClear();
+    resolve.mockClear();
+    expect(await queryAfterware.resolve()).toEqual(reply);
+    expect(afterware).toHaveBeenCalledTimes(1);
+    expect(afterware).toHaveBeenLastCalledWith(undefined, undefined, undefined, undefined, data);
+    expect(resolve).toHaveBeenCalledTimes(1);
+
+    const QueryDeepAfterware = class extends QueryAfterware {
+      afterware = [
+        (payload, args, context, info, results) => new Promise(done => setImmediate(() => {
+          done([results, 1]);
+        })),
+        (payload, args, context, info, results) => _.flatten([results, 2]),
+      ];;
+      resolve = resolve;
+    };
+    const queryDeepAfterware = new QueryDeepAfterware();
+
+    afterware.mockClear();
+    resolve.mockClear();
+    expect(await queryDeepAfterware.resolve()).toEqual([reply, 1, 2]);
+    expect(afterware).toHaveBeenCalledTimes(1);
+    expect(afterware).toHaveBeenLastCalledWith(undefined, undefined, undefined, undefined, data);
+    expect(resolve).toHaveBeenCalledTimes(1);
+
+    expect(() => {
+      const QueryFailed = class extends Query {
+        afterware = faker.lorem.word();
+        resolve = resolve;
+      };
+      const queryFailed = new QueryFailed();
+      queryFailed.resolve();
+    }).toThrowError('afterware a function array is required');
+  });
+
+  it('QueryWithConnection', () => {
+    const QueryConnection = class extends QueryWithConnection {
+      type = GraphQLInt;
+    };
+    expect(new QueryConnection()).toMatchSnapshot();
   });
 });

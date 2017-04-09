@@ -1,27 +1,40 @@
+import _ from 'lodash';
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import Query from './query';
 
 function resolveMaybeThunk(thingOrThunk) {
   return typeof thingOrThunk === 'function' ? thingOrThunk() : thingOrThunk;
 }
 
-export default function mutation(configs) {
-  const { name, inputFields, outputFields, ...otherConfigs } = configs;
+export default class Mutation extends Query {
 
-  const outputType = new GraphQLObjectType({
-    name: `${name}Payload`,
-    fields: resolveMaybeThunk(outputFields),
-  });
+  constructor(...args) {
+    super(...args);
 
-  const inputType = new GraphQLInputObjectType({
-    name: `${name}Input`,
-    fields: resolveMaybeThunk(inputFields),
-  });
+    this._.name = '';
+    this.outputFields = {};
+    this.inputFields = {};
+  }
 
-  return {
-    type: outputType,
-    args: {
-      input: { type: new GraphQLNonNull(inputType) },
-    },
-    ...otherConfigs,
-  };
+  set name(value) {
+    _.set(this, 'type.name', `${value}Payload`);
+    _.set(this, 'args.input.type.ofType.name', `${value}Input`);
+    this._.name = value;
+  }
+
+  set outputFields(value) {
+    this.type = new GraphQLObjectType({
+      name: `${this._.name}Payload`,
+      fields: resolveMaybeThunk(value),
+    });
+  }
+
+  set inputFields(value) {
+    const inputType = new GraphQLInputObjectType({
+      name: `${this._.name}Input`,
+      fields: resolveMaybeThunk(value),
+    });
+
+    _.set(this, 'args.input.type', new GraphQLNonNull(inputType));
+  }
 }

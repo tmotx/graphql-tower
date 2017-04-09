@@ -1,20 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`query Query 1`] = `
-QueryNode {
+exports[`afterware pagination 1`] = `
+QueryPagination {
   "_": Object {
-    "afterware": Array [],
-    "middleware": Array [],
-    "resolve": [Function],
-  },
-  "args": Object {},
-}
-`;
-
-exports[`query QueryWithConnection 1`] = `
-QueryConnection {
-  "_": Object {
-    "afterware": Array [],
+    "afterware": Array [
+      [Function],
+      [Function],
+    ],
     "middleware": Array [],
     "resolve": [Function],
     "type": "[Int]",

@@ -1,15 +1,31 @@
-import mutation from './mutation';
+import { authentication } from './middleware';
+import { pagination } from './afterware';
+import { ForbiddenError, NotFoundError, UnauthorizedError } from './error';
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
-import { UnauthorizedError, resolveWithAuth } from './resolve';
-import { queryWithConnection, queryWithPagination } from './query';
+import Query, { QueryWithConnection } from './query';
+import Mutation from './mutation';
 
 module.exports = {
-  mutation,
+  // middleware
+  authentication,
+
+  // afterware
+  pagination,
+
+  // error
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+
+  // node
   toGlobalId,
   fromGlobalId,
   GraphQLGlobalIdField,
-  UnauthorizedError,
-  resolveWithAuth,
-  queryWithConnection,
-  queryWithPagination,
+
+  // query
+  Query,
+  QueryWithConnection,
+
+  // mutation
+  Mutation,
 };
