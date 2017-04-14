@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import faker from 'faker';
-import { GraphQLInt, GraphQLList } from 'graphql';
+import { GraphQLInt } from 'graphql';
 import Query, { QueryWithConnection } from '../query';
 
 describe('query', () => {

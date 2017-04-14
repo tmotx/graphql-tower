@@ -1,13 +1,17 @@
+import _ from 'lodash';
 import { GraphQLNonNull, GraphQLID } from 'graphql';
 
 class GlobalId {
   constructor(type, id) {
-    this.type = type;
-    this.id = id;
-  }
+    Object.defineProperty(this, 'type', {
+      enumerable: true,
+      get: () => type,
+    });
 
-  getType() {
-    return this.type;
+    Object.defineProperty(this, 'id', {
+      enumerable: true,
+      get: () => id,
+    });
   }
 
   toString() {
@@ -19,9 +23,16 @@ export function toGlobalId(type, id) {
   return new Buffer(`${type}:${id}`, 'utf8').toString('base64');
 }
 
-export function fromGlobalId(globalId) {
-  const unbased = new Buffer(globalId, 'base64').toString('utf8').split(':');
-  return new GlobalId(unbased[0], unbased[1]);
+export function fromGlobalId(globalId, verification) {
+  const [type, id] = new Buffer(globalId, 'base64').toString('utf8').split(':');
+
+  const nid = _.parseInt(id);
+
+  if (nid < 1) throw TypeError('invalid global id');
+
+  if (verification && verification !== type) throw TypeError('invalid global id');
+
+  return verification ? id : new GlobalId(type, id);
 }
 
 export class GraphQLGlobalIdField {

@@ -10,9 +10,16 @@ describe('node', () => {
     const globalId = toGlobalId(type, id);
     expect(globalId).toBe(new Buffer(`${type}:${id}`, 'utf8').toString('base64'));
 
-    const unbased = fromGlobalId(globalId);
-    expect(unbased.getType()).toBe(type);
-    expect(`${unbased}`).toBe(id);
+    const gid = fromGlobalId(globalId);
+    expect(gid.type).toBe(type);
+    expect(gid.id).toBe(id);
+    expect(`${gid}`).toBe(id);
+
+    const nid = fromGlobalId(globalId, type);
+    expect(nid).toBe(id);
+
+    expect(() => fromGlobalId(toGlobalId(type, 0))).toThrowError(TypeError);
+    expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
   });
 
   it('GraphQLGlobalIdField', async () => {
