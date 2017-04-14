@@ -8,6 +8,7 @@ QueryPagination {
       [Function],
     ],
     "middleware": Array [],
+    "node": "Int",
     "resolve": [Function],
     "type": "[Int]",
   },
@@ -22,5 +23,7 @@ QueryPagination {
       "type": "Int",
     },
   },
+  "resolve": [Function],
+  "type": "[Int]",
 }
 `;

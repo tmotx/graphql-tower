@@ -4,6 +4,10 @@ import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
 export default class Query {
 
   constructor() {
+    Object.defineProperty(this, 'node', {
+      get: () => this._.node || this.type,
+    });
+
     Object.defineProperty(this, 'resolve', {
       enumerable: true,
       set: handler => (this._.resolve = handler),
@@ -63,7 +67,10 @@ export class QueryWithConnection extends Query {
 
     Object.defineProperty(this, 'type', {
       enumerable: true,
-      set: value => (this._.type = new GraphQLList(value)),
+      set: (type) => {
+        this._.node = type;
+        this._.type = new GraphQLList(type);
+      },
       get: () => this._.type,
     });
   }

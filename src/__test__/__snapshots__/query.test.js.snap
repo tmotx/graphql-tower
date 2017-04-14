@@ -17,6 +17,7 @@ QueryConnection {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
+    "node": "Int",
     "resolve": [Function],
     "type": "[Int]",
   },

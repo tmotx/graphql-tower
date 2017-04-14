@@ -11,6 +11,7 @@ QueryAuthentication {
     "resolve": [Function],
   },
   "args": Object {},
+  "resolve": [Function],
   "type": "Int",
 }
 `;

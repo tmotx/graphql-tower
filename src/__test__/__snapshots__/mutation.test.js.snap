@@ -13,6 +13,7 @@ MutationNode {
       "type": "Input!",
     },
   },
+  "resolve": [Function],
   "type": "Payload",
 }
 `;
@@ -30,6 +31,7 @@ MutationNode {
       "type": "NodeInput!",
     },
   },
+  "resolve": [Function],
   "type": "NodePayload",
 }
 `;
@@ -47,6 +49,7 @@ MutationNode {
       "type": "NodeInput!",
     },
   },
+  "resolve": [Function],
   "type": "NodePayload",
 }
 `;
@@ -64,6 +67,7 @@ MutationNode {
       "type": "NodeInput!",
     },
   },
+  "resolve": [Function],
   "type": "NodePayload",
 }
 `;

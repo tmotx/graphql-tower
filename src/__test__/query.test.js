@@ -14,14 +14,17 @@ describe('query', () => {
     expect(await queryNode.resolve()).toBeUndefined();
 
     const QueryResolve = class extends Query {
+      type = GraphQLInt;
       resolve = resolve;
     };
     const queryResolve = new QueryResolve();
     resolve.mockClear();
     expect(await queryResolve.resolve()).toEqual(data);
     expect(resolve).toHaveBeenCalledTimes(1);
+    expect(queryResolve.node).toEqual(GraphQLInt);
 
     const queryExtend = _.extend({}, queryResolve);
+    expect(queryExtend.node).toBeUndefined();
     expect(queryExtend.resolve).not.toBeUndefined();
   });
 
@@ -126,7 +129,10 @@ describe('query', () => {
     const query = new QueryConnection();
     expect(query).toMatchSnapshot();
 
+    expect(query.node).toEqual(GraphQLInt);
+
     const queryExtend = _.extend({}, query);
+    expect(queryExtend.node).toBeUndefined();
     expect(queryExtend.type).not.toBeUndefined();
     expect(queryExtend.resolve).not.toBeUndefined();
   });
