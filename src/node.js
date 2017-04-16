@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { GraphQLNonNull, GraphQLID } from 'graphql';
 
 class GlobalId {
@@ -26,9 +25,7 @@ export function toGlobalId(type, id) {
 export function fromGlobalId(globalId, verification) {
   const [type, id] = new Buffer(globalId, 'base64').toString('utf8').split(':');
 
-  const nid = _.parseInt(id);
-
-  if (nid < 1) throw TypeError('invalid global id');
+  if (!id || id === '0') throw TypeError('invalid global id');
 
   if (verification && verification !== type) throw TypeError('invalid global id');
 

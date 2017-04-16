@@ -18,6 +18,7 @@ describe('node', () => {
     const nid = fromGlobalId(globalId, type);
     expect(nid).toBe(id);
 
+    expect(() => fromGlobalId(toGlobalId(type, ''))).toThrowError(TypeError);
     expect(() => fromGlobalId(toGlobalId(type, 0))).toThrowError(TypeError);
     expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
   });
