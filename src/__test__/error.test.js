@@ -1,5 +1,14 @@
 import faker from 'faker';
-import { ForbiddenError, NotFoundError, UnauthorizedError } from '../error';
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+  PaymentRequiredError,
+  GoneDataError,
+  LockedError,
+  ConflictError,
+  UnavailableForLegalReasonsError,
+} from '../error';
 
 describe('error', () => {
   it('ForbiddenError', async () => {
@@ -31,5 +40,32 @@ describe('error', () => {
       throw new UnauthorizedError(message);
     }).toThrowError(new UnauthorizedError(message));
     expect(() => { throw new UnauthorizedError(); }).not.toThrowError(NotFoundError);
+  });
+
+  it('PaymentRequiredError', async () => {
+    expect(() => { throw new PaymentRequiredError(); }).toThrowError(Error);
+    expect(() => { throw new PaymentRequiredError(); }).toThrowError(PaymentRequiredError);
+  });
+
+  it('GoneDataError', async () => {
+    expect(() => { throw new GoneDataError(); }).toThrowError(Error);
+    expect(() => { throw new GoneDataError(); }).toThrowError(GoneDataError);
+  });
+
+  it('LockedError', async () => {
+    expect(() => { throw new LockedError(); }).toThrowError(Error);
+    expect(() => { throw new LockedError(); }).toThrowError(LockedError);
+  });
+
+  it('ConflictError', async () => {
+    expect(() => { throw new ConflictError(); }).toThrowError(Error);
+    expect(() => { throw new ConflictError(); }).toThrowError(ConflictError);
+  });
+
+  it('UnavailableForLegalReasonsError', async () => {
+    expect(() => { throw new UnavailableForLegalReasonsError(); }).toThrowError(Error);
+    expect(() => { throw new UnavailableForLegalReasonsError(); }).toThrowError(
+      UnavailableForLegalReasonsError,
+    );
   });
 });
