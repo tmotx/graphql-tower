@@ -23,7 +23,7 @@ describe('node', () => {
     expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
   });
 
-  it('GraphQLGlobalIdField', async () => {
+  describe('GraphQLGlobalIdField', () => {
     const resolve = jest.fn();
 
     const schema = new GraphQLSchema({
@@ -44,17 +44,31 @@ describe('node', () => {
       }),
     });
 
-    const reply = {
-      id: faker.random.number(),
-      customId: faker.random.number(),
-    };
+    it('when resolve is object', async () => {
+      const reply = {
+        id: faker.random.number(),
+        customId: faker.random.number(),
+      };
 
-    resolve.mockClear();
-    resolve.mockReturnValueOnce(reply);
-    const result = await graphql(schema, 'query { node { id customId } }');
-    expect(result.data.node).toEqual({
-      id: toGlobalId('Node', reply.id),
-      customId: toGlobalId('custom', reply.customId),
+      resolve.mockClear();
+      resolve.mockReturnValueOnce(reply);
+      const result = await graphql(schema, 'query { node { id customId } }');
+      expect(result.data.node).toEqual({
+        id: toGlobalId('Node', reply.id),
+        customId: toGlobalId('custom', reply.customId),
+      });
+    });
+
+    it('when resolve is string', async () => {
+      const reply = faker.random.number();
+
+      resolve.mockClear();
+      resolve.mockReturnValueOnce(reply);
+      const result = await graphql(schema, 'query { node { id customId } }');
+      expect(result.data.node).toEqual({
+        id: toGlobalId('Node', reply),
+        customId: toGlobalId('custom', reply),
+      });
     });
   });
 });

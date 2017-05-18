@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { GraphQLNonNull, GraphQLID } from 'graphql';
 
 class GlobalId {
@@ -45,7 +46,7 @@ export class GraphQLGlobalIdField {
   }
 
   resolve = (payload, args, context, info) => {
-    const value = payload[info.fieldName];
+    const value = _.isObject(payload) ? payload[info.fieldName] : payload;
     const typeName = this.typeName || info.parentType.name;
 
     return toGlobalId(typeName, value);
