@@ -1,5 +1,8 @@
 import _ from 'lodash';
+import base from 'base-x';
 import { GraphQLNonNull, GraphQLID } from 'graphql';
+
+const bs62 = base('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 class GlobalId {
   constructor(type, id) {
@@ -20,11 +23,11 @@ class GlobalId {
 }
 
 export function toGlobalId(type, id) {
-  return new Buffer(`${type}:${id}`, 'utf8').toString('base64');
+  return bs62.encode(Buffer.from(`${type}:${id}`));
 }
 
 export function fromGlobalId(globalId, verification) {
-  const [type, id] = new Buffer(globalId, 'base64').toString('utf8').split(':');
+  const [type, id] = _.split(`${bs62.decode(globalId)}`, ':');
 
   if (!id || id === '0') throw TypeError('invalid global id');
 

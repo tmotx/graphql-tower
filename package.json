@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A package to easy use graphql for server",
   "main": "lib/index.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "graphql": ">=0.9.1"
   },
   "dependencies": {
+    "base-x": "^3.0.0",
     "lodash": "^4.17.4"
   }
 }

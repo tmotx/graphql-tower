@@ -1,6 +1,9 @@
 import faker from 'faker';
+import base from 'base-x';
 import { graphql, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from '../node';
+
+const bs62 = base('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 describe('node', () => {
   it('toGlobalId & fromGlobalId', () => {
@@ -8,7 +11,7 @@ describe('node', () => {
     const id = `${faker.random.number()}`;
 
     const globalId = toGlobalId(type, id);
-    expect(globalId).toBe(new Buffer(`${type}:${id}`, 'utf8').toString('base64'));
+    expect(globalId).toBe(bs62.encode(Buffer.from(`${type}:${id}`)));
 
     const gid = fromGlobalId(globalId);
     expect(gid.type).toBe(type);
