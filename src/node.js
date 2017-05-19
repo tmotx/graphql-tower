@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import base from 'base-x';
-import { GraphQLNonNull, GraphQLID } from 'graphql';
+import { GraphQLGID } from './type';
 
 const bs62 = base('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
@@ -38,9 +38,9 @@ export function fromGlobalId(globalId, verification) {
 
 export class GraphQLGlobalIdField {
 
-  type = new GraphQLNonNull(GraphQLID);
+  type = GraphQLGID;
 
-  description = 'The ID of an object';
+  description = 'The global id of an object';
 
   typeName = 'type';
 
