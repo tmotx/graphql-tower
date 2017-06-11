@@ -2,7 +2,7 @@ import _ from 'lodash';
 import faker from 'faker';
 import moment from 'moment';
 import { graphql, GraphQLSchema, GraphQLObjectType } from 'graphql';
-import { GraphQLResponseStatus, GraphQLGID, GraphQLDate, GraphQLExpiration, GraphQLSentence } from '../type';
+import { GraphQLResponseStatus, GraphQLGID, GraphQLDate, GraphQLExpiration, GraphQLSentence, GraphQLMobile } from '../type';
 
 const resolve = jest.fn();
 
@@ -33,6 +33,11 @@ const schema = new GraphQLSchema({
       sentence: {
         type: GraphQLSentence,
         args: { input: { type: GraphQLSentence } },
+        resolve,
+      },
+      mobile: {
+        type: GraphQLMobile,
+        args: { input: { type: GraphQLMobile } },
         resolve,
       },
     },
@@ -254,6 +259,40 @@ describe('type', () => {
     ).toEqual({ errors: [new TypeError(
       `Variable "$input" got invalid value "${_.repeat(sentence, 20)}".\nExpected type "Sentence", found "${_.repeat(sentence, 20)}": sentence length exceeds the maximum length of 255`,
     )] });
+    expect(resolve).toHaveBeenCalledTimes(0);
+  });
+
+  it('GraphQLMobile', async () => {
+    const mobile = Number(`886${_.padStart('963066131', 13, 0)}`);
+
+    resolve.mockClear();
+    resolve.mockReturnValueOnce(mobile);
+    expect(
+      _.get(await graphql(schema, 'query { mobile }'), 'data.mobile'),
+    ).toBe(mobile);
+
+    resolve.mockClear();
+    await graphql(schema, `query { mobile (input: "${mobile}") }`);
+    expect(resolve).toHaveBeenLastCalledWith(
+      undefined, { input: mobile }, undefined, expect.anything(),
+    );
+
+    resolve.mockClear();
+    expect(
+      await graphql(schema, 'query { mobile (input: "963066131") }'),
+    ).toEqual({ errors: [new TypeError('Mobile cannot represent non value: 963066131')] });
+    expect(resolve).toHaveBeenCalledTimes(0);
+
+    resolve.mockClear();
+    await graphql(schema, 'query($input: Mobile) { mobile (input: $input) }', undefined, undefined, { input: mobile });
+    expect(resolve).toHaveBeenLastCalledWith(
+      undefined, { input: mobile }, undefined, expect.anything(),
+    );
+
+    resolve.mockClear();
+    expect(
+      await graphql(schema, 'query($input: Mobile) { mobile (input: $input) }', undefined, undefined, { input: 963066131 }),
+    ).toEqual({ errors: [new TypeError('Variable "$input" got invalid value 963066131.\nExpected type "Mobile", found 963066131: Mobile cannot represent non value: 963066131')] });
     expect(resolve).toHaveBeenCalledTimes(0);
   });
 });

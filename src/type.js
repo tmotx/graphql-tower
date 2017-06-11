@@ -75,3 +75,20 @@ export const GraphQLSentence = new GraphQLScalarType({
   parseValue: parseSentence,
   parseLiteral: ast => parseSentence(ast.value),
 });
+
+export const parseMobile = (value) => {
+  const mobile = Number(value);
+
+  if (!/^[1-9]{1,5}0[0-9]{12}$/.test(mobile)) {
+    throw new TypeError(`Mobile cannot represent non value: ${mobile}`);
+  }
+
+  return mobile;
+};
+
+export const GraphQLMobile = new GraphQLScalarType({
+  name: 'Mobile',
+  serialize: Number,
+  parseValue: parseMobile,
+  parseLiteral: ast => parseMobile(ast.value),
+});
