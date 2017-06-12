@@ -13,7 +13,14 @@ import {
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
 import Query, { QueryWithConnection } from './query';
 import Mutation from './mutation';
-import { GraphQLResponseStatus, GraphQLGID, GraphQLDate, GraphQLExpiration, GraphQLSentence } from './type';
+import {
+  GraphQLResponseStatus,
+  GraphQLGID,
+  GraphQLDate,
+  GraphQLExpiration,
+  GraphQLSentence,
+  GraphQLMobile,
+} from './type';
 
 module.exports = {
   // middleware
@@ -50,4 +57,5 @@ module.exports = {
   GraphQLDate,
   GraphQLExpiration,
   GraphQLSentence,
+  GraphQLMobile,
 };
