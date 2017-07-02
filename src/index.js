@@ -11,6 +11,7 @@ import {
   UnavailableForLegalReasonsError,
 } from './error';
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
+import unique from './unique';
 import Query, { QueryWithConnection } from './query';
 import Mutation from './mutation';
 import {
@@ -40,6 +41,7 @@ module.exports = {
   UnavailableForLegalReasonsError,
 
   // node
+  unique,
   toGlobalId,
   fromGlobalId,
   GraphQLGlobalIdField,

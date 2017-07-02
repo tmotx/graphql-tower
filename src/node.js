@@ -2,7 +2,7 @@ import _ from 'lodash';
 import base from 'base-x';
 import { GraphQLGID } from './type';
 
-const bs62 = base('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const bs62 = base('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
 
 class GlobalId {
   constructor(type, id) {

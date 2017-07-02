@@ -3,7 +3,7 @@ import base from 'base-x';
 import { graphql, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from '../node';
 
-const bs62 = base('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const bs62 = base('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
 
 describe('node', () => {
   it('toGlobalId & fromGlobalId', () => {
