@@ -36,8 +36,9 @@ describe('unique', () => {
   });
 
   it('sort', async () => {
-    const uid = _.range(0, 1000).map(unique);
-    expect(_.clone(uid).sort()).toEqual(uid);
-    // console.log(_.uniq(_.range(0, 100000).map(() => Date.now())).length);
+    const uuid = _.range(0, 1000).map(() => unique().toUUID());
+    expect(_.clone(uuid).sort()).toEqual(uuid);
+    const hash = _.range(0, 1000).map(() => unique().toString());
+    expect(_.clone(hash).sort()).toEqual(hash);
   });
 });
