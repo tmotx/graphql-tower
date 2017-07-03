@@ -30,31 +30,19 @@ function unique() {
   seq.writeUIntBE(index & 0xFFFFFF, 0, 3); // eslint-disable-line
   seq.writeUInt8(_.random(0xFF), 3);
 
-  return new unique.UniqueId(Buffer.concat([datetime, seq, machine], 16));
+  return bs62.encode(Buffer.concat([datetime, seq, machine], 16));
 }
 
-unique.UniqueId = class UniqueId {
-  constructor(id) {
-    if (_.isBuffer(id)) this.buf = id;
-    else if (_.isString(id)) this.buf = Buffer.from(id);
-    else this.buf = unique();
-  }
+unique.fromUUID = function fromUUID(uuid) {
+  const buf = Buffer.from(uuid.replace(/-/g, ''), 'hex');
+  return bs62.encode(buf);
+};
 
-  toString() {
-    return bs62.encode(this.buf);
-  }
+unique.toUUID = function toUUID(uniqueId) {
+  const buf = bs62.decode(uniqueId);
+  const uuid = /^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/.exec(buf.toString('hex'));
 
-  toUUID() {
-    const buf = this.buf;
-    let i = 0;
-    return [
-      `${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}`,  // eslint-disable-line
-      `${bth[buf[i++]]}${bth[buf[i++]]}`,  // eslint-disable-line
-      `${bth[buf[i++]]}${bth[buf[i++]]}`,  // eslint-disable-line
-      `${bth[buf[i++]]}${bth[buf[i++]]}`,  // eslint-disable-line
-      `${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}${bth[buf[i++]]}`,  // eslint-disable-line
-    ].join('-');
-  }
+  return `${uuid[1]}-${uuid[2]}-${uuid[3]}-${uuid[4]}-${uuid[5]}`;
 };
 
 module.exports = unique;

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import faker from 'faker';
 import { fork } from 'child_process';
 import unique from '../unique';
 
@@ -36,9 +37,14 @@ describe('unique', () => {
   });
 
   it('sort', async () => {
-    const uuid = _.range(0, 1000).map(() => unique().toUUID());
-    expect(_.clone(uuid).sort()).toEqual(uuid);
-    const hash = _.range(0, 1000).map(() => unique().toString());
-    expect(_.clone(hash).sort()).toEqual(hash);
+    const uid = _.range(0, 1000).map(unique);
+    expect(_.clone(uid).sort()).toEqual(uid);
+  });
+
+  it('toUUID & fromUUID', async () => {
+    const uniqueId = unique();
+    expect(unique.fromUUID(unique.toUUID(uniqueId))).toBe(uniqueId);
+    const uuid = faker.random.uuid();
+    expect(unique.toUUID(unique.fromUUID(uuid))).toBe(uuid);
   });
 });
