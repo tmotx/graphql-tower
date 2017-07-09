@@ -6,12 +6,12 @@ import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from '../node';
 const bs62 = base('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
 
 describe('node', () => {
-  it('toGlobalId & fromGlobalId', () => {
+  it('isGlobalId & toGlobalId & fromGlobalId', () => {
     const type = faker.lorem.word();
     const id = `${faker.random.number()}`;
 
     const globalId = toGlobalId(type, id);
-    expect(globalId).toBe(bs62.encode(Buffer.from(`${type}:${id}`)));
+    expect(globalId).toBe(`i${bs62.encode(Buffer.from(`${type}:${id}`))}`);
 
     const gid = fromGlobalId(globalId);
     expect(gid.type).toBe(type);
@@ -22,7 +22,6 @@ describe('node', () => {
     expect(nid).toBe(id);
 
     expect(() => fromGlobalId(toGlobalId(type, ''))).toThrowError(TypeError);
-    expect(() => fromGlobalId(toGlobalId(type, 0))).toThrowError(TypeError);
     expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
   });
 

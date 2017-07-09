@@ -10,7 +10,7 @@ import {
   ConflictError,
   UnavailableForLegalReasonsError,
 } from './error';
-import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
+import { isGlobalId, toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
 import unique from './unique';
 import Query, { QueryWithConnection } from './query';
 import Mutation from './mutation';
@@ -42,6 +42,7 @@ module.exports = {
 
   // node
   unique,
+  isGlobalId,
   toGlobalId,
   fromGlobalId,
   GraphQLGlobalIdField,

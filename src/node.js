@@ -22,18 +22,28 @@ class GlobalId {
   }
 }
 
+export function isGlobalId(globalId) {
+  return /^i[\w\d]+$/.test(globalId);
+}
+
 export function toGlobalId(type, id) {
-  return bs62.encode(Buffer.from(`${type}:${id}`));
+  return `i${bs62.encode(Buffer.from(`${type}:${id}`))}`;
 }
 
 export function fromGlobalId(globalId, verification) {
-  const [type, id] = _.split(`${bs62.decode(globalId)}`, ':');
+  try {
+    if (!isGlobalId(globalId)) throw new TypeError();
 
-  if (!id || id === '0') throw TypeError('invalid global id');
+    const [type, id] = _.split(`${bs62.decode(globalId.substr(1))}`, ':');
 
-  if (verification && verification !== type) throw TypeError('invalid global id');
+    if (!id) throw TypeError();
 
-  return verification ? id : new GlobalId(type, id);
+    if (verification && verification !== type) throw TypeError();
+
+    return verification ? id : new GlobalId(type, id);
+  } catch (error) {
+    throw TypeError('invalid global id');
+  }
 }
 
 export class GraphQLGlobalIdField {
