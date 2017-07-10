@@ -14,8 +14,8 @@ let lastSecs = 0;
 const datetime = Buffer.alloc(6);
 const machine = Buffer.alloc(6);
 const instance = Buffer.from(process.env.INSTANCE_ID || os.hostname());
-machine.writeUInt16BE(instance.readUInt16BE(instance.length - 3), 0);
-machine.writeUInt16BE(process.pid & 0xFFFFFF, 3); // eslint-disable-line
+machine.writeUIntBE(instance.readUInt16BE(instance.length - 3), 0, 3);
+machine.writeUIntBE(process.pid & 0xFFFFFF, 3, 3); // eslint-disable-line
 
 function unique() {
   if (lastSecs !== Date.now()) {
