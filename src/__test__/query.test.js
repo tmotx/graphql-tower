@@ -123,7 +123,7 @@ describe('query', () => {
   });
 
   it('QueryWithNode', async () => {
-    const resolve = jest.fn(id => id);
+    const resolve = jest.fn((payload, id) => id);
     const QueryNode = class extends QueryWithNode {
       type = GraphQLInt;
       resolve = resolve;

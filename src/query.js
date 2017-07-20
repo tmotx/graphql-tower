@@ -64,7 +64,7 @@ export class QueryWithNode extends Query {
     _.set(this._, 'resolveNode', _.identity);
     _.set(this._, 'resolve', (payload, args, context, info) => {
       const namd = fieldName || `${info.fieldName}Id`;
-      return this._.resolveNode(payload[namd], args, context, info);
+      return this._.resolveNode(payload, payload[namd], context, info);
     });
   }
 
