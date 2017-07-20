@@ -4,23 +4,18 @@ import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
 export default class Query {
 
   constructor() {
-    Object.defineProperty(this, 'node', {
-      get: () => this._.node || this.type,
-    });
-
     Object.defineProperty(this, 'resolve', {
       enumerable: true,
-      set: handler => (this._.resolve = handler),
+      set: handler => (this.handler = handler),
       get: () => async (payload, args, context, info) => {
         await this._.middleware.reduce(async (prev, middleware) => {
           await prev;
           await middleware(payload, args, context, info);
         }, Promise.resolve());
 
-        const results = await this._.afterware.reduce(async (prev, afterware) => {
-          const reply = await afterware(payload, args, context, info, await prev);
-          return reply;
-        }, this._.resolve(payload, args, context, info));
+        const results = await this._.afterware.reduce(async (prev, afterware) => (
+          afterware(payload, args, context, info, await prev)
+        ), this._.resolve(payload, args, context, info));
 
         return results;
       },
@@ -32,7 +27,11 @@ export default class Query {
   _ = {
     middleware: [],
     afterware: [],
-    resolve: () => {},
+    resolve: _.identity,
+  }
+
+  get node() {
+    return this._.node || this.type;
   }
 
   set middleware(handler) {
@@ -52,12 +51,32 @@ export default class Query {
 
     throw new Error('afterware a function array is required');
   }
+
+  set handler(value) {
+    this._.resolve = value;
+  }
+}
+
+export class QueryWithNode extends Query {
+
+  constructor(fieldName) {
+    super();
+    _.set(this._, 'resolveNode', _.identity);
+    _.set(this._, 'resolve', (payload, args, context, info) => {
+      const namd = fieldName || `${info.fieldName}Id`;
+      return this._.resolveNode(payload[namd], args, context, info);
+    });
+  }
+
+  set handler(value) {
+    this._.resolveNode = value;
+  }
 }
 
 export class QueryWithConnection extends Query {
 
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super();
 
     _.defaultsDeep(this.args, {
       first: { type: GraphQLInt },

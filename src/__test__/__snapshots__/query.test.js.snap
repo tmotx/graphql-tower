@@ -36,3 +36,17 @@ QueryConnection {
   "type": "[Int]",
 }
 `;
+
+exports[`query QueryWithNode 1`] = `
+QueryNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "resolve": [Function],
+    "resolveNode": [Function],
+  },
+  "args": Object {},
+  "resolve": [Function],
+  "type": "Int",
+}
+`;

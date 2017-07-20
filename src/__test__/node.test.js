@@ -23,6 +23,7 @@ describe('node', () => {
 
     expect(() => fromGlobalId(toGlobalId(type, ''))).toThrowError(TypeError);
     expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
+    expect(() => fromGlobalId('!@$')).toThrowError(TypeError);
   });
 
   describe('GraphQLGlobalIdField', () => {

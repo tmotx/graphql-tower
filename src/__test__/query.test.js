@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import faker from 'faker';
-import { GraphQLInt } from 'graphql';
-import Query, { QueryWithConnection } from '../query';
+import { graphql, GraphQLInt, GraphQLSchema, GraphQLObjectType } from 'graphql';
+import Query, { QueryWithNode, QueryWithConnection } from '../query';
 
 describe('query', () => {
   it('Query', async () => {
@@ -122,10 +122,48 @@ describe('query', () => {
     }).toThrowError('afterware a function array is required');
   });
 
-  it('QueryWithConnection', () => {
+  it('QueryWithNode', async () => {
+    const resolve = jest.fn(id => id);
+    const QueryNode = class extends QueryWithNode {
+      type = GraphQLInt;
+      resolve = resolve;
+    };
+
+    const query = new QueryNode();
+    expect(query).toMatchSnapshot();
+
+    const fieldId = faker.random.number();
+    const tempId = faker.random.number();
+
+    const schema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          node: {
+            type: new GraphQLObjectType({
+              name: 'Node',
+              fields: {
+                field: query,
+                custom: new QueryNode('tempId'),
+              },
+            }),
+            resolve: () => ({ fieldId, tempId }),
+          },
+        },
+      }),
+    });
+
+    const result = await graphql(schema, 'query { node { field custom } }');
+    expect(result.data.node).toEqual({ field: fieldId, custom: tempId });
+  });
+
+  it('QueryWithConnection', async () => {
+    const resolve = jest.fn();
     const QueryConnection = class extends QueryWithConnection {
       type = GraphQLInt;
+      resolve = resolve;
     };
+
     const query = new QueryConnection();
     expect(query).toMatchSnapshot();
 
@@ -135,5 +173,25 @@ describe('query', () => {
     expect(queryExtend.node).toBeUndefined();
     expect(queryExtend.type).not.toBeUndefined();
     expect(queryExtend.resolve).not.toBeUndefined();
+
+    const first = faker.random.number();
+    const offset = faker.random.number();
+    const after = faker.lorem.word();
+    const schema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: { connection: query },
+      }),
+    });
+
+    const reply = [faker.random.number(), faker.random.number()];
+
+    resolve.mockReturnValueOnce(reply);
+    const result = await graphql(schema, `
+      query ($first: Int $offset: Int $after: String) {
+        connection (first: $first offset: $offset after: $after)
+      }`, {}, {}, { first, offset, after });
+
+    expect(result.data.connection).toEqual(reply);
   });
 });
