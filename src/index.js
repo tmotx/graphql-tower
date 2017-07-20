@@ -12,7 +12,7 @@ import {
 } from './error';
 import { isGlobalId, toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
 import unique from './unique';
-import Query, { QueryWithConnection } from './query';
+import Query, { QueryWithNode, QueryWithConnection } from './query';
 import Mutation from './mutation';
 import {
   GraphQLResponseStatus,
@@ -49,6 +49,7 @@ module.exports = {
 
   // query
   Query,
+  QueryWithNode,
   QueryWithConnection,
 
   // mutation
