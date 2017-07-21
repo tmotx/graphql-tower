@@ -11,7 +11,7 @@ export class PayloadField {
   }
 
   getValue(payload, args, context, info, key) {
-    return _.get(payload, this.field || key);
+    return _.get(payload, _.defaultTo(this.field, key));
   }
 }
 
@@ -37,7 +37,7 @@ export default class Query {
   }
 
   get node() {
-    return this._.node || this.type;
+    return _.defaultTo(this._.node, this.type);
   }
 
   set middleware(handler) {
@@ -81,7 +81,7 @@ export class QueryWithNode extends Query {
 
   constructor(fieldName) {
     super({ id: new PayloadField((payload, args, context, info) => (
-      _.get(payload, fieldName || `${info.fieldName}Id`)
+      _.get(payload, _.defaultTo(fieldName, `${_.get(info, 'fieldName')}Id`))
     )) });
   }
 }

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import faker from 'faker';
 import { graphql, GraphQLInt, GraphQLSchema, GraphQLObjectType } from 'graphql';
-import Query, { QueryWithNode, QueryWithConnection } from '../query';
+import Query, { PayloadField, QueryWithNode, QueryWithConnection } from '../query';
 
 describe('query', () => {
   it('Query', async () => {
@@ -120,6 +120,40 @@ describe('query', () => {
       const queryFailed = new QueryFailed();
       queryFailed.resolve();
     }).toThrowError('afterware a function array is required');
+  });
+
+  it('Payload', async () => {
+    const resolve = jest.fn((payload, { id }) => id);
+    const QueryNode = class extends Query {
+      type = GraphQLInt;
+      resolve = resolve;
+    };
+
+    const fieldId = faker.random.number();
+    const tempId = faker.random.number();
+    const value = faker.random.number();
+
+    const schema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          node: {
+            type: new GraphQLObjectType({
+              name: 'Node',
+              fields: {
+                field: new QueryNode({ id: new PayloadField() }),
+                custom: new QueryNode({ id: new PayloadField('tempId') }),
+                value: new QueryNode({ id: value }),
+              },
+            }),
+            resolve: () => ({ id: fieldId, tempId }),
+          },
+        },
+      }),
+    });
+
+    const result = await graphql(schema, 'query { node { field custom value } }');
+    expect(result.data.node).toEqual({ field: fieldId, custom: tempId, value });
   });
 
   it('QueryWithNode', async () => {
