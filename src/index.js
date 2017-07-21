@@ -10,9 +10,9 @@ import {
   ConflictError,
   UnavailableForLegalReasonsError,
 } from './error';
-import { isGlobalId, PayloadField, toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
+import { isGlobalId, toGlobalId, fromGlobalId, GraphQLGlobalIdField } from './node';
 import unique from './unique';
-import Query, { QueryWithNode, QueryWithConnection } from './query';
+import Query, { PayloadField, QueryWithNode, QueryWithConnection } from './query';
 import Mutation from './mutation';
 import {
   GraphQLResponseStatus,
