@@ -8,6 +8,7 @@ QueryAuthentication {
       [Function],
       [Function],
     ],
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {},

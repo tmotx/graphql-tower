@@ -9,6 +9,7 @@ QueryPagination {
     ],
     "middleware": Array [],
     "node": "Int",
+    "parentArgs": undefined,
     "resolve": [Function],
     "type": "[Int]",
   },

@@ -6,6 +6,7 @@ MutationNode {
     "afterware": Array [],
     "middleware": Array [],
     "name": "",
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {
@@ -24,6 +25,7 @@ MutationNode {
     "afterware": Array [],
     "middleware": Array [],
     "name": "Node",
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {
@@ -42,6 +44,7 @@ MutationNode {
     "afterware": Array [],
     "middleware": Array [],
     "name": "Node",
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {
@@ -60,6 +63,7 @@ MutationNode {
     "afterware": Array [],
     "middleware": Array [],
     "name": "Node",
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {

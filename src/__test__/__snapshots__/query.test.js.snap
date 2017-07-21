@@ -5,6 +5,7 @@ QueryNode {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
+    "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {},
@@ -18,6 +19,7 @@ QueryConnection {
     "afterware": Array [],
     "middleware": Array [],
     "node": "Int",
+    "parentArgs": undefined,
     "resolve": [Function],
     "type": "[Int]",
   },
@@ -42,8 +44,12 @@ QueryNode {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
+    "parentArgs": Object {
+      "id": PayloadField {
+        "getValue": [Function],
+      },
+    },
     "resolve": [Function],
-    "resolveNode": [Function],
   },
   "args": Object {},
   "resolve": [Function],

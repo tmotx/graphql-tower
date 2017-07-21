@@ -91,7 +91,7 @@ describe('query', () => {
     resolve.mockClear();
     expect(await queryAfterware.resolve()).toEqual(reply);
     expect(afterware).toHaveBeenCalledTimes(1);
-    expect(afterware).toHaveBeenLastCalledWith(undefined, undefined, undefined, undefined, data);
+    expect(afterware).toHaveBeenLastCalledWith(undefined, {}, undefined, undefined, data);
     expect(resolve).toHaveBeenCalledTimes(1);
 
     const QueryDeepAfterware = class extends QueryAfterware {
@@ -109,7 +109,7 @@ describe('query', () => {
     resolve.mockClear();
     expect(await queryDeepAfterware.resolve()).toEqual([reply, 1, 2]);
     expect(afterware).toHaveBeenCalledTimes(1);
-    expect(afterware).toHaveBeenLastCalledWith(undefined, undefined, undefined, undefined, data);
+    expect(afterware).toHaveBeenLastCalledWith(undefined, {}, undefined, undefined, data);
     expect(resolve).toHaveBeenCalledTimes(1);
 
     expect(() => {
@@ -123,7 +123,7 @@ describe('query', () => {
   });
 
   it('QueryWithNode', async () => {
-    const resolve = jest.fn((payload, id) => id);
+    const resolve = jest.fn((payload, { id }) => id);
     const QueryNode = class extends QueryWithNode {
       type = GraphQLInt;
       resolve = resolve;
