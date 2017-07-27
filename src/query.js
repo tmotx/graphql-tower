@@ -2,20 +2,43 @@ import _ from 'lodash';
 import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
 
 export class PayloadField {
-  constructor(field) {
-    if (_.isFunction(field)) {
-      this.getValue = field;
+  constructor(fieldName) {
+    if (_.isFunction(fieldName)) {
+      this.resolveValue = fieldName;
       return;
     }
-    this.field = field;
+    this.fieldName = fieldName;
   }
 
-  getValue(payload, args, context, info, key) {
-    return _.get(payload, _.defaultTo(this.field, key));
+  resolveValue(payload, args, context, info, key) {
+    return _.get(payload, _.defaultTo(this.fieldName, key));
   }
 }
 
 export default class Query {
+
+  static resolveArgs(...args) {
+    return _.defaultsDeep(_.mapValues(this._.parentArgs, (value, key) => (
+      value instanceof PayloadField ? value.resolveValue(...args, key) : value
+    )), args[1]);
+  }
+
+  static async preResolve(payload, client, context, info) {
+    const { resolveArgs, resolve } = this.constructor;
+    const args = resolveArgs.call(this, payload, client, context, info);
+    return resolve.call(this, payload, args, context, info);
+  }
+
+  static async resolve(...args) {
+    await this._.middleware.reduce(async (prev, middleware) => {
+      await prev;
+      await middleware(...args);
+    }, Promise.resolve());
+
+    return this._.afterware.reduce(async (prev, afterware) => (
+      afterware(...args, await prev)
+    ), this._.resolve(...args));
+  }
 
   constructor(parentArgs) {
     this._.parentArgs = parentArgs;
@@ -23,7 +46,7 @@ export default class Query {
     Object.defineProperty(this, 'resolve', {
       enumerable: true,
       set: resolve => (this._.resolve = resolve),
-      get: () => this.preResolve.bind(this),
+      get: () => this.constructor.preResolve.bind(this),
     });
   }
 
@@ -57,32 +80,26 @@ export default class Query {
 
     throw new Error('afterware a function array is required');
   }
-
-  async preResolve(payload, clientArgs, context, info) {
-    const args = _.defaultsDeep(_.mapValues(this._.parentArgs, (value, key) => (
-      value instanceof PayloadField ?
-        value.getValue(payload, clientArgs, context, info, key) : value
-    )), clientArgs);
-
-    await this._.middleware.reduce(async (prev, middleware) => {
-      await prev;
-      await middleware(payload, args, context, info);
-    }, Promise.resolve());
-
-    const results = await this._.afterware.reduce(async (prev, afterware) => (
-      afterware(payload, args, context, info, await prev)
-    ), this._.resolve(payload, args, context, info));
-
-    return results;
-  }
 }
 
 export class QueryWithNode extends Query {
 
+  fieldName = null;
+
+  static async resolve(...args) {
+    if (!args[1].id) {
+      return null;
+    }
+
+    return super.resolve(...args);
+  }
+
   constructor(fieldName) {
     super({ id: new PayloadField((payload, args, context, info) => (
-      _.get(payload, _.defaultTo(fieldName, `${_.get(info, 'fieldName')}Id`))
+      _.get(payload, _.defaultTo(this.fieldName, `${_.get(info, 'fieldName')}Id`))
     )) });
+
+    this.fieldName = fieldName;
   }
 }
 

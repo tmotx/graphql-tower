@@ -46,12 +46,13 @@ QueryNode {
     "middleware": Array [],
     "parentArgs": Object {
       "id": PayloadField {
-        "getValue": [Function],
+        "resolveValue": [Function],
       },
     },
     "resolve": [Function],
   },
   "args": Object {},
+  "fieldName": undefined,
   "resolve": [Function],
   "type": "Int",
 }

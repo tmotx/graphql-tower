@@ -87,10 +87,9 @@ describe('query', () => {
     };
     const queryAfterware = new QueryAfterware();
 
-    afterware.mockClear();
-    resolve.mockClear();
     expect(await queryAfterware.resolve()).toEqual(reply);
     expect(afterware).toHaveBeenCalledTimes(1);
+    expect(afterware.mock.calls[0][1]).toEqual({});
     expect(afterware).toHaveBeenLastCalledWith(undefined, {}, undefined, undefined, data);
     expect(resolve).toHaveBeenCalledTimes(1);
 
@@ -179,6 +178,7 @@ describe('query', () => {
               fields: {
                 field: query,
                 custom: new QueryNode('tempId'),
+                empty: new QueryNode(),
               },
             }),
             resolve: () => ({ fieldId, tempId }),
@@ -187,8 +187,8 @@ describe('query', () => {
       }),
     });
 
-    const result = await graphql(schema, 'query { node { field custom } }');
-    expect(result.data.node).toEqual({ field: fieldId, custom: tempId });
+    const result = await graphql(schema, 'query { node { field custom empty } }');
+    expect(result.data.node).toEqual({ field: fieldId, custom: tempId, empty: null });
   });
 
   it('QueryWithConnection', async () => {
