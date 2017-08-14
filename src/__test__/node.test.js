@@ -6,15 +6,15 @@ describe('node', () => {
   it('isGlobalId & toGlobalId & fromGlobalId', () => {
     const type = 'GlobalType';
 
-    expect(toGlobalId(type, '123456789')).toBe('iNg4tchz7wmADhj8X1lTUtPlTd1bWj');
+    expect(toGlobalId(type, '123456789')).toBe('iN2T1VQ2b3u8TB0vOWmpGCbdVlUz');
 
     const buffer = Buffer.from(faker.random.locale());
     const GlobalBuffer = toGlobalId(type, buffer);
     expect(fromGlobalId(GlobalBuffer, type)).toBe(buffer.toString());
 
-    const number = faker.random.number();
+    const number = '9223372036854775807';
     const GlobalNumber = toGlobalId(type, number);
-    expect(fromGlobalId(GlobalNumber, type)).toBe(`${number}`);
+    expect(fromGlobalId(GlobalNumber, type)).toEqual('9223372036854775807');
 
     const locale = faker.random.locale();
     const GlobalLocale = toGlobalId(type, locale);

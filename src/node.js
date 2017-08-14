@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import base from 'base-x';
+import BigNumber from 'bignumber.js';
 import { GraphQLGID } from './type';
 
 const bs62 = base('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
@@ -24,7 +25,7 @@ class GlobalId {
   }
 
   toBigint() {
-    return _.trimStart(this._.id.toString('hex'), '0');
+    return new BigNumber(this._.id.toString('hex'), 16).toString(10);
   }
 
   toUUID() {
@@ -42,6 +43,10 @@ class GlobalId {
     }
 
     return this._.id.toString();
+  }
+
+  toJSON() {
+    return this.toString();
   }
 }
 
@@ -65,15 +70,11 @@ function fromId(value) {
     return { format: 'U', idBuf: buf };
   }
 
-  if (/^\d+$/gi.test(id) && id.length <= 20) {
-    const buf = Buffer.alloc(10);
-    let offset = 9;
-    for (let idx = id.length - 2; idx > -2; idx -= 2) {
-      buf.writeUInt8(
-        `0x${_.defaultTo(id[idx], 0)}${_.defaultTo(id[idx + 1], 0)}`,
-        offset,
-      );
-      offset -= 1;
+  if (/^\d+$/gi.test(id)) {
+    const idHex = _.padStart(new BigNumber(id, 10).toString(16), 16, 0);
+    const buf = Buffer.alloc(8);
+    for (let idx = 0; idx < 16; idx += 2) {
+      buf.writeUInt8(`0x${idHex[idx]}${idHex[idx + 1]}`, idx / 2);
     }
     return { format: 'N', idBuf: buf };
   }
