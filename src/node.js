@@ -132,6 +132,6 @@ export class GraphQLGlobalIdField {
     const value = _.isObject(payload) ? payload[info.fieldName] : payload;
     const typeName = this.typeName || info.parentType.name;
 
-    return toGlobalId(typeName, value);
+    return isGlobalId(value) ? value : toGlobalId(typeName, value);
   }
 }
