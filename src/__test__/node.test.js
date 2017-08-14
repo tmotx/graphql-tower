@@ -1,27 +1,33 @@
 import faker from 'faker';
-import base from 'base-x';
 import { graphql, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { toGlobalId, fromGlobalId, GraphQLGlobalIdField } from '../node';
 
-const bs62 = base('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
-
 describe('node', () => {
   it('isGlobalId & toGlobalId & fromGlobalId', () => {
-    const type = faker.lorem.word();
-    const id = `${faker.random.number()}`;
+    const type = 'GlobalType';
 
-    const globalId = toGlobalId(type, id);
-    expect(globalId).toBe(`i${bs62.encode(Buffer.from(`${type}:${id}`))}`);
+    expect(toGlobalId(type, '123456789')).toBe('iNg4tchz7wmADhj8X1lTUtPlTd1bWj');
 
-    const gid = fromGlobalId(globalId);
+    const buffer = Buffer.from(faker.random.locale());
+    const GlobalBuffer = toGlobalId(type, buffer);
+    expect(fromGlobalId(GlobalBuffer, type)).toBe(buffer.toString());
+
+    const number = faker.random.number();
+    const GlobalNumber = toGlobalId(type, number);
+    expect(fromGlobalId(GlobalNumber, type)).toBe(`${number}`);
+
+    const locale = faker.random.locale();
+    const GlobalLocale = toGlobalId(type, locale);
+    expect(fromGlobalId(GlobalLocale, type)).toBe(locale);
+
+    const uuid = faker.random.uuid();
+    const GlobalUUID = toGlobalId(type, uuid);
+    expect(fromGlobalId(GlobalUUID, type)).toBe(uuid);
+
+    const gid = fromGlobalId(toGlobalId(type, '123456789'));
     expect(gid.type).toBe(type);
-    expect(gid.id).toBe(id);
-    expect(`${gid}`).toBe(id);
+    expect(gid.toString()).toEqual('123456789');
 
-    const nid = fromGlobalId(globalId, type);
-    expect(nid).toBe(id);
-
-    expect(() => fromGlobalId(toGlobalId(type, ''))).toThrowError(TypeError);
     expect(() => fromGlobalId(toGlobalId('abc', 1), 'xyz')).toThrowError(TypeError);
     expect(() => fromGlobalId('!@$')).toThrowError(TypeError);
   });
