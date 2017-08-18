@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql/error';
 
 export class ForbiddenError extends GraphQLError {
-  name = 'ForbiddenError';
+  symbol = 'ForbiddenError';
 
   constructor(message = 'ForbiddenError') {
     super(message);
@@ -9,7 +9,7 @@ export class ForbiddenError extends GraphQLError {
 }
 
 export class NotFoundError extends GraphQLError {
-  name = 'NotFoundError';
+  symbol = 'NotFoundError';
 
   constructor(message = 'NotFoundError') {
     super(message);
@@ -17,7 +17,7 @@ export class NotFoundError extends GraphQLError {
 }
 
 export class UnauthorizedError extends GraphQLError {
-  name = 'UnauthorizedError';
+  symbol = 'UnauthorizedError';
 
   constructor(message = 'UnauthorizedError') {
     super(message);
@@ -25,7 +25,7 @@ export class UnauthorizedError extends GraphQLError {
 }
 
 export class PaymentRequiredError extends GraphQLError {
-  name = 'PaymentRequiredError';
+  symbol = 'PaymentRequiredError';
 
   constructor(message = 'PaymentRequiredError') {
     super(message);
@@ -33,7 +33,7 @@ export class PaymentRequiredError extends GraphQLError {
 }
 
 export class GoneDataError extends GraphQLError {
-  name = 'GoneDataError';
+  symbol = 'GoneDataError';
 
   constructor(message = 'GoneDataError') {
     super(message);
@@ -41,7 +41,7 @@ export class GoneDataError extends GraphQLError {
 }
 
 export class ConflictError extends GraphQLError {
-  name = 'ConflictError';
+  symbol = 'ConflictError';
 
   constructor(message = 'ConflictError') {
     super(message);
@@ -49,7 +49,7 @@ export class ConflictError extends GraphQLError {
 }
 
 export class LockedError extends GraphQLError {
-  name = 'LockedError';
+  symbol = 'LockedError';
 
   constructor(message = 'LockedError') {
     super(message);
@@ -57,7 +57,7 @@ export class LockedError extends GraphQLError {
 }
 
 export class UnavailableForLegalReasonsError extends GraphQLError {
-  name = 'UnavailableForLegalReasonsError';
+  symbol = 'UnavailableForLegalReasonsError';
 
   constructor(message = 'UnavailableForLegalReasonsError') {
     super(message);
