@@ -105,8 +105,8 @@ export class QueryWithNode extends Query {
 
 export class QueryWithConnection extends Query {
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
 
     _.defaultsDeep(this.args, {
       first: { type: GraphQLInt },
