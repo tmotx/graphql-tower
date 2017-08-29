@@ -108,10 +108,16 @@ export class QueryWithConnection extends Query {
   constructor(...args) {
     super(...args);
 
-    _.defaultsDeep(this.args, {
+    this._.args = {
       first: { type: GraphQLInt },
       offset: { type: GraphQLInt },
       after: { type: GraphQLString },
+    };
+
+    Object.defineProperty(this, 'args', {
+      enumerable: true,
+      set: (value) => { _.assign(this._.args, value); },
+      get: () => this._.args,
     });
 
     Object.defineProperty(this, 'type', {

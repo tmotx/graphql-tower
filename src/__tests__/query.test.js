@@ -195,6 +195,7 @@ describe('query', () => {
     const resolve = jest.fn();
     const QueryConnection = class extends QueryWithConnection {
       type = GraphQLInt;
+      args = { id: { type: GraphQLInt } };
       resolve = resolve;
     };
 
@@ -205,6 +206,7 @@ describe('query', () => {
 
     const queryExtend = _.extend({}, query);
     expect(queryExtend.node).toBeUndefined();
+    expect(queryExtend.args).not.toBeUndefined();
     expect(queryExtend.type).not.toBeUndefined();
     expect(queryExtend.resolve).not.toBeUndefined();
 

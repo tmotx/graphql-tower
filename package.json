@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "2.7.0",
+  "version": "0.0.0-development",
   "description": "A package to easy use graphql for server",
   "main": "lib/index.js",
   "scripts": {
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yutin1987/graphql-tower.git"
+    "url": "https://github.com/tmotx/graphql-tower.git"
   },
   "author": "YuTin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yutin1987/graphql-tower/issues"
+    "url": "https://github.com/tmotx/graphql-tower/issues"
   },
-  "homepage": "https://github.com/yutin1987/graphql-tower#readme",
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
   "files": [
     "lib"
   ],

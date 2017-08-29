@@ -7,6 +7,17 @@ QueryPagination {
       [Function],
       [Function],
     ],
+    "args": Object {
+      "after": Object {
+        "type": "String",
+      },
+      "first": Object {
+        "type": "Int",
+      },
+      "offset": Object {
+        "type": "Int",
+      },
+    },
     "middleware": Array [],
     "node": "Int",
     "parentArgs": undefined,

@@ -17,6 +17,20 @@ exports[`query QueryWithConnection 1`] = `
 QueryConnection {
   "_": Object {
     "afterware": Array [],
+    "args": Object {
+      "after": Object {
+        "type": "String",
+      },
+      "first": Object {
+        "type": "Int",
+      },
+      "id": Object {
+        "type": "Int",
+      },
+      "offset": Object {
+        "type": "Int",
+      },
+    },
     "middleware": Array [],
     "node": "Int",
     "parentArgs": undefined,
@@ -28,6 +42,9 @@ QueryConnection {
       "type": "String",
     },
     "first": Object {
+      "type": "Int",
+    },
+    "id": Object {
       "type": "Int",
     },
     "offset": Object {
