@@ -22,16 +22,16 @@ describe('unique', () => {
 
   it('child process', async () => {
     const uid = _.flattenDeep(await Promise.all([
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
-      new Promise(resolve => fork(`${__dirname}/unique.js`).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
+      new Promise(resolve => fork(`${__dirname}/unique.js`, ['child']).on('message', resolve)),
     ]));
     expect(_.uniq(uid).length).toBe(10000);
   });
