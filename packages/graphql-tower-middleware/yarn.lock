@@ -6,6 +6,12 @@ graphql-tower-errors@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.0.0.tgz#1b9caade14dfed12ac37bfc5a44287100a07347e"
 
+graphql-tower-queries@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.0.0.tgz#a8538eefb2ab51147dbbb6ccd30d8eff2a463f3d"
+  dependencies:
+    lodash "^4.17.4"
+
 lodash@^4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"

@@ -9,8 +9,7 @@
     "build": "lerna run -- build",
     "test": "eslint ./packages/*/src; jest --coverage ./packages/*/src",
     "predeploy": "npm run build",
-    "deploy": "lerna publish --registry=https://registry.npmjs.org/",
-    "semantic-release": "lerna-semantic-release pre && npm run deploy && lerna-semantic-release post"
+    "deploy": "lerna-semantic-release pre && lerna-semantic-release perform && lerna-semantic-release post"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-middleware",
-  "version": "3.0.1",
+  "version": "3.0.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -19,6 +19,9 @@
   "files": [
     "lib"
   ],
+  "devDependencies": {
+    "graphql-tower-queries": "^3.0.0"
+  },
   "dependencies": {
     "graphql-tower-errors": "^3.0.0",
     "lodash": "^4.17.4"

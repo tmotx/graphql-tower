@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-model",
-  "version": "3.0.1",
+  "version": "3.0.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -26,5 +26,8 @@
   },
   "peerDependencies": {
     "knex": "^0.13.0"
+  },
+  "devDependencies": {
+    "graphql-tower-errors": "^3.0.0"
   }
 }
