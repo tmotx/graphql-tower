@@ -20,6 +20,7 @@
     "lib"
   ],
   "dependencies": {
+    "graphql-tower-global-id": "^3.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.1"
   },

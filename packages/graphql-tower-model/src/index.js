@@ -418,7 +418,7 @@ export default class CacheModel {
 
   search(keyword) {
     const { database, keywordAttribute } = this.constructor;
-    const queryBuilder = this.queryBuilder;
+    const { queryBuilder } = this;
     queryBuilder.select(database.raw(`*, ts_rank(${keywordAttribute}, ?) as rank`, keyword));
     queryBuilder.where(database.raw(`${keywordAttribute} @@ to_tsquery(?)`, keyword));
     queryBuilder.orderBy('rank', 'desc');

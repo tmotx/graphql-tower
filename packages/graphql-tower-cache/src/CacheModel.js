@@ -4,7 +4,6 @@ import { fromGlobalId } from 'graphql-tower-global-id';
 import TimeToLiveStore from './TimeToLiveStore';
 
 export default class CacheModel {
-
   static ttl = false;
 
   static async loader(ids) {

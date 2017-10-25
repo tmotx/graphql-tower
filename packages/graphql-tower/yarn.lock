@@ -2,3 +2,84 @@
 # yarn lockfile v1
 
 
+base-x@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.2.tgz#bf873861b7514279b7969f340929eab87c11d130"
+  dependencies:
+    safe-buffer "^5.0.1"
+
+bignumber.js@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
+
+dataloader@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.3.0.tgz#6fec5be4b30a712e4afd30b86b4334566b97673b"
+
+graphql-tower-cache@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-cache/-/graphql-tower-cache-3.0.0.tgz#f19dd5f9befa851a3e5c0029137f1368e0d968a2"
+  dependencies:
+    dataloader "^1.3.0"
+
+graphql-tower-errors@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.0.0.tgz#1b9caade14dfed12ac37bfc5a44287100a07347e"
+
+graphql-tower-global-id@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.0.0.tgz#87f119ad63f6d3f2c7d0c42d86675a912bef4449"
+  dependencies:
+    base-x "^3.0.2"
+    bignumber.js "^4.1.0"
+    lodash "^4.17.4"
+
+graphql-tower-middleware@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-middleware/-/graphql-tower-middleware-3.0.0.tgz#c0689f19fc2c332b1216c0081b96ec870ab336b8"
+  dependencies:
+    lodash "^4.17.4"
+
+graphql-tower-model@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-model/-/graphql-tower-model-3.0.0.tgz#071b91788581250a676910b27256cf99598bfb7c"
+  dependencies:
+    dataloader "^1.3.0"
+    lodash "^4.17.4"
+
+graphql-tower-queries@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.0.0.tgz#a8538eefb2ab51147dbbb6ccd30d8eff2a463f3d"
+  dependencies:
+    lodash "^4.17.4"
+
+graphql-tower-types@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-types/-/graphql-tower-types-3.0.0.tgz#2c3721ad8ad3365277bb758b6b86b5503b5833c2"
+  dependencies:
+    lodash "^4.17.4"
+    moment "^2.19.1"
+
+graphql-tower-unigue@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-unigue/-/graphql-tower-unigue-3.0.0.tgz#4f8b86afdc96d40590d782bb279c1be11c137ef6"
+  dependencies:
+    base-x "^3.0.2"
+    lodash "^4.17.4"
+    os "^0.1.1"
+
+lodash@^4.17.4:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+
+moment@^2.19.1:
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.1.tgz#56da1a2d1cbf01d38b7e1afc31c10bcfa1929167"
+
+os@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/os/-/os-0.1.1.tgz#208845e89e193ad4d971474b93947736a56d13f3"
+
+safe-buffer@^5.0.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"

@@ -23,6 +23,7 @@
     "graphql": "^0.11.7"
   },
   "dependencies": {
-    "dataloader": "^1.3.0"
+    "dataloader": "^1.3.0",
+    "graphql-tower-global-id": "^3.0.0"
   }
 }
