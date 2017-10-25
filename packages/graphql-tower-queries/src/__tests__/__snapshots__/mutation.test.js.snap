@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mutation Mutation 1`] = `
+MutationNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "",
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "Input!",
+    },
+  },
+  "resolve": [Function],
+  "type": "Payload",
+}
+`;
+
+exports[`Mutation Mutation with fields 1`] = `
+MutationNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "Node",
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "resolve": [Function],
+  "type": "NodePayload",
+}
+`;
+
+exports[`Mutation Mutation with name 1`] = `
+MutationNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "Node",
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "resolve": [Function],
+  "type": "NodePayload",
+}
+`;
+
+exports[`Mutation Mutation with thunk fields 1`] = `
+MutationNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "Node",
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "resolve": [Function],
+  "type": "NodePayload",
+}
+`;

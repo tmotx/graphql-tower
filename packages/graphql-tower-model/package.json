@@ -1,0 +1,29 @@
+{
+  "name": "graphql-tower-model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "dataloader": "^1.3.0",
+    "lodash": "^4.17.4"
+  },
+  "peerDependencies": {
+    "knex": "^0.13.0"
+  }
+}

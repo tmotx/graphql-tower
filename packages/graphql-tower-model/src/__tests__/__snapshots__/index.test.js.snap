@@ -1,0 +1,171 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cache model model destroy 1`] = `
+Array [
+  "select * from default_table where id in (3) and deleted_at is null",
+  "update default_table set deleted_at = DATE, deleted_by = 10 where deleted_at is null and id = 3",
+]
+`;
+
+exports[`cache model model fetch 1`] = `
+Object {
+  "createdAt": null,
+  "createdBy": null,
+  "deletedAt": null,
+  "deletedBy": null,
+  "id": 1,
+  "keyword": null,
+  "name": "name is one",
+  "password": null,
+  "updatedAt": null,
+  "updatedBy": null,
+}
+`;
+
+exports[`cache model model fetch 2`] = `
+Array [
+  "select * from default_table where deleted_at is null and name = name is one limit 1",
+]
+`;
+
+exports[`cache model model fetchAll 1`] = `
+Array [
+  "name is one",
+]
+`;
+
+exports[`cache model model fetchAll 2`] = `
+Array [
+  "select * from default_table where deleted_at is null and name = name is one limit 1000",
+]
+`;
+
+exports[`cache model model insert of save 1`] = `
+Array [
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is three, new is three, DATE, 10) returning id",
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is four, new is four, DATE, 10) returning id",
+]
+`;
+
+exports[`cache model model merge 1`] = `
+Object {
+  "current": Object {
+    "archive": Object {
+      "items": Array [
+        20,
+        40,
+      ],
+    },
+    "createdAt": null,
+    "createdBy": null,
+    "deletedAt": null,
+    "deletedBy": null,
+    "id": 1,
+    "keyword": null,
+    "name": "a name",
+    "password": null,
+    "updatedAt": null,
+    "updatedBy": null,
+  },
+  "previous": Object {
+    "archive": Object {
+      "items": Array [
+        20,
+        40,
+      ],
+    },
+    "createdAt": null,
+    "createdBy": null,
+    "deletedAt": null,
+    "deletedBy": null,
+    "id": 1,
+    "keyword": null,
+    "name": "a name",
+    "password": null,
+    "updatedAt": null,
+    "updatedBy": null,
+  },
+  "queryBuilder": undefined,
+}
+`;
+
+exports[`cache model model search 1`] = `
+Array [
+  "new is four",
+]
+`;
+
+exports[`cache model model search 2`] = `
+Array [
+  "select *, ts_rank(keyword, new) as rank from default_table where keyword @@ to_tsquery(new) and deleted_at is null order by rank desc limit 1000",
+]
+`;
+
+exports[`cache model model update of save 1`] = `
+Array [
+  "select * from default_table where id in (3) and deleted_at is null",
+]
+`;
+
+exports[`cache model static columns 1`] = `
+Object {
+  "name": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+}
+`;
+
+exports[`cache model static dataloader 1`] = `
+DataLoader {
+  "_batchLoadFn": [Function],
+  "_options": Object {
+    "cache": false,
+  },
+  "_promiseCache": Map {},
+  "_queue": Array [],
+}
+`;
+
+exports[`cache model static forge 1`] = `
+DefaultModel {
+  "_": Object {
+    "current": Object {
+      "name": "my name",
+    },
+    "previous": Object {
+      "name": "my name",
+    },
+    "queryBuilder": undefined,
+  },
+  "cache": null,
+  "createdAt": null,
+  "createdBy": null,
+  "deletedAt": null,
+  "deletedBy": null,
+  "id": null,
+  "name": "my name",
+  "password": null,
+  "updatedAt": null,
+  "updatedBy": null,
+}
+`;
+
+exports[`cache model static load && loadMany 1`] = `
+Array [
+  "select * from default_table where id in (1) and deleted_at is null",
+  "select * from default_table where id in (1, 2, 1) and deleted_at is null",
+]
+`;
+
+exports[`cache model static toGlobalId & fromGlobalId 1`] = `"invalid global id"`;

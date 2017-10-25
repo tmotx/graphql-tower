@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`middleware authentication 1`] = `
+QueryAuthentication {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [
+      [Function],
+      [Function],
+    ],
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {},
+  "resolve": [Function],
+  "type": "Int",
+}
+`;

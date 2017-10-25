@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QueryWithNode QueryWithNode 1`] = `
+QueryNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "parentArgs": Object {
+      "id": PayloadField {
+        "resolveValue": [Function],
+      },
+    },
+    "resolve": [Function],
+  },
+  "args": Object {},
+  "fieldName": undefined,
+  "resolve": [Function],
+  "type": "Int",
+}
+`;

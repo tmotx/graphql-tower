@@ -6,8 +6,16 @@ notifications:
 node_js:
   - '7'
   - '6'
+  - '4'
+
+services:
+  - postgresql
+
+addons:
+  postgresql: '9.5'
 
 before_script:
+  - psql -c 'create database graphql-tower;' -U postgres
   - npm prune
 
 after_success:

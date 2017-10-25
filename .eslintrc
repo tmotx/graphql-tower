@@ -7,6 +7,11 @@
     "it": true,
     "expect": true,
     "beforeEach": true,
-    "afterEach": true
+    "afterEach": true,
+    "beforeAll": true,
+    "afterAll": true
+  },
+  "rules": {
+    "import/no-extraneous-dependencies": [0]
   }
 }

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Query Query 1`] = `
+QueryNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {},
+  "resolve": [Function],
+}
+`;
