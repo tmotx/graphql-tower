@@ -33,7 +33,7 @@ class DefaultModel extends Model {
   }
 }
 
-describe('cache model', () => {
+describe('model', () => {
   beforeAll(async () => {
     await database.schema.dropTableIfExists('default_table');
 

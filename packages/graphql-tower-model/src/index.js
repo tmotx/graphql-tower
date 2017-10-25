@@ -8,7 +8,7 @@ import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
 export * from './columns';
 
-export default class CacheModel {
+export default class Model {
   static database = null;
 
   static tableName = null;
@@ -331,8 +331,8 @@ export default class CacheModel {
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
 
     if (hasOperator) {
-      values.createdBy = CacheModel.fromModel(operator);
-      values.updatedBy = CacheModel.fromModel(operator);
+      values.createdBy = Model.fromModel(operator);
+      values.updatedBy = Model.fromModel(operator);
     }
     if (hasTimestamps) {
       values.createdAt = new Date();
@@ -370,7 +370,7 @@ export default class CacheModel {
     if (_.size(keys) < 1) return this;
 
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
-    if (hasOperator) values.updatedBy = CacheModel.fromModel(operator);
+    if (hasOperator) values.updatedBy = Model.fromModel(operator);
     if (hasTimestamps) values.updatedAt = new Date();
 
     const changes = _.pick(values, _.concat(['updatedBy', 'updatedAt', keywordAttribute], keys));
@@ -405,7 +405,7 @@ export default class CacheModel {
 
     if (!this.valueOf('deletedAt')) {
       const data = { deletedAt: new Date() };
-      if (hasOperator) data.deletedBy = CacheModel.fromModel(operator);
+      if (hasOperator) data.deletedBy = Model.fromModel(operator);
       await this.query.update(signify(data));
 
       this.merge(data);
@@ -431,7 +431,7 @@ _.forEach([
   'whereNotExists', 'whereBetween', 'whereNotBetween', 'whereRaw',
   'orderBy', 'orderByRaw',
 ], (key) => {
-  CacheModel.prototype[key] = function queryBuilder(...args) {
+  Model.prototype[key] = function queryBuilder(...args) {
     this.queryBuilder[key](...args);
     return this;
   };

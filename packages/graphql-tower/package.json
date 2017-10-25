@@ -23,13 +23,13 @@
     "graphql": "^0.11.7"
   },
   "dependencies": {
-    "graphql-tower-cache": "^3.0.1",
+    "graphql-tower-cache": "^3.0.0",
     "graphql-tower-errors": "^3.0.0",
     "graphql-tower-global-id": "^3.0.0",
-    "graphql-tower-middleware": "^3.0.1",
-    "graphql-tower-model": "^3.0.1",
+    "graphql-tower-middleware": "^3.0.0",
+    "graphql-tower-model": "^3.0.0",
     "graphql-tower-queries": "^3.0.0",
-    "graphql-tower-types": "^3.0.1",
+    "graphql-tower-types": "^3.0.0",
     "graphql-tower-unigue": "^3.0.0"
   }
 }
