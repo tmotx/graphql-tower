@@ -17,6 +17,8 @@ export default class Model {
 
   static keywordAttribute = 'keyword';
 
+  static hasUUID = false;
+
   static hasOperator = false;
 
   static hasTimestamps = true;
@@ -47,7 +49,9 @@ export default class Model {
   }
 
   static fromGlobalId(value) {
-    return isGlobalId(value) ? fromGlobalId(value, this.tableName) : value;
+    const id = isGlobalId(value) ? fromGlobalId(value, this.tableName) : value;
+    if (this.hasUUID && !Model.isUUID(id)) throw new TypeError();
+    return id;
   }
 
   static toGlobalId(value) {
@@ -232,7 +236,12 @@ export default class Model {
   }
 
   async loadQuery(queryBuilder, NotFoundError) {
-    const { idAttribute, toGlobalId: toGid, format } = this.constructor;
+    const {
+      idAttribute,
+      toGlobalId: toGid,
+      format,
+      forge,
+    } = this.constructor;
     const { cache } = this;
 
     const collection = _.map(await queryBuilder, format);
@@ -246,7 +255,7 @@ export default class Model {
       return [];
     }
 
-    return _.map(collection, this.forge.bind(this));
+    return _.map(collection, forge.bind(this.constructor));
   }
 
   forge(attributes) {

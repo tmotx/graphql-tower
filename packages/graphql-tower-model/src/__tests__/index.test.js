@@ -214,6 +214,7 @@ describe('model', () => {
     });
 
     it('search', async () => {
+      await (new DefaultModel({ name: 'new for search' })).save('10');
       const model = new DefaultModel();
       model.search('new');
       expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
