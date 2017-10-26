@@ -43,7 +43,7 @@ export default class CacheModel {
         const store = await this.dataloader.load(id);
         if (!store) return null;
 
-        if (type && store.model.tableName !== type) return null;
+        if (type && typeof type === 'string' && store.model.tableName !== type) return null;
 
         const model = store.model.forge(store.data);
         model.cache = this;

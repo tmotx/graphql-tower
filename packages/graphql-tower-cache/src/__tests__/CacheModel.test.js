@@ -87,14 +87,20 @@ describe('CacheModel', () => {
 
     await expect(cache.load(toGlobalId('tree', '1'))).resolves.toBeNull();
 
-    client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
-    await expect(cache.load(toGlobalId('car', '1'), 'house')).resolves.toBeNull();
+    client.mockReturnValueOnce([]);
+    await expect(cache.load(toGlobalId('car', '1'))).resolves.toBeNull();
 
-    await expect(cache.load(toGlobalId('car', '1'), 'house', NotFoundError))
+    await expect(cache.load(toGlobalId('car', '1'), NotFoundError))
+      .rejects.toEqual(new NotFoundError());
+
+    client.mockReturnValueOnce([{ id: '2', name: '2 of car' }]);
+    await expect(cache.load(toGlobalId('car', '2'), 'house')).resolves.toBeNull();
+
+    await expect(cache.load(toGlobalId('car', '2'), 'house', NotFoundError))
       .rejects.toEqual(new NotFoundError());
 
     expect(client).toMatchSnapshot();
-    expect(client).toHaveBeenCalledTimes(1);
+    expect(client).toHaveBeenCalledTimes(2);
   });
 
   it('prime', async () => {

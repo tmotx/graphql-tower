@@ -3,6 +3,7 @@
 exports[`CacheModel check type 1`] = `
 Array [
   "select * from car where id in (1) and deleted_at is null",
+  "select * from car where id in (2) and deleted_at is null",
 ]
 `;
 
