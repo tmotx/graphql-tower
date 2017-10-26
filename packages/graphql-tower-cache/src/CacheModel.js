@@ -21,8 +21,19 @@ export default class CacheModel {
 
   constructor() {
     const { ttl, loader } = this.constructor;
-    this.dataloader = new DataLoader(loader.bind(this), {
+    this.dataloader = new DataLoader(loader.bind(this.constructor), {
       cacheMap: ttl ? new TimeToLiveStore() : new Map(),
+    });
+
+    _.forEach(_.pullAll(_.keys(this.constructor), _.keys(CacheModel)), (name) => {
+      Object.defineProperty(this, name, {
+        enumerable: true,
+        get: () => {
+          const Model = this.constructor[name];
+          const model = new Model({}, { cache: this });
+          return model;
+        },
+      });
     });
   }
 
@@ -56,7 +67,7 @@ export default class CacheModel {
     const { dataloader } = this;
 
     const gid = fromGlobalId(id);
-    const model = this[gid.type];
+    const model = this.constructor[gid.type];
 
     if (!model) return this;
 

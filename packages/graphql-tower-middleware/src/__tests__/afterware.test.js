@@ -31,5 +31,8 @@ describe('afterware', () => {
 
     resolve.mockImplementation(() => _.range(1, 2000).map(cursor => ({ cursor: `${cursor}` })));
     expect(await query.resolve({}, { after: '120', first: 100 })).toEqual(_.range(120, 220).map(cursor => ({ cursor: `${cursor}` })));
+
+    resolve.mockImplementation(() => _.range(1, 2000).map(cursor => ({ cursor: `${cursor}` })));
+    expect(await query.resolve({}, { after: '3000', first: 200 })).toEqual(_.range(1, 201).map(cursor => ({ cursor: `${cursor}` })));
   });
 });

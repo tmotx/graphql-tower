@@ -44,7 +44,7 @@ export const parseDate = (value) => {
 
 export const GraphQLDate = new GraphQLScalarType({
   name: 'Date',
-  serialize: value => (value ? moment(value).utc().format() : null),
+  serialize: value => moment(value).utc().format(),
   parseValue: parseDate,
   parseLiteral: (ast) => {
     try { return parseDate(ast.value); } catch (e) { return null; }

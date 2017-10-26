@@ -69,8 +69,8 @@ export default class Model {
     return _.mapKeys(data, (value, key) => _.snakeCase(key));
   }
 
-  static forge(attributes) {
-    const model = new this();
+  static forge(attributes, options) {
+    const model = new this({}, options);
     return model.forge(attributes);
   }
 
@@ -149,10 +149,11 @@ export default class Model {
 
   cache = null;
 
-  constructor(attrs) {
+  constructor(attrs, options) {
     const {
       columns, idAttribute, hasOperator, hasTimestamps, softDelete,
     } = this.constructor;
+
     const properties = _.mapValues(
       _.defaults(
         columns,
@@ -181,6 +182,7 @@ export default class Model {
     Object.defineProperties(this, properties);
 
     if (attrs) this.set(attrs);
+    if (options && options.cache) this.cache = options.cache;
   }
 
   get isNew() {
@@ -241,7 +243,6 @@ export default class Model {
   async loadQuery(queryBuilder, NotFoundError) {
     const {
       idAttribute,
-      toGlobalId: toGid,
       format,
       forge,
     } = this.constructor;
@@ -250,7 +251,7 @@ export default class Model {
     const collection = _.map(await queryBuilder, format);
 
     if (cache && cache.prime) {
-      _.forEach(collection, obj => cache.prime(toGid(obj[idAttribute]), obj));
+      _.forEach(collection, obj => cache.prime(this.constructor.toGlobalId(obj[idAttribute]), obj));
     }
 
     if (collection.length < 1) {

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import knex, { client } from 'jest-mock-knex';
 import Model, { ValueColumn } from 'graphql-tower-model';
 import { toGlobalId } from 'graphql-tower-global-id';
@@ -37,8 +38,8 @@ class HouseModel extends Model {
 }
 
 class Cache extends CacheModel {
-  car = CarModel;
-  house = HouseModel;
+  static car = CarModel;
+  static house = HouseModel;
 }
 
 describe('CacheModel', () => {
@@ -64,6 +65,7 @@ describe('CacheModel', () => {
       ]);
 
       expect(client).toMatchSnapshot();
+      expect(client).toHaveBeenCalledTimes(4);
     });
 
     it('cache 2', async () => {
@@ -76,6 +78,7 @@ describe('CacheModel', () => {
       await cache.load(toGlobalId('house', '1'));
 
       expect(client).toMatchSnapshot();
+      expect(client).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -87,11 +90,11 @@ describe('CacheModel', () => {
     client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
     await expect(cache.load(toGlobalId('car', '1'), 'house')).resolves.toBeNull();
 
-    client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
     await expect(cache.load(toGlobalId('car', '1'), 'house', NotFoundError))
       .rejects.toEqual(new NotFoundError());
 
     expect(client).toMatchSnapshot();
+    expect(client).toHaveBeenCalledTimes(1);
   });
 
   it('prime', async () => {
@@ -117,5 +120,19 @@ describe('CacheModel', () => {
     await cache.load(toGlobalId('car', '1'));
 
     expect(client).toMatchSnapshot();
+    expect(client).toHaveBeenCalledTimes(3);
+  });
+
+  it('new model', async () => {
+    const cache = new Cache();
+    const { car } = cache;
+
+    client.mockReturnValueOnce([{ id: '1', name: '1 of car' }, { id: '2', name: '2 of car' }]);
+    expect(_.size(await car.fetchAll())).toBe(2);
+
+    await cache.load(toGlobalId('car', '1'));
+
+    expect(client).toMatchSnapshot();
+    expect(client).toHaveBeenCalledTimes(1);
   });
 });

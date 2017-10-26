@@ -43,13 +43,13 @@ Array [
 ]
 `;
 
-exports[`model model fetchAll 1`] = `
+exports[`model model fetchAll no cache 1`] = `
 Array [
   "name is one",
 ]
 `;
 
-exports[`model model fetchAll 2`] = `
+exports[`model model fetchAll no cache 2`] = `
 Array [
   "select * from default_table where deleted_at is null and name = name is one limit 1000",
 ]

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import faker from 'faker';
 import moment from 'moment';
 import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLError } from 'graphql';
+import { toGlobalId } from 'graphql-tower-global-id';
 import {
   GraphQLResponseStatus,
   GraphQLGID,
@@ -9,6 +10,7 @@ import {
   GraphQLExpiration,
   GraphQLSentence,
   GraphQLMobile,
+  GraphQLGlobalIdField,
 } from '../index';
 
 const resolve = jest.fn();
@@ -45,6 +47,16 @@ const schema = new GraphQLSchema({
       mobile: {
         type: GraphQLMobile,
         args: { input: { type: GraphQLMobile } },
+        resolve,
+      },
+      node: {
+        type: new GraphQLObjectType({
+          name: 'Node',
+          fields: {
+            id: new GraphQLGlobalIdField(),
+            customId: new GraphQLGlobalIdField('custom'),
+          },
+        }),
         resolve,
       },
     },
@@ -130,6 +142,10 @@ describe('type', () => {
     const value = new Date();
 
     await _.reduce([{
+      value: null,
+      query: 'query { date }',
+      result: { data: { date: null } },
+    }, {
       value,
       query: 'query { date }',
       result: { data: { date: moment(value).utc().format() } },
@@ -255,5 +271,43 @@ describe('type', () => {
       result: { errors: [new TypeError('Variable "$input" got invalid value 963066131.\nExpected type "Mobile", found 963066131: Mobile cannot represent non value: 963066131')] },
       calledTimes: 0,
     }], expectGraphql, Promise.resolve());
+  });
+
+  describe('GraphQLGlobalIdField', () => {
+    it('when resolve is object', async () => {
+      const reply = {
+        id: faker.random.number(),
+        customId: faker.random.number(),
+      };
+
+      resolve.mockClear();
+      resolve.mockReturnValueOnce(reply);
+      const result = await graphql(schema, 'query { node { id customId } }');
+      expect(result.data.node).toEqual({
+        id: toGlobalId('Node', reply.id),
+        customId: toGlobalId('custom', reply.customId),
+      });
+    });
+
+    it('when resolve is string', async () => {
+      const reply = faker.random.number();
+
+      resolve.mockClear();
+      resolve.mockReturnValueOnce(reply);
+      const result = await graphql(schema, 'query { node { id customId } }');
+      expect(result.data.node).toEqual({
+        id: toGlobalId('Node', reply),
+        customId: toGlobalId('custom', reply),
+      });
+    });
+
+    it('when resolve is global id', async () => {
+      const reply = toGlobalId('Node', faker.random.number());
+
+      resolve.mockClear();
+      resolve.mockReturnValueOnce(reply);
+      const result = await graphql(schema, 'query { node { id } }');
+      expect(result.data.node).toEqual({ id: reply });
+    });
   });
 });

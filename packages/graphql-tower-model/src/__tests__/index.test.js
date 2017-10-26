@@ -243,15 +243,24 @@ describe('model', () => {
         .rejects.toEqual(new NotFoundError());
     });
 
-    it('fetchAll', async () => {
-      const model = new DefaultModel({ name: 'name is one' });
-      expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
-      expect(client).toMatchSnapshot();
+    describe('fetchAll', () => {
+      it('no cache', async () => {
+        const model = new DefaultModel({ name: 'name is one' });
+        expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
+        expect(client).toMatchSnapshot();
 
-      await expect((new DefaultModel({ name: 'one' })).fetchAll())
-        .resolves.toEqual([]);
-      await expect((new DefaultModel({ name: 'one' })).fetchAll(NotFoundError))
-        .rejects.toEqual(new NotFoundError());
+        await expect((new DefaultModel({ name: 'one' })).fetchAll())
+          .resolves.toEqual([]);
+        await expect((new DefaultModel({ name: 'one' })).fetchAll(NotFoundError))
+          .rejects.toEqual(new NotFoundError());
+      });
+
+      it('cache', async () => {
+        const model = new DefaultModel({ name: 'name is one' });
+        model.cache = { prime: jest.fn() };
+        await model.fetchAll();
+        expect(model.cache.prime).toHaveBeenCalledWith(toGlobalId('default_table', 1), expect.anything());
+      });
     });
 
     it('addKeyValue', async () => {

@@ -29,3 +29,9 @@ Array [
   "select * from house where id in (1) and deleted_at is null",
 ]
 `;
+
+exports[`CacheModel new model 1`] = `
+Array [
+  "select * from car where deleted_at is null limit 1000",
+]
+`;
