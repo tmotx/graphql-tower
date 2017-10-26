@@ -30,6 +30,7 @@ class DefaultModel extends Model {
   static columns = {
     name: new ValueColumn(),
     password: new HashColumn(),
+    data: new ValueColumn(Object),
   }
 }
 
@@ -42,6 +43,7 @@ describe('model', () => {
       table.string('name');
       table.text('password');
       table.specificType('keyword', 'tsvector');
+      table.jsonb('data');
       table.timestamps();
       table.integer('created_by');
       table.integer('updated_by');
@@ -56,8 +58,26 @@ describe('model', () => {
   afterAll(() => database.destroy());
 
   describe('static', () => {
-    it('columns', () => {
-      expect(DefaultModel.columns).toMatchSnapshot();
+    describe('columns', () => {
+      it('object', () => {
+        expect(DefaultModel.columns).toMatchSnapshot();
+      });
+
+      it('thunk', () => {
+        class ThunkModel extends Model {
+          static database = database;
+
+          static tableName = 'default_table';
+
+          static columns = () => ({
+            name: new ValueColumn(),
+            password: new HashColumn(),
+            data: new ValueColumn(Object),
+          })
+        }
+
+        expect(ThunkModel.columns).toMatchSnapshot();
+      });
     });
 
     it('dataloader', () => {
@@ -68,12 +88,33 @@ describe('model', () => {
       expect(DefaultModel.queryBuilder.toString()).toBe('select * from "default_table"');
     });
 
-    it('toGlobalId & fromGlobalId', () => {
-      expect(DefaultModel.toGlobalId('2020')).toBe('iN3wDu0PJew8f0Jmr3hvaGDUPVMrPibs');
-      expect(DefaultModel.fromGlobalId('iN3wDu0PJew8f0Jmr3hvaGDUPVMrPibs')).toBe('2020');
+    describe('toGlobalId & fromGlobalId', () => {
+      it('integer', () => {
+        expect(DefaultModel.toGlobalId('2020')).toBe('iN3wDu0PJew8f0Jmr3hvaGDUPVMrPibs');
+        expect(DefaultModel.fromGlobalId('iN3wDu0PJew8f0Jmr3hvaGDUPVMrPibs')).toBe('2020');
 
-      expect(() => DefaultModel.fromGlobalId(toGlobalId('type', '2020'))).toThrowErrorMatchingSnapshot();
-      expect(fromGlobalId(DefaultModel.toGlobalId('2020')).type).toBe('default_table');
+        expect(() => DefaultModel.fromGlobalId(toGlobalId('type', '2020'))).toThrowErrorMatchingSnapshot();
+        expect(fromGlobalId(DefaultModel.toGlobalId('2020')).type).toBe('default_table');
+      });
+
+      it('uuid', () => {
+        class UUIDModel extends Model {
+          static database = database;
+
+          static tableName = 'default_table';
+
+          static hasUUID = true;
+
+          static columns = {
+            name: new ValueColumn(),
+          }
+        }
+
+        expect(UUIDModel.toGlobalId('131d069a-8b6e-45d1-af3b-c25c598e06be')).toBe('iU1OZjz0bCBYpXCysIj8ELxRnJZZZRdhoTS1EaGgcve');
+        expect(UUIDModel.fromGlobalId('iU1OZjz0bCBYpXCysIj8ELxRnJZZZRdhoTS1EaGgcve')).toBe('131d069a-8b6e-45d1-af3b-c25c598e06be');
+
+        expect(() => UUIDModel.fromGlobalId(toGlobalId('default_table', '2020'))).toThrowErrorMatchingSnapshot();
+      });
     });
 
     it('format && signify', () => {
@@ -211,6 +252,26 @@ describe('model', () => {
         .resolves.toEqual([]);
       await expect((new DefaultModel({ name: 'one' })).fetchAll(NotFoundError))
         .rejects.toEqual(new NotFoundError());
+    });
+
+    it('addKeyValue', async () => {
+      const model = await DefaultModel.load(1);
+
+      expect(model.valueOf('data')).toBe(null);
+      await model.addKeyValue('data', '10', 'xyz');
+      expect(model.valueOf('data')).toEqual({ 10: 'xyz' });
+
+      expect(client).toMatchSnapshot();
+    });
+
+    it('delKeyValue', async () => {
+      const model = await DefaultModel.load(1);
+
+      expect(model.valueOf('data')).toEqual({ 10: 'xyz' });
+      await model.delKeyValue('data', '10');
+      expect(model.valueOf('data')).toEqual({});
+
+      expect(client).toMatchSnapshot();
     });
 
     it('search', async () => {

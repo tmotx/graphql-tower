@@ -49,7 +49,7 @@ class ColumnModel extends Model {
     birthday: new DateColumn(),
     checkAt: new DateTimeColumn(),
     items: new ListColumn(),
-    archiveName: new ArchiveColumn(new ValueColumn()),
+    archiveName: new ArchiveColumn(),
     archiveNameAlias: new ArchiveColumn(new ValueColumn(String, 'nameAliasNickname')),
     archiveTotal: new ArchiveColumn(new ValueColumn(Number)),
     archiveIsAdmin: new ArchiveColumn(new ValueColumn(Boolean)),
@@ -61,6 +61,7 @@ class ColumnModel extends Model {
     numberOflike: new ArchiveColumn(new ValueColumn(Number, 'Oflike'), 'other'),
     hasSubscription: new ReadOnlyColumn(Boolean),
     numberOfMember: new ReadOnlyColumn(() => 99),
+    nothing: new CustomColumn(),
     enabled: new CustomColumn({
       set: (value, data) => _.set(data, 'enabled', value),
       get: data => (!!data.enabled),
@@ -85,6 +86,7 @@ describe('Columns', () => {
       table.jsonb('archive');
       table.jsonb('other');
       table.datetime('enabled');
+      table.string('nothing');
       table.timestamps();
       table.datetime('deleted_at');
     });
@@ -99,6 +101,32 @@ describe('Columns', () => {
   });
 
   afterAll(() => database.destroy());
+
+  it('when value is null', async () => {
+    const model = new ColumnModel();
+
+    model.name = null;
+    model.nameAlias = null;
+    model.total = null;
+    model.isAdmin = null;
+    model.buyer = null;
+    model.password = null;
+    model.birthday = null;
+    model.checkAt = null;
+    model.items = null;
+    model.nothing = null;
+
+    expect(model.name).toBeNull();
+    expect(model.nameAlias).toBeNull();
+    expect(model.total).toBeNull();
+    expect(model.isAdmin).toBeNull();
+    expect(model.buyer).toBeNull();
+    expect(model.password).toBeNull();
+    expect(model.birthday).toBeNull();
+    expect(model.checkAt).toBeNull();
+    expect(model.items).toEqual([]);
+    expect(model.nothing).toBeNull();
+  });
 
   it('save to postgres', async () => {
     const user = new UserModel({ name: 'I`m user' });
@@ -118,12 +146,13 @@ describe('Columns', () => {
       archiveNameAlias: 'my archive nickname',
       archiveTotal: 2049,
       archiveIsAdmin: true,
-      archiveBuyer: user,
+      archiveBuyer: user.nativeId,
       archivePassword: 'XYZ2049',
       archiveBirthday: new Date('2049-01-01'),
       archiveCheckAt: new Date('2049-04-01T10:00:00'),
       archiveItems: [20, 49, 49],
       numberOflike: 99,
+      nothing: 'xyz',
       enabled: new Date('2020-12-31'),
     });
 
@@ -159,6 +188,7 @@ describe('Columns', () => {
     expect(model.archiveCheckAt).toEqual(new Date('2049-04-01T10:00:00'));
     expect(model.archiveItems).toEqual(['20', '49', '49']);
 
+    expect(model.nothing).toBe('xyz');
     expect(model.enabled).toBe(true);
 
     expect(model.verify('password', 'XYZ2020')).toBe(true);

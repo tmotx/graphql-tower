@@ -6,6 +6,9 @@ import crypto from 'crypto';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
+_.unionKeys = collections => _.union(..._.map(collections, _.keys));
+_.cloneAndMerge = collections => _.assign(..._.map(collections, _.cloneDeep));
+
 export * from './columns';
 
 export default class Model {
@@ -277,8 +280,8 @@ export default class Model {
   }
 
   merge(values) {
-    _.assign(this._.current, values);
-    _.assign(this._.previous, values);
+    const handler = _.isPlainObject(values) ? data => _.assign(data, values) : values;
+    _.forEach([this._.current, this._.previous], handler);
 
     return this;
   }
@@ -335,7 +338,7 @@ export default class Model {
       throw new Error('operator is required');
     }
 
-    const values = _.assign(_.cloneDeep(this.valueOf()), _.cloneDeep(tmpData));
+    const values = _.cloneAndMerge([this.valueOf(), tmpData]);
 
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
 
@@ -373,9 +376,9 @@ export default class Model {
       throw new Error('operator is required');
     }
 
-    const values = _.assign(_.cloneDeep(this.valueOf()), _.cloneDeep(tmpData));
+    const values = _.cloneAndMerge([this.valueOf(), tmpData]);
 
-    const keys = _.uniq(_.keys(this.changes), _.keys(tmpData));
+    const keys = _.unionKeys([this.changes, tmpData]);
     if (_.size(keys) < 1) return this;
 
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
@@ -423,6 +426,27 @@ export default class Model {
     this.prime(id);
 
     return this;
+  }
+
+  async addKeyValue(column, key, value) {
+    const { database } = this.constructor;
+
+    const snake = _.snakeCase(column);
+    const item = _.set({}, key, value);
+    const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
+    await this.query.update(setValue);
+
+    this.merge(data => _.setWith(data, [_.camelCase(column), key], value, Object));
+  }
+
+  async delKeyValue(column, key) {
+    const { database } = this.constructor;
+
+    const snake = _.snakeCase(column);
+    const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
+    await this.query.update(setValue);
+
+    this.merge(data => _.unset(data, [_.camelCase(column), key]));
   }
 
   search(keyword) {

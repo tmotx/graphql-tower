@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`model model addKeyValue 1`] = `
+Array [
+  "select * from default_table where id in (1) and deleted_at is null",
+  "update default_table set data = coalesce(data, '{}') || {\\"10\\":\\"xyz\\"} where deleted_at is null and id = 1",
+]
+`;
+
+exports[`model model delKeyValue 1`] = `
+Array [
+  "select * from default_table where id in (1) and deleted_at is null",
+  "update default_table set data = coalesce(data, '{}') - 10 where deleted_at is null and id = 1",
+]
+`;
+
 exports[`model model destroy 1`] = `
 Array [
   "select * from default_table where id in (3) and deleted_at is null",
@@ -11,6 +25,7 @@ exports[`model model fetch 1`] = `
 Object {
   "createdAt": null,
   "createdBy": null,
+  "data": null,
   "deletedAt": null,
   "deletedBy": null,
   "id": 1,
@@ -58,6 +73,7 @@ Object {
     },
     "createdAt": null,
     "createdBy": null,
+    "data": null,
     "deletedAt": null,
     "deletedBy": null,
     "id": 1,
@@ -76,6 +92,7 @@ Object {
     },
     "createdAt": null,
     "createdBy": null,
+    "data": null,
     "deletedAt": null,
     "deletedBy": null,
     "id": 1,
@@ -106,11 +123,45 @@ Array [
 exports[`model model update of save 1`] = `
 Array [
   "select * from default_table where id in (3) and deleted_at is null",
+  "update default_table set keyword = name is four part2, name = name is four part2, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 3",
 ]
 `;
 
-exports[`model static columns 1`] = `
+exports[`model static columns object 1`] = `
 Object {
+  "data": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "name": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+}
+`;
+
+exports[`model static columns thunk 1`] = `
+Object {
+  "data": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
   "name": ValueColumn {
     "_": Object {
       "name": undefined,
@@ -153,6 +204,7 @@ DefaultModel {
   "cache": null,
   "createdAt": null,
   "createdBy": null,
+  "data": null,
   "deletedAt": null,
   "deletedBy": null,
   "id": null,
@@ -170,4 +222,6 @@ Array [
 ]
 `;
 
-exports[`model static toGlobalId & fromGlobalId 1`] = `"invalid global id"`;
+exports[`model static toGlobalId & fromGlobalId integer 1`] = `"invalid global id"`;
+
+exports[`model static toGlobalId & fromGlobalId uuid 1`] = `""`;

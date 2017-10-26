@@ -32,15 +32,17 @@ export class ValueColumn {
   }
 
   fromModel(value) {
-    if (value === null || value === undefined) return value;
+    if (value === null || value === undefined) return null;
 
     const Serialize = this.serialize;
-    if (Serialize.load) return value ? value.nativeId || value : null;
+    if (Serialize.load) return value.nativeId || value;
 
     return Serialize(value);
   }
 
   toModel(value, cache) {
+    if (value === null || value === undefined) return null;
+
     const Serialize = this.serialize;
     return Serialize.load ? Serialize.load(value, cache) : Serialize(value);
   }
@@ -50,13 +52,17 @@ export class ValueColumn {
   }
 
   get(data, model) {
-    const value = data[this._.name];
-    return _.isUndefined(value) ? null : this.toModel(value, model.cache);
+    return this.toModel(data[this._.name], model.cache);
   }
 }
 
 export class HashColumn extends ValueColumn {
   set(value, ...args) {
+    if (value === null || value === undefined) {
+      super.set(null, ...args);
+      return;
+    }
+
     const salt = crypto.randomBytes(8);
     const password = crypto.pbkdf2Sync(value, salt, 8727, 512, 'sha512');
     super.set(`${salt.toString('hex')}:${password.toString('hex')}`, ...args);
@@ -146,7 +152,7 @@ export class ReadOnlyColumn extends ValueColumn {
   constructor(...args) {
     super(...args);
 
-    this.set = () => {};
+    this.set = _.identity;
     if (!isType(args[0])) {
       this.get = args[0].bind(this);
     }
@@ -154,9 +160,9 @@ export class ReadOnlyColumn extends ValueColumn {
 }
 
 export class CustomColumn extends ValueColumn {
-  constructor({ set, get }, ...args) {
+  constructor(configs, ...args) {
     super(String, ...args);
-    if (set) this.set = set.bind(this);
-    if (get) this.get = get.bind(this);
+    if (configs && configs.set) this.set = configs.set.bind(this);
+    if (configs && configs.get) this.get = configs.get.bind(this);
   }
 }
