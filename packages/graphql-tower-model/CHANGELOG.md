@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/tmotx/graphql-tower/compare/v3.1.1...v3.2.0) (2017-10-26)
+
+
+### Features
+
+* **model:** added addKeyValue delKeyValue method ([b413966](https://github.com/tmotx/graphql-tower/commit/b413966))
+
+
+
+
 <a name="3.1.1"></a>
 ## [3.1.1](https://github.com/tmotx/graphql-tower/compare/v3.1.0...v3.1.1) (2017-10-26)
 
