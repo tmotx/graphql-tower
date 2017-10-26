@@ -13,13 +13,13 @@ services:
 addons:
   postgresql: '9.5'
 
+before_install:
+    - npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
 before_script:
   - psql -c 'create database graphql_tower;' -U postgres
   - npm prune
   - npm run bootstrap
-
-after_success:
-  - npm run deploy
 
 branches:
   except:
