@@ -242,7 +242,7 @@ DataLoader {
 `;
 
 exports[`model static forge 1`] = `
-DefaultModel {
+Default {
   "_": Object {
     "current": Object {
       "name": "my name",
@@ -282,5 +282,3 @@ Array [
 `;
 
 exports[`model static toGlobalId & fromGlobalId integer 1`] = `"invalid global id"`;
-
-exports[`model static toGlobalId & fromGlobalId uuid 1`] = `""`;

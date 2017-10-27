@@ -25,7 +25,7 @@ export default class CacheModel {
     });
 
     _.forEach(_.pullAll(_.keys(this.constructor), _.keys(CacheModel)), (name) => {
-      Object.defineProperty(this, name, {
+      Object.defineProperty(this, _.lowerFirst(name), {
         enumerable: true,
         get: () => {
           const Model = this.constructor[name];
@@ -36,27 +36,28 @@ export default class CacheModel {
     });
   }
 
-  async load(id, type, error) {
+  async load(id, error, type) {
     return Promise.resolve()
       .then(async () => {
         const model = await this.dataloader.load(id);
         if (!model) return null;
 
-        if (type && typeof type === 'string' && model.constructor.tableName !== type) return null;
+        const Type = type || error;
+        if ((Type && typeof Type === 'string') && model.constructor.displayName !== Type) return null;
         return model.clone({ cache: this });
       })
       .then(async (model) => {
-        if (!model) {
-          const NotFoundError = (type && type.prototype) instanceof Error ? type : error;
-          if (NotFoundError) throw new NotFoundError();
+        const NotFoundError = error;
+        if (!model && (NotFoundError && NotFoundError.prototype) instanceof Error) {
+          throw new NotFoundError();
         }
 
         return model;
       });
   }
 
-  async loadMany(ids, type, error) {
-    return Promise.all(_.map(ids, id => this.load(id, type, error)));
+  async loadMany(ids, error, type) {
+    return Promise.all(_.map(ids, id => this.load(id, error, type)));
   }
 
   prime(id, newModel) {

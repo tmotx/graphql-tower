@@ -17,7 +17,7 @@ const database = knex({
   },
 });
 
-class CarModel extends Model {
+class Car extends Model {
   static database = database;
 
   static tableName = 'car';
@@ -27,7 +27,7 @@ class CarModel extends Model {
   }
 }
 
-class HouseModel extends Model {
+class House extends Model {
   static database = database;
 
   static tableName = 'house';
@@ -38,14 +38,14 @@ class HouseModel extends Model {
 }
 
 class Cache extends CacheModel {
-  static car = CarModel;
-  static house = HouseModel;
+  static Car = Car;
+  static House = House;
 }
 
 class TTLCache extends CacheModel {
   static ttl = true;
-  static car = CarModel;
-  static house = HouseModel;
+  static Car = Car;
+  static House = House;
 }
 
 describe('CacheModel', () => {
@@ -56,18 +56,18 @@ describe('CacheModel', () => {
       const cache = new Cache();
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
-      await cache.load(toGlobalId('car', '1'));
+      await cache.load(toGlobalId('Car', '1'));
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of house' }]);
-      await cache.load(toGlobalId('house', '1'));
+      await cache.load(toGlobalId('House', '1'));
 
       client.mockReturnValueOnce([{ id: '3', name: '3 of car' }]);
       client.mockReturnValueOnce([{ id: '2', name: '2 of house' }, { id: '4', name: '4 of house' }]);
 
       await Promise.all([
-        cache.load(toGlobalId('car', '1')),
-        cache.load(toGlobalId('house', '2')),
-        cache.loadMany([toGlobalId('car', '3'), toGlobalId('house', '1'), toGlobalId('house', '4')]),
+        cache.load(toGlobalId('Car', '1')),
+        cache.load(toGlobalId('House', '2')),
+        cache.loadMany([toGlobalId('Car', '3'), toGlobalId('House', '1'), toGlobalId('House', '4')]),
       ]);
 
       expect(client).toMatchSnapshot();
@@ -78,10 +78,10 @@ describe('CacheModel', () => {
       const cache = new Cache();
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
-      await cache.load(toGlobalId('car', '1'));
+      await cache.load(toGlobalId('Car', '1'));
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of house' }]);
-      await cache.load(toGlobalId('house', '1'));
+      await cache.load(toGlobalId('House', '1'));
 
       expect(client).toMatchSnapshot();
       expect(client).toHaveBeenCalledTimes(2);
@@ -94,15 +94,15 @@ describe('CacheModel', () => {
     await expect(cache.load(toGlobalId('tree', '1'))).resolves.toBeNull();
 
     client.mockReturnValueOnce([]);
-    await expect(cache.load(toGlobalId('car', '1'))).resolves.toBeNull();
+    await expect(cache.load(toGlobalId('Car', '1'))).resolves.toBeNull();
 
-    await expect(cache.load(toGlobalId('car', '1'), NotFoundError))
+    await expect(cache.load(toGlobalId('Car', '1'), NotFoundError))
       .rejects.toEqual(new NotFoundError());
 
     client.mockReturnValueOnce([{ id: '2', name: '2 of car' }]);
-    await expect(cache.load(toGlobalId('car', '2'), 'house')).resolves.toBeNull();
+    await expect(cache.load(toGlobalId('Car', '2'), 'House')).resolves.toBeNull();
 
-    await expect(cache.load(toGlobalId('car', '2'), 'house', NotFoundError))
+    await expect(cache.load(toGlobalId('Car', '2'), NotFoundError, 'House'))
       .rejects.toEqual(new NotFoundError());
 
     expect(client).toMatchSnapshot();
@@ -111,11 +111,11 @@ describe('CacheModel', () => {
 
   describe('prime', async () => {
     it('when prime new data', async () => {
-      const id = toGlobalId('car', '1');
+      const id = toGlobalId('Car', '1');
 
       const cache = new Cache();
 
-      cache.prime(id, CarModel.forge({ id: '1', name: '1 of car' }));
+      cache.prime(id, Car.forge({ id: '1', name: '1 of car' }));
       await expect(cache.load(id))
         .resolves.toEqual(expect.objectContaining({ id, name: '1 of car' }));
       expect(client).toHaveBeenCalledTimes(0);
@@ -143,12 +143,12 @@ describe('CacheModel', () => {
     client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
     client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
 
-    await cache.load(toGlobalId('car', '1'));
-    await cache.load(toGlobalId('car', '1'));
-    cache.clear(toGlobalId('car', '1'));
-    await cache.load(toGlobalId('car', '1'));
+    await cache.load(toGlobalId('Car', '1'));
+    await cache.load(toGlobalId('Car', '1'));
+    cache.clear(toGlobalId('Car', '1'));
+    await cache.load(toGlobalId('Car', '1'));
     cache.clearAll();
-    await cache.load(toGlobalId('car', '1'));
+    await cache.load(toGlobalId('Car', '1'));
 
     expect(client).toMatchSnapshot();
     expect(client).toHaveBeenCalledTimes(3);
@@ -161,7 +161,7 @@ describe('CacheModel', () => {
     client.mockReturnValueOnce([{ id: '1', name: '1 of car' }, { id: '2', name: '2 of car' }]);
     expect(_.size(await car.fetchAll())).toBe(2);
 
-    await cache.load(toGlobalId('car', '1'));
+    await cache.load(toGlobalId('Car', '1'));
 
     expect(client).toMatchSnapshot();
     expect(client).toHaveBeenCalledTimes(1);
@@ -172,18 +172,18 @@ describe('CacheModel', () => {
       const cache = new TTLCache();
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
-      await cache.load(toGlobalId('car', '1'));
+      await cache.load(toGlobalId('Car', '1'));
 
       client.mockReturnValueOnce([{ id: '1', name: '1 of house' }]);
-      await cache.load(toGlobalId('house', '1'));
+      await cache.load(toGlobalId('House', '1'));
 
       client.mockReturnValueOnce([{ id: '3', name: '3 of car' }]);
       client.mockReturnValueOnce([{ id: '2', name: '2 of house' }, { id: '4', name: '4 of house' }]);
 
       await Promise.all([
-        cache.load(toGlobalId('car', '1')),
-        cache.load(toGlobalId('house', '2')),
-        cache.loadMany([toGlobalId('car', '3'), toGlobalId('house', '1'), toGlobalId('house', '4')]),
+        cache.load(toGlobalId('Car', '1')),
+        cache.load(toGlobalId('House', '2')),
+        cache.loadMany([toGlobalId('Car', '3'), toGlobalId('House', '1'), toGlobalId('House', '4')]),
       ]);
 
       expect(client).toMatchSnapshot();

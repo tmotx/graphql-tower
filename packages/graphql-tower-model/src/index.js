@@ -30,6 +30,10 @@ export default class Model {
 
   static toKeyword = null;
 
+  static get displayName() {
+    return this.name;
+  }
+
   static get columns() {
     if (_.isFunction(this._columns)) this.columns = this._columns();
     return this._columns;
@@ -52,13 +56,13 @@ export default class Model {
   }
 
   static fromGlobalId(value) {
-    const id = isGlobalId(value) ? fromGlobalId(value, this.tableName) : value;
+    const id = isGlobalId(value) ? fromGlobalId(value, this.displayName) : value;
     if (this.hasUUID && !Model.isUUID(id)) throw new TypeError();
     return id;
   }
 
   static toGlobalId(value) {
-    return toGlobalId(this.tableName, value);
+    return toGlobalId(this.displayName, value);
   }
 
   static format(data) {
@@ -88,24 +92,25 @@ export default class Model {
     return _.map(ids, id => (collections[id] || null));
   }
 
-  static load(id, cache, error) {
+  static load(id, error, cache) {
     if (!id) return null;
 
-    const nativeId = this.fromGlobalId(id);
+    const nativeId = this.fromGlobalId(id, this.displayName);
 
     const reply = Promise.resolve(nativeId);
 
     reply.nativeId = nativeId;
     reply.then = (resolve, reject) => Promise.resolve()
       .then(() => {
-        if (cache && cache.load) return cache.load(this.toGlobalId(nativeId));
+        const Cache = cache || error;
+        if (Cache && Cache.load) return Cache.load(this.toGlobalId(nativeId));
 
         return this.dataloader.load(nativeId).then(data => (data ? this.forge(data) : null));
       })
       .then((model) => {
-        if (!model) {
-          const NotFoundError = (cache && cache.prototype) instanceof Error ? cache : error;
-          if (NotFoundError) throw new NotFoundError();
+        const NotFoundError = error;
+        if (!model && (NotFoundError && NotFoundError.prototype) instanceof Error) {
+          throw new NotFoundError();
         }
 
         return model;
@@ -115,8 +120,8 @@ export default class Model {
     return reply;
   }
 
-  static async loadMany(ids, cache, error) {
-    return Promise.all(_.map(ids, id => this.load(id, cache, error)));
+  static async loadMany(ids, error, cache) {
+    return Promise.all(_.map(ids, id => this.load(id, error, cache)));
   }
 
   static verifyHash(raw, value) {

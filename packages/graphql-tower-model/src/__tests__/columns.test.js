@@ -24,7 +24,7 @@ const database = knex({
   },
 });
 
-class UserModel extends Model {
+class User extends Model {
   static database = database;
 
   static tableName = 'column_user';
@@ -34,7 +34,7 @@ class UserModel extends Model {
   }
 }
 
-class ColumnModel extends Model {
+class Column extends Model {
   static database = database;
 
   static tableName = 'column';
@@ -44,7 +44,7 @@ class ColumnModel extends Model {
     nameAlias: new ValueColumn(String, 'nameAliasNickname'),
     total: new ValueColumn(Number),
     isAdmin: new ValueColumn(Boolean),
-    buyer: new ValueColumn(UserModel, 'buyerId'),
+    buyer: new ValueColumn(User, 'buyerId'),
     password: new HashColumn(),
     birthday: new DateColumn(),
     checkAt: new DateTimeColumn(),
@@ -53,7 +53,7 @@ class ColumnModel extends Model {
     archiveNameAlias: new ArchiveColumn(new ValueColumn(String, 'nameAliasNickname')),
     archiveTotal: new ArchiveColumn(new ValueColumn(Number)),
     archiveIsAdmin: new ArchiveColumn(new ValueColumn(Boolean)),
-    archiveBuyer: new ArchiveColumn(new ValueColumn(UserModel, 'buyerId')),
+    archiveBuyer: new ArchiveColumn(new ValueColumn(User, 'buyerId')),
     archivePassword: new ArchiveColumn(new HashColumn()),
     archiveBirthday: new ArchiveColumn(new DateColumn()),
     archiveCheckAt: new ArchiveColumn(new DateTimeColumn()),
@@ -103,7 +103,7 @@ describe('Columns', () => {
   afterAll(() => database.destroy());
 
   it('when value is null', async () => {
-    const model = new ColumnModel();
+    const model = new Column();
 
     model.name = null;
     model.nameAlias = null;
@@ -129,10 +129,10 @@ describe('Columns', () => {
   });
 
   it('save to postgres', async () => {
-    const user = new UserModel({ name: 'I`m user' });
+    const user = new User({ name: 'I`m user' });
     await user.save();
 
-    const model = new ColumnModel({
+    const model = new Column({
       name: 'my name',
       nameAlias: 'my nickname',
       total: 2020,
@@ -157,15 +157,15 @@ describe('Columns', () => {
     });
 
     await model.save();
-    expect(model.id).toBe(toGlobalId('column', '1'));
+    expect(model.id).toBe(toGlobalId('Column', '1'));
   });
 
   it('fetch from postgres', async () => {
-    const model = new ColumnModel({ name: 'my name' });
+    const model = new Column({ name: 'my name' });
     await model.fetch();
     expect(client).toMatchSnapshot();
 
-    expect(model.id).toBe(toGlobalId('column', '1'));
+    expect(model.id).toBe(toGlobalId('Column', '1'));
     expect(model.name).toBe('my name');
     expect(model.nameAlias).toBe('my nickname');
     expect(model.total).toBe(2020);
