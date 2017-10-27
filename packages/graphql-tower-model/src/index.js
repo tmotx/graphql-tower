@@ -88,6 +88,10 @@ export default class Model {
     return _.map(ids, id => (collections[id] || null));
   }
 
+  static nativeLoad(id) {
+    return this.dataloader.load(id);
+  }
+
   static load(id, cache, error) {
     if (!id) return null;
 
@@ -100,7 +104,7 @@ export default class Model {
       .then(() => {
         if (cache && cache.load) return cache.load(this.toGlobalId(nativeId));
 
-        return this.dataloader.load(nativeId).then(data => (data ? this.forge(data) : null));
+        return this.nativeLoad(nativeId).then(data => (data ? this.forge(data) : null));
       })
       .then((model) => {
         if (!model) {

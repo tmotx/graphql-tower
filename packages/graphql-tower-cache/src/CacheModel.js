@@ -12,7 +12,7 @@ export default class CacheModel {
       const model = this[gid.type];
       if (!model) return null;
 
-      const data = await model.dataloader.load(gid.toString());
+      const data = await model.nativeLoad(gid.toString());
       return data ? { data, model } : null;
     }));
   }
