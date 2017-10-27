@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`CacheModel TTLCache cache 1`] = `
+Array [
+  "select * from car where id in (1) and deleted_at is null",
+  "select * from house where id in (1) and deleted_at is null",
+  "select * from house where id in (2, 4) and deleted_at is null",
+  "select * from car where id in (3) and deleted_at is null",
+]
+`;
+
 exports[`CacheModel check type 1`] = `
 Array [
   "select * from car where id in (1) and deleted_at is null",

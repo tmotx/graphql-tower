@@ -25,11 +25,11 @@ export default class GlobalId {
   }
 
   toBigint() {
-    return new BigNumber(this._.id.toString('hex'), 16).toString(10);
+    return new BigNumber(this.id.toString('hex'), 16).toString(10);
   }
 
   toUUID() {
-    const data = uuidParser.exec(padStart(this._.id.toString('hex'), 32, 0));
+    const data = uuidParser.exec(padStart(this.id.toString('hex'), 32, 0));
     return `${data[1]}-${data[2]}-${data[3]}-${data[4]}-${data[5]}`;
   }
 
@@ -42,7 +42,7 @@ export default class GlobalId {
       return this.toUUID();
     }
 
-    return this._.id.toString();
+    return this.id.toString();
   }
 
   toJSON() {

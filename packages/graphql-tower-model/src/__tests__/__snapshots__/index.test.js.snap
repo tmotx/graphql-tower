@@ -14,10 +14,24 @@ Array [
 ]
 `;
 
-exports[`model model destroy 1`] = `
+exports[`model model destroy has operator 1`] = `
 Array [
-  "select * from default_table where id in (3) and deleted_at is null",
-  "update default_table set deleted_at = DATE, deleted_by = 10 where deleted_at is null and id = 3",
+  "select * from default_table where id in (4) and deleted_at is null",
+  "update default_table set deleted_at = DATE, deleted_by = 10 where deleted_at is null and id = 4",
+]
+`;
+
+exports[`model model destroy is not soft delete 1`] = `
+Array [
+  "select * from default_table where id in (6) and deleted_at is null",
+  "delete from default_table where id = 6",
+]
+`;
+
+exports[`model model destroy no operator 1`] = `
+Array [
+  "select * from default_table where id in (5) and deleted_at is null",
+  "update default_table set deleted_at = DATE where deleted_at is null and id = 5",
 ]
 `;
 
@@ -43,6 +57,28 @@ Array [
 ]
 `;
 
+exports[`model model fetch with where 1`] = `
+Object {
+  "createdAt": null,
+  "createdBy": null,
+  "data": null,
+  "deletedAt": null,
+  "deletedBy": null,
+  "id": 1,
+  "keyword": null,
+  "name": "name is one",
+  "password": null,
+  "updatedAt": null,
+  "updatedBy": null,
+}
+`;
+
+exports[`model model fetch with where 2`] = `
+Array [
+  "select * from default_table where name = name is one and deleted_at is null limit 1",
+]
+`;
+
 exports[`model model fetchAll no cache 1`] = `
 Array [
   "name is one",
@@ -55,10 +91,16 @@ Array [
 ]
 `;
 
-exports[`model model insert of save 1`] = `
+exports[`model model insert of save has operator 1`] = `
 Array [
-  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is three, new is three, DATE, 10) returning id",
-  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is four, new is four, DATE, 10) returning id",
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is insert, new is insert, DATE, 10) returning id",
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is action, new is action, DATE, 10) returning id",
+]
+`;
+
+exports[`model model insert of save no operator 1`] = `
+Array [
+  "insert into default_table (name) values (new is no operator insert) returning id",
 ]
 `;
 
@@ -108,22 +150,31 @@ Object {
 
 exports[`model model search 1`] = `
 Array [
-  "new is four",
+  "new for action",
   "new for search",
 ]
 `;
 
 exports[`model model search 2`] = `
 Array [
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for action, new for action, DATE, 10) returning id",
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for search, new for search, DATE, 10) returning id",
   "select *, ts_rank(keyword, new) as rank from default_table where keyword @@ to_tsquery(new) and deleted_at is null order by rank desc limit 1000",
 ]
 `;
 
-exports[`model model update of save 1`] = `
+exports[`model model update of save has operator 1`] = `
 Array [
-  "select * from default_table where id in (3) and deleted_at is null",
-  "update default_table set keyword = name is four part2, name = name is four part2, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 3",
+  "select * from default_table where id in (4) and deleted_at is null",
+  "update default_table set keyword = name is update, name = name is update, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 4",
+  "update default_table set keyword = name is action, name = name is action, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 4",
+]
+`;
+
+exports[`model model update of save no operator 1`] = `
+Array [
+  "select * from default_table where id in (6) and deleted_at is null",
+  "update default_table set keyword = null, name = name is no operator update, updated_at = null, updated_by = null where deleted_at is null and id = 6",
 ]
 `;
 
@@ -215,7 +266,15 @@ DefaultModel {
 }
 `;
 
-exports[`model static load && loadMany 1`] = `
+exports[`model static load && loadMany no soft delete 1`] = `
+Array [
+  "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, for no soft delete load, for no soft delete load, DATE, 10) returning id",
+  "update default_table set deleted_at = DATE, deleted_by = 10 where deleted_at is null and id = 3",
+  "select * from default_table where id in (3)",
+]
+`;
+
+exports[`model static load && loadMany softDelete 1`] = `
 Array [
   "select * from default_table where id in (1) and deleted_at is null",
   "select * from default_table where id in (1, 2, 1) and deleted_at is null",

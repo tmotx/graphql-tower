@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isGlobalId, toGlobalId, fromGlobalId } from '../';
+import GlobalId, { isGlobalId, toGlobalId, fromGlobalId } from '../';
 
 describe('GlobalId', () => {
   it('isGlobalId & toGlobalId & fromGlobalId', () => {
@@ -28,6 +28,8 @@ describe('GlobalId', () => {
     expect(gid.toUUID()).toEqual('00000000-0000-0000-7fff-fffffffff8f0');
     expect(gid.toString()).toEqual('9223372036854774000');
     expect(gid.toJSON()).toEqual('9223372036854774000');
+
+    expect(new GlobalId('123', 'DEF').toString()).toEqual('123');
   });
 
   it('check global id', () => {

@@ -7,7 +7,7 @@
     "bootstrap": "yarn install && lerna bootstrap",
     "postbootstrap": "npm run build",
     "build": "lerna run -- build",
-    "test": "eslint ./packages/*/src; jest --coverage ./packages/*/src",
+    "test": "eslint ./packages/*/src; jest --coverage ./packages/*/src --forceExit",
     "predeploy": "npm run build",
     "deploy": "lerna publish --registry=https://registry.npmjs.org/ --conventional-commits --yes"
   },

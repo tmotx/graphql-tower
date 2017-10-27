@@ -88,10 +88,6 @@ export default class Model {
     return _.map(ids, id => (collections[id] || null));
   }
 
-  static nativeLoad(id) {
-    return this.dataloader.load(id);
-  }
-
   static load(id, cache, error) {
     if (!id) return null;
 
@@ -104,7 +100,7 @@ export default class Model {
       .then(() => {
         if (cache && cache.load) return cache.load(this.toGlobalId(nativeId));
 
-        return this.nativeLoad(nativeId).then(data => (data ? this.forge(data) : null));
+        return this.dataloader.load(nativeId).then(data => (data ? this.forge(data) : null));
       })
       .then((model) => {
         if (!model) {
@@ -195,15 +191,10 @@ export default class Model {
   }
 
   get changes() {
-    const data = {};
-    _.forEach(this.valueOf(), (value, key) => {
-      if (_.isObject(value)) {
-        if (!_.isEqual(this._.previous[key], value)) data[key] = value;
-        return;
-      }
-
-      if (value !== this._.previous[key]) data[key] = value;
-    });
+    const data = _.omitBy(
+      this.valueOf(),
+      (value, key) => _.isEqual(this._.previous[key], value),
+    );
 
     return data;
   }
@@ -230,7 +221,7 @@ export default class Model {
     if (id) return query.where(_.snakeCase(idAttribute), id);
 
     const data = signify(values);
-    if (keywordAttribute) delete data[keywordAttribute];
+    delete data[keywordAttribute];
 
     _.forEach(data, (value, key) => {
       if (!_.isObject(value)) query.where(key, value);
@@ -245,25 +236,26 @@ export default class Model {
   }
 
   async loadQuery(queryBuilder, NotFoundError) {
-    const {
-      idAttribute,
-      format,
-      forge,
-    } = this.constructor;
+    const { format } = this.constructor;
     const { cache } = this;
 
-    const collection = _.map(await queryBuilder, format);
-
-    if (cache && cache.prime) {
-      _.forEach(collection, obj => cache.prime(this.constructor.toGlobalId(obj[idAttribute]), obj));
-    }
+    const collection = _.map(await queryBuilder, format.bind(this.constructor));
 
     if (collection.length < 1) {
       if (NotFoundError) throw new NotFoundError();
       return [];
     }
 
-    return _.map(collection, forge.bind(this.constructor));
+    return _.map(collection, (data) => {
+      const model = this.constructor.forge(data, { cache });
+      model.prime();
+      return model;
+    });
+  }
+
+  clone(options) {
+    const model = new this.constructor({}, options);
+    return model.forge(this);
   }
 
   forge(attributes) {
@@ -301,10 +293,13 @@ export default class Model {
     return this.constructor.verifyHash(raw, value);
   }
 
-  prime(id, data) {
-    const { toGid } = this.constructor;
-    if (this.cache) this.cache.prime(toGid(id), data);
+  prime() {
+    if (this.cache) this.cache.prime(this.id, this);
+    return this;
+  }
 
+  clear() {
+    if (this.cache) this.cache.clear(this.id);
     return this;
   }
 
@@ -363,7 +358,7 @@ export default class Model {
     values[idAttribute] = id;
 
     this.forge(values);
-    this.prime(values[idAttribute], values);
+    this.prime();
 
     return this;
   }
@@ -407,30 +402,29 @@ export default class Model {
   }
 
   async destroy(operator) {
-    const { idAttribute, signify, hasOperator } = this.constructor;
-    const id = this.valueOf(idAttribute);
-    if (!this.constructor.softDelete) {
-      await this.query.delete();
+    const { signify, hasOperator, softDelete } = this.constructor;
+    return Promise.resolve()
+      .then(() => {
+        if (!softDelete) return this.query.delete();
 
-      this.prime(id);
-      return this;
-    }
+        if (hasOperator && !operator) {
+          throw new Error('operator is required');
+        }
 
-    if (hasOperator && !operator) {
-      throw new Error('operator is required');
-    }
+        if (!this.valueOf('deletedAt')) {
+          const data = { deletedAt: new Date() };
+          if (hasOperator) data.deletedBy = Model.fromModel(operator);
+          this.merge(data);
 
-    if (!this.valueOf('deletedAt')) {
-      const data = { deletedAt: new Date() };
-      if (hasOperator) data.deletedBy = Model.fromModel(operator);
-      await this.query.update(signify(data));
+          return this.query.update(signify(data));
+        }
 
-      this.merge(data);
-    }
-
-    this.prime(id);
-
-    return this;
+        return this;
+      })
+      .then(() => {
+        this.clear();
+        return this;
+      });
   }
 
   async addKeyValue(column, key, value) {

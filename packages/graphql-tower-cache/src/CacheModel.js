@@ -9,11 +9,10 @@ export default class CacheModel {
   static async loader(ids) {
     return Promise.all(_.map(ids, async (id) => {
       const gid = fromGlobalId(id);
-      const model = this[gid.type];
-      if (!model) return null;
+      const Model = this[gid.type];
+      if (!Model) return null;
 
-      const data = await model.nativeLoad(gid.toString());
-      return data ? { data, model } : null;
+      return Model.load(gid.toString());
     }));
   }
 
@@ -40,14 +39,11 @@ export default class CacheModel {
   async load(id, type, error) {
     return Promise.resolve()
       .then(async () => {
-        const store = await this.dataloader.load(id);
-        if (!store) return null;
+        const model = await this.dataloader.load(id);
+        if (!model) return null;
 
-        if (type && typeof type === 'string' && store.model.tableName !== type) return null;
-
-        const model = store.model.forge(store.data);
-        model.cache = this;
-        return model;
+        if (type && typeof type === 'string' && model.constructor.tableName !== type) return null;
+        return model.clone({ cache: this });
       })
       .then(async (model) => {
         if (!model) {
@@ -63,16 +59,14 @@ export default class CacheModel {
     return Promise.all(_.map(ids, id => this.load(id, type, error)));
   }
 
-  prime(id, data) {
+  prime(id, newModel) {
     const { dataloader } = this;
 
     const gid = fromGlobalId(id);
-    const model = this.constructor[gid.type];
-
-    if (!model) return this;
+    if (!this.constructor[gid.type]) return this;
 
     dataloader.clear(id);
-    if (data) dataloader.prime(id, { model, data });
+    if (newModel) dataloader.prime(id, newModel);
 
     return this;
   }

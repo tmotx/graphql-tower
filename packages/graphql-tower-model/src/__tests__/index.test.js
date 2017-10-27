@@ -34,6 +34,19 @@ class DefaultModel extends Model {
   }
 }
 
+class NoOperatorModel extends Model {
+  static database = database;
+
+  static tableName = 'default_table';
+
+  static hasTimestamps = false;
+
+  static columns = {
+    name: new ValueColumn(),
+  }
+}
+
+
 describe('model', () => {
   beforeAll(async () => {
     await database.schema.dropTableIfExists('default_table');
@@ -126,21 +139,40 @@ describe('model', () => {
       expect(DefaultModel.forge({ name: 'my name' })).toMatchSnapshot();
     });
 
-    it('load && loadMany', async () => {
-      expect(await DefaultModel.load(1)).toEqual(expect.objectContaining({ name: 'name is one' }));
+    describe('load && loadMany', () => {
+      it('softDelete', async () => {
+        expect(await DefaultModel.load()).toBe(null);
 
-      const results = await Promise.all([DefaultModel.load(1), DefaultModel.loadMany([1, 2])]);
-      expect(results).toEqual([
-        expect.objectContaining({ name: 'name is one' }),
-        [expect.objectContaining({ name: 'name is one' }), expect.objectContaining({ name: 'name is two' })],
-      ]);
+        expect(await DefaultModel.load(1)).toEqual(expect.objectContaining({ name: 'name is one' }));
 
-      expect(client).toMatchSnapshot();
+        const results = await Promise.all([DefaultModel.load(1), DefaultModel.loadMany([1, 2])]);
+        expect(results).toEqual([
+          expect.objectContaining({ name: 'name is one' }),
+          [expect.objectContaining({ name: 'name is one' }), expect.objectContaining({ name: 'name is two' })],
+        ]);
 
-      await expect(DefaultModel.load(99)).resolves.toEqual(null);
-      await expect(DefaultModel.load(99, NotFoundError)).rejects.toEqual(new NotFoundError());
-      await expect(DefaultModel.loadMany([99])).resolves.toEqual([null]);
-      await expect(DefaultModel.loadMany([99], NotFoundError)).rejects.toEqual(new NotFoundError());
+        expect(client).toMatchSnapshot();
+
+        await expect(DefaultModel.load(99))
+          .resolves.toEqual(null);
+        await expect(DefaultModel.load(99, NotFoundError))
+          .rejects.toEqual(new NotFoundError());
+        await expect(DefaultModel.loadMany([99]))
+          .resolves.toEqual([null]);
+        await expect(DefaultModel.loadMany([99], NotFoundError))
+          .rejects.toEqual(new NotFoundError());
+      });
+
+      it('no soft delete', async () => {
+        class DirectDelete extends NoOperatorModel {
+          static softDelete = false;
+        }
+        const model = new DefaultModel({ name: 'for no soft delete load' });
+        await (await model.save(10)).destroy(10);
+        expect(await DirectDelete.load(3))
+          .toEqual(expect.objectContaining({ name: 'for no soft delete load' }));
+        expect(client).toMatchSnapshot();
+      });
     });
 
     it('isUUID', () => {
@@ -200,6 +232,20 @@ describe('model', () => {
       });
     });
 
+    it('clone', async () => {
+      const model = await DefaultModel.load(1);
+      model.name = 'new model one';
+
+      const newModel = model.clone();
+      expect(model).toEqual(newModel);
+      expect(model._.previous).toBe(newModel._.previous);
+      expect(model._.current).not.toBe(newModel._.current);
+
+      newModel.name = 'new model clone';
+      expect(model.name).toBe('new model one');
+      expect(model.valueOf()).not.toEqual(newModel.valueOf());
+    });
+
     it('merge', async () => {
       const model = await DefaultModel.load(1);
       model.merge({ name: 'a name', archive: { items: [20, 40] } });
@@ -213,22 +259,73 @@ describe('model', () => {
       expect(model.verify('password', 'XYZ2049')).toBe(false);
     });
 
-    it('insert of save', async () => {
-      await (new DefaultModel({ name: 'new is three' })).save(10);
-      await (new DefaultModel()).save(10, { name: 'new is four' });
-      expect(client).toMatchSnapshot();
+    describe('insert of save', () => {
+      it('has operator', async () => {
+        await (new DefaultModel({ name: 'new is insert' })).save(10);
+        await (new DefaultModel()).save(10, { name: 'new is action' });
+        expect(client).toMatchSnapshot();
+
+        await expect((new DefaultModel()).save(null, { name: 'new is insert again' }))
+          .rejects.toEqual(new Error('operator is required'));
+      });
+
+      it('no operator', async () => {
+        await (new NoOperatorModel()).save(null, { name: 'new is no operator insert' });
+        expect(client).toMatchSnapshot();
+      });
     });
 
-    it('update of save', async () => {
-      const model = await DefaultModel.load(3);
-      await model.save(20, { name: 'name is four part2' });
-      expect(client).toMatchSnapshot();
+    describe('update of save', async () => {
+      it('has operator', async () => {
+        const model = await DefaultModel.load(4);
+
+        await model.save(20);
+
+        model.name = 'name is update';
+        await model.save(20);
+
+        await model.save(20, { name: 'name is action' });
+        expect(client).toMatchSnapshot();
+
+        await expect(model.save(null, { name: 'new is update again' }))
+          .rejects.toEqual(new Error('operator is required'));
+      });
+
+      it('no operator', async () => {
+        const model = await NoOperatorModel.load(6);
+        await model.save(null, { name: 'name is no operator update' });
+        expect(client).toMatchSnapshot();
+      });
     });
 
-    it('destroy', async () => {
-      const model = await DefaultModel.load(3);
-      await model.destroy(10);
-      expect(client).toMatchSnapshot();
+    describe('destroy', () => {
+      it('has operator', async () => {
+        const model = await DefaultModel.load(4);
+
+        await expect(model.destroy())
+          .rejects.toEqual(new Error('operator is required'));
+
+        await model.destroy(10);
+
+        await model.destroy(10);
+        expect(client).toMatchSnapshot();
+      });
+
+      it('no operator', async () => {
+        const model = await NoOperatorModel.load(5);
+        await model.destroy();
+        expect(client).toMatchSnapshot();
+      });
+
+      it('is not soft delete', async () => {
+        class DirectDelete extends NoOperatorModel {
+          static softDelete = false;
+        }
+        const model = await DirectDelete.load(6);
+
+        await model.destroy();
+        expect(client).toMatchSnapshot();
+      });
     });
 
     it('fetch', async () => {
@@ -241,6 +338,14 @@ describe('model', () => {
         .resolves.toEqual(null);
       await expect((new DefaultModel({ name: 'one' })).fetch(NotFoundError))
         .rejects.toEqual(new NotFoundError());
+    });
+
+    it('fetch with where', async () => {
+      const model = new DefaultModel();
+      model.where({ name: 'name is one' });
+      await model.fetch();
+      expect(model.valueOf()).toMatchSnapshot();
+      expect(client).toMatchSnapshot();
     });
 
     describe('fetchAll', () => {
@@ -284,6 +389,7 @@ describe('model', () => {
     });
 
     it('search', async () => {
+      await (new DefaultModel({ name: 'new for action' })).save('10');
       await (new DefaultModel({ name: 'new for search' })).save('10');
       const model = new DefaultModel();
       model.search('new');
