@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-types",
-  "version": "3.3.0",
+  "version": "3.3.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "lib"
   ],
   "dependencies": {
-    "graphql-tower-global-id": "^3.1.0",
+    "graphql-tower-global-id": "^3.3.3",
     "lodash": "^4.17.4",
     "moment": "^2.19.1"
   },
