@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.4.2"></a>
+## [3.4.2](https://github.com/tmotx/graphql-tower/compare/v3.4.1...v3.4.2) (2017-10-27)
+
+
+### Bug Fixes
+
+* **model:** list column should return Promise when type is Model ([d19a0c4](https://github.com/tmotx/graphql-tower/commit/d19a0c4))
+
+
+
+
 <a name="3.4.0"></a>
 # [3.4.0](https://github.com/tmotx/graphql-tower/compare/v3.3.3...v3.4.0) (2017-10-27)
 
