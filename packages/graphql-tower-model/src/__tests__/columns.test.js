@@ -48,7 +48,7 @@ class Column extends Model {
     password: new HashColumn(),
     birthday: new DateColumn(),
     checkAt: new DateTimeColumn(),
-    items: new ListColumn(),
+    itemIds: new ListColumn(User),
     archiveName: new ArchiveColumn(),
     archiveNameAlias: new ArchiveColumn(new ValueColumn(String, 'nameAliasNickname')),
     archiveTotal: new ArchiveColumn(new ValueColumn(Number)),
@@ -82,7 +82,7 @@ describe('Columns', () => {
       table.text('password');
       table.date('birthday');
       table.datetime('check_at');
-      table.specificType('items', 'integer[]');
+      table.specificType('item_ids', 'integer[]');
       table.jsonb('archive');
       table.jsonb('other');
       table.datetime('enabled');
@@ -113,7 +113,7 @@ describe('Columns', () => {
     model.password = null;
     model.birthday = null;
     model.checkAt = null;
-    model.items = null;
+    model.itemIds = null;
     model.nothing = null;
 
     expect(model.name).toBeNull();
@@ -124,13 +124,15 @@ describe('Columns', () => {
     expect(model.password).toBeNull();
     expect(model.birthday).toBeNull();
     expect(model.checkAt).toBeNull();
-    expect(model.items).toEqual([]);
+    expect(model.itemIds).toEqual([]);
     expect(model.nothing).toBeNull();
   });
 
   it('save to postgres', async () => {
     const user = new User({ name: 'I`m user' });
     await user.save();
+    await (new User({ name: 'I`m user 2' })).save();
+    await (new User({ name: 'I`m user 3' })).save();
 
     const model = new Column({
       name: 'my name',
@@ -141,7 +143,7 @@ describe('Columns', () => {
       password: 'XYZ2020',
       birthday: new Date('2020-01-01'),
       checkAt: new Date('2020-04-01T10:00:00'),
-      items: [20, 20, 99],
+      itemIds: [2, 3],
       archiveName: 'my archive name',
       archiveNameAlias: 'my archive nickname',
       archiveTotal: 2049,
@@ -175,7 +177,11 @@ describe('Columns', () => {
     expect(model.password).not.toBeNull();
     expect(model.birthday).toBe('2020-01-01');
     expect(model.checkAt).toEqual(new Date('2020-04-01T10:00:00'));
-    expect(model.items).toEqual(['20', '20', '99']);
+    expect(_.map(model.itemIds, ({ nativeId }) => nativeId)).toEqual([2, 3]);
+    expect(Promise.all(model.itemIds)).resolves.toEqual([
+      expect.objectContaining({ id: toGlobalId('User', 2) }),
+      expect.objectContaining({ id: toGlobalId('User', 3) }),
+    ]);
 
     expect(model.archiveName).toBe('my archive name');
     expect(model.archiveNameAlias).toBe('my archive nickname');

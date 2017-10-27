@@ -22,7 +22,11 @@ export class ValueColumn {
   }
 
   get serialize() {
-    return this._.serialize;
+    return (this._.serialize.load || this._.serialize).bind(this._.serialize);
+  }
+
+  get isModel() {
+    return Boolean(this._.serialize && this._.serialize.load);
   }
 
   constructor(serialize = String, name) {
@@ -34,25 +38,22 @@ export class ValueColumn {
   fromModel(value) {
     if (value === null || value === undefined) return null;
 
-    const Serialize = this.serialize;
-    if (Serialize.load) return value.nativeId || value;
+    if (this.isModel) return value.nativeId || value;
 
-    return Serialize(value);
+    return this.serialize(value);
   }
 
-  toModel(value, cache) {
+  toModel(value, { cache }) {
     if (value === null || value === undefined) return null;
-
-    const Serialize = this.serialize;
-    return Serialize.load ? Serialize.load(value, cache) : Serialize(value);
+    return this.serialize(value, cache);
   }
 
   set(value, data) {
-    data[this._.name] = this.fromModel(value); // eslint-disable-line
+    _.set(data, this._.name, this.fromModel(value));
   }
 
   get(data, model) {
-    return this.toModel(data[this._.name], model.cache);
+    return this.toModel(data[this._.name], model);
   }
 }
 
@@ -107,12 +108,12 @@ export class PrimaryKeyColumn extends ValueColumn {
 }
 
 export class ListColumn extends ValueColumn {
-  set(value, data) {
-    data[this._.name] = _.map(value, this.fromModel.bind(this)); // eslint-disable-line
+  set(values, data) {
+    _.set(data, this._.name, _.map(values, this.fromModel.bind(this)));
   }
 
-  get(data) {
-    return _.map(data[this._.name], this.toModel.bind(this));
+  get(data, model) {
+    return _.map(data[this._.name], value => this.toModel(value, model));
   }
 }
 
