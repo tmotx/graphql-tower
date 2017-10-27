@@ -65,8 +65,8 @@ describe('CacheModel', () => {
       client.mockReturnValueOnce([{ id: '2', name: '2 of house' }, { id: '4', name: '4 of house' }]);
 
       await Promise.all([
-        cache.load(toGlobalId('Car', '1')),
-        cache.load(toGlobalId('House', '2')),
+        cache.loadCar(toGlobalId('Car', '1')),
+        cache.loadHouse(toGlobalId('House', '2')),
         cache.loadMany([toGlobalId('Car', '3'), toGlobalId('House', '1'), toGlobalId('House', '4')]),
       ]);
 
@@ -100,9 +100,13 @@ describe('CacheModel', () => {
       .rejects.toEqual(new NotFoundError());
 
     client.mockReturnValueOnce([{ id: '2', name: '2 of car' }]);
+
     await expect(cache.load(toGlobalId('Car', '2'), 'House')).resolves.toBeNull();
+    await expect(cache.loadHouse(toGlobalId('Car', '2'))).resolves.toBeNull();
 
     await expect(cache.load(toGlobalId('Car', '2'), NotFoundError, 'House'))
+      .rejects.toEqual(new NotFoundError());
+    await expect(cache.loadHouse(toGlobalId('Car', '2'), NotFoundError))
       .rejects.toEqual(new NotFoundError());
 
     expect(client).toMatchSnapshot();

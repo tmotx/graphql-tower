@@ -33,6 +33,7 @@ export default class CacheModel {
           return model;
         },
       });
+      this[`load${_.upperFirst(name)}`] = (...args) => this.load(...args, name);
     });
   }
 
