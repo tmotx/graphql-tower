@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.3.2"></a>
+## [3.3.2](https://github.com/tmotx/graphql-tower/compare/v3.3.1...v3.3.2) (2017-10-27)
+
+
+### Bug Fixes
+
+* **cache:** use nativeLoad to load model data ([7e434dc](https://github.com/tmotx/graphql-tower/commit/7e434dc))
+
+
+
+
 <a name="3.3.0"></a>
 # [3.3.0](https://github.com/tmotx/graphql-tower/compare/v3.2.0...v3.3.0) (2017-10-26)
 
