@@ -158,6 +158,8 @@ describe('model', () => {
 
         await expect(Default.load(99))
           .resolves.toEqual(null);
+        await expect(Default.load(99, Error))
+          .rejects.toEqual(new Error());
         await expect(Default.load(99, NotFoundError))
           .rejects.toEqual(new NotFoundError());
         await expect(Default.loadMany([99]))

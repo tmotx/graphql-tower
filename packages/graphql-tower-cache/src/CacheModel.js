@@ -49,7 +49,7 @@ export default class CacheModel {
       })
       .then(async (model) => {
         const NotFoundError = error;
-        if (!model && (NotFoundError && NotFoundError.prototype) instanceof Error) {
+        if (!model && NotFoundError && (NotFoundError.prototype instanceof Error || NotFoundError.name === 'Error')) {
           throw new NotFoundError();
         }
 

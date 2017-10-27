@@ -109,7 +109,7 @@ export default class Model {
       })
       .then((model) => {
         const NotFoundError = error;
-        if (!model && (NotFoundError && NotFoundError.prototype) instanceof Error) {
+        if (!model && NotFoundError && (NotFoundError.prototype instanceof Error || NotFoundError.name === 'Error')) {
           throw new NotFoundError();
         }
 
