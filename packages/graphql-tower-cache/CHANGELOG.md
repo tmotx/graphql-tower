@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.4.4"></a>
+## [3.4.4](https://github.com/tmotx/graphql-tower/compare/v3.4.3...v3.4.4) (2017-10-28)
+
+
+
+
+**Note:** Version bump only for package graphql-tower-cache
+
 <a name="3.4.3"></a>
 ## [3.4.3](https://github.com/tmotx/graphql-tower/compare/v3.4.2...v3.4.3) (2017-10-27)
 
