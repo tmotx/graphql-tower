@@ -271,6 +271,22 @@ describe('model', () => {
       expect(model.verify('password', 'XYZ2049')).toBe(false);
     });
 
+    it('prime && clear', async () => {
+      const cache = { prime: jest.fn(), clear: jest.fn() };
+      const model = new Default({}, { cache });
+
+      model.prime();
+      expect(cache.prime).toHaveBeenCalledTimes(0);
+      model.clear();
+      expect(cache.clear).toHaveBeenCalledTimes(0);
+
+      model.id = 10;
+      model.prime();
+      expect(cache.prime).toHaveBeenCalledTimes(1);
+      model.clear();
+      expect(cache.clear).toHaveBeenCalledTimes(1);
+    });
+
     describe('insert of save', () => {
       it('has operator', async () => {
         await (new Default({ name: 'new is insert' })).save(10);

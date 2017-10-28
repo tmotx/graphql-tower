@@ -299,12 +299,12 @@ export default class Model {
   }
 
   prime() {
-    if (this.cache) this.cache.prime(this.id, this);
+    if (this.cache && this.id) this.cache.prime(this.id, this);
     return this;
   }
 
   clear() {
-    if (this.cache) this.cache.clear(this.id);
+    if (this.cache && this.id) this.cache.clear(this.id);
     return this;
   }
 
