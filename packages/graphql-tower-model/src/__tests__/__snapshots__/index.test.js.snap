@@ -48,6 +48,7 @@ Object {
   "password": null,
   "updatedAt": null,
   "updatedBy": null,
+  "userIds": null,
 }
 `;
 
@@ -70,6 +71,7 @@ Object {
   "password": null,
   "updatedAt": null,
   "updatedBy": null,
+  "userIds": null,
 }
 `;
 
@@ -124,6 +126,7 @@ Object {
     "password": null,
     "updatedAt": null,
     "updatedBy": null,
+    "userIds": null,
   },
   "previous": Object {
     "archive": Object {
@@ -143,6 +146,7 @@ Object {
     "password": null,
     "updatedAt": null,
     "updatedBy": null,
+    "userIds": null,
   },
   "queryBuilder": undefined,
 }
@@ -195,6 +199,13 @@ Object {
     "enumerable": true,
   },
   "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "userIds": ListColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],
@@ -263,6 +274,7 @@ Default {
   "password": null,
   "updatedAt": null,
   "updatedBy": null,
+  "userIds": Array [],
 }
 `;
 

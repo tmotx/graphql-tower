@@ -453,6 +453,26 @@ export default class Model {
     this.merge(data => _.unset(data, [_.camelCase(column), key]));
   }
 
+  async appendValue(column, value) {
+    const { database } = this.constructor;
+
+    const snake = _.snakeCase(column);
+    const setValue = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
+    await this.query.update(setValue);
+
+    this.merge(_.set({}, column, _.concat(_.pull(this.valueOf(column) || [], value), value)));
+  }
+
+  async removeValue(column, value) {
+    const { database } = this.constructor;
+
+    const snake = _.snakeCase(column);
+    const setValue = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
+    await this.query.update(setValue);
+
+    this.merge(_.set({}, column, _.pull(this.valueOf(column) || [], value)));
+  }
+
   search(keyword) {
     const { database, keywordAttribute } = this.constructor;
     const { queryBuilder } = this;

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import faker from 'faker';
 import { toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { NotFoundError } from 'graphql-tower-errors';
-import Model, { ValueColumn, HashColumn } from '../';
+import Model, { ValueColumn, HashColumn, ListColumn } from '../';
 
 process.setMaxListeners(0);
 
@@ -30,6 +30,7 @@ class Default extends Model {
   static columns = {
     name: new ValueColumn(),
     password: new HashColumn(),
+    userIds: new ListColumn(),
     data: new ValueColumn(Object),
   }
 }
@@ -55,6 +56,7 @@ describe('model', () => {
       table.string('name');
       table.text('password');
       table.specificType('keyword', 'tsvector');
+      table.specificType('user_ids', 'bigint[]');
       table.jsonb('data');
       table.timestamps();
       table.integer('created_by');
@@ -419,6 +421,37 @@ describe('model', () => {
       expect(model.valueOf('data')).toEqual({});
 
       expect(client).toMatchSnapshot();
+    });
+
+    it('appendValue', async () => {
+      const model = await Default.load(1);
+
+      await model.appendValue('userIds', '10');
+      expect(model.userIds).toEqual(['10']);
+
+      await model.appendValue('userIds', '20');
+      expect(model.userIds).toEqual(['10', '20']);
+
+      expect((await Default.load(1)).userIds).toEqual(['10', '20']);
+
+      await model.appendValue('userIds', '10');
+      expect(model.userIds).toEqual(['20', '10']);
+      expect((await Default.load(1)).userIds).toEqual(['20', '10']);
+    });
+
+    it('removeValue', async () => {
+      const model = await Default.load(1);
+
+      await model.appendValue('userIds', '30');
+      expect(model.userIds).toEqual(['20', '10', '30']);
+
+      await model.removeValue('userIds', '10');
+      expect(model.userIds).toEqual(['20', '30']);
+
+      expect((await Default.load(1)).userIds).toEqual(['20', '30']);
+
+      (await Default.load(2)).removeValue('userIds', '10');
+      expect((await Default.load(2)).userIds).toEqual([]);
     });
 
     it('search', async () => {
