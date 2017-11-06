@@ -7,5 +7,6 @@ export * from 'graphql-tower-queries';
 export * from 'graphql-tower-types';
 export * from 'graphql-tower-unigue';
 
+export { default as JWT } from 'graphql-tower-jwt';
 export { default as Model } from 'graphql-tower-model';
 export { default as GlobalId } from 'graphql-tower-global-id';
