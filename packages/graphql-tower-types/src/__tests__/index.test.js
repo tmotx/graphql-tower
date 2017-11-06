@@ -248,7 +248,7 @@ describe('type', () => {
   });
 
   it('GraphQLMobile', async () => {
-    const mobile = Number(`886${_.padStart('963066131', 13, 0)}`);
+    const mobile = `886${_.padStart('963066131', 13, 0)}`;
 
     await _.reduce([{
       value: mobile,
