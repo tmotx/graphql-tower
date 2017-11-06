@@ -68,7 +68,10 @@ export default class CacheModel {
     if (!this.constructor[gid.type]) return this;
 
     dataloader.clear(id);
-    if (newModel) dataloader.prime(id, newModel);
+    if (newModel) {
+      dataloader.prime(id, newModel);
+      _.set(newModel, 'cache', this);
+    }
 
     return this;
   }

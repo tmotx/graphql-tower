@@ -119,7 +119,10 @@ describe('CacheModel', () => {
 
       const cache = new Cache();
 
-      cache.prime(id, Car.forge({ id: '1', name: '1 of car' }));
+      const car = Car.forge({ id: '1', name: '1 of car' });
+      expect(car.cache).toBeNull();
+      cache.prime(id, car);
+      expect(car.cache).toBe(cache);
       await expect(cache.load(id))
         .resolves.toEqual(expect.objectContaining({ id, name: '1 of car' }));
       expect(client).toHaveBeenCalledTimes(0);
