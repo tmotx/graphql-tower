@@ -1,0 +1,27 @@
+{
+  "name": "graphql-tower-account-kit",
+  "version": "3.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {},
+  "dependencies": {
+    "graphql-tower-errors": "^3.0.0",
+    "node-fetch": "^1.7.3"
+  }
+}
