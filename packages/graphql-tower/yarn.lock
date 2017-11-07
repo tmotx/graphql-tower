@@ -2,61 +2,104 @@
 # yarn lockfile v1
 
 
+asn1@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.3.tgz#dac8787713c9966849fc8180777ebe9c1ddf3b86"
+
 base-x@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.2.tgz#bf873861b7514279b7969f340929eab87c11d130"
   dependencies:
     safe-buffer "^5.0.1"
 
+base64url@2.0.0, base64url@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/base64url/-/base64url-2.0.0.tgz#eac16e03ea1438eff9423d69baa36262ed1f70bb"
+
 bignumber.js@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
+
+buffer-equal-constant-time@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
 
 dataloader@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.3.0.tgz#6fec5be4b30a712e4afd30b86b4334566b97673b"
 
-graphql-tower-cache@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-cache/-/graphql-tower-cache-3.0.0.tgz#f19dd5f9befa851a3e5c0029137f1368e0d968a2"
+ecdsa-sig-formatter@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.9.tgz#4bc926274ec3b5abb5016e7e1d60921ac262b2a1"
+  dependencies:
+    base64url "^2.0.0"
+    safe-buffer "^5.0.1"
+
+encoding@^0.1.11:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
+  dependencies:
+    iconv-lite "~0.4.13"
+
+graphql-tower-account-kit@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-account-kit/-/graphql-tower-account-kit-3.6.0.tgz#7c3958d3dd98fd71da857f2b445e35dfb6c37453"
+  dependencies:
+    graphql-tower-errors "^3.0.0"
+    node-fetch "^1.7.3"
+
+graphql-tower-cache@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-cache/-/graphql-tower-cache-3.6.0.tgz#7591c7d1850cde4f6100e76df4127292d203e022"
   dependencies:
     dataloader "^1.3.0"
+    graphql-tower-global-id "^3.3.3"
 
 graphql-tower-errors@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.0.0.tgz#1b9caade14dfed12ac37bfc5a44287100a07347e"
 
-graphql-tower-global-id@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.0.0.tgz#87f119ad63f6d3f2c7d0c42d86675a912bef4449"
+graphql-tower-global-id@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.3.3.tgz#5741ce5561dc1075264c2c905da617eca96e7884"
   dependencies:
     base-x "^3.0.2"
     bignumber.js "^4.1.0"
     lodash "^4.17.4"
 
-graphql-tower-middleware@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-middleware/-/graphql-tower-middleware-3.0.0.tgz#c0689f19fc2c332b1216c0081b96ec870ab336b8"
+graphql-tower-jwt@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-jwt/-/graphql-tower-jwt-3.6.0.tgz#bb52ac2773a2d4e19e08824b1ec5198029b50008"
   dependencies:
+    jsonwebtoken "^8.1.0"
+    node-rsa "^0.4.2"
+
+graphql-tower-middleware@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-middleware/-/graphql-tower-middleware-3.3.0.tgz#b1fb58d8398c76654be6bbf3f7bc5a4b439db43d"
+  dependencies:
+    graphql-tower-errors "^3.0.0"
     lodash "^4.17.4"
 
-graphql-tower-model@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-model/-/graphql-tower-model-3.0.0.tgz#071b91788581250a676910b27256cf99598bfb7c"
+graphql-tower-model@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-model/-/graphql-tower-model-3.5.0.tgz#42b6fe10d03bd245d53ecb52bd777a12b0de7f83"
   dependencies:
     dataloader "^1.3.0"
+    graphql-tower-global-id "^3.3.3"
     lodash "^4.17.4"
 
-graphql-tower-queries@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.0.0.tgz#a8538eefb2ab51147dbbb6ccd30d8eff2a463f3d"
+graphql-tower-queries@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.1.0.tgz#0fefa5dd7fbef613e8ba91a819d441dbfcc8d886"
   dependencies:
     lodash "^4.17.4"
 
-graphql-tower-types@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-types/-/graphql-tower-types-3.0.0.tgz#2c3721ad8ad3365277bb758b6b86b5503b5833c2"
+graphql-tower-types@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-types/-/graphql-tower-types-3.6.0.tgz#c07cfe72a8fcbf579ef26373886949089ee28701"
   dependencies:
+    graphql-tower-global-id "^3.3.3"
     lodash "^4.17.4"
     moment "^2.19.1"
 
@@ -68,6 +111,74 @@ graphql-tower-unigue@^3.0.0:
     lodash "^4.17.4"
     os "^0.1.1"
 
+iconv-lite@~0.4.13:
+  version "0.4.19"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
+
+is-stream@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
+
+jsonwebtoken@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.1.0.tgz#c6397cd2e5fd583d65c007a83dc7bb78e6982b83"
+  dependencies:
+    jws "^3.1.4"
+    lodash.includes "^4.3.0"
+    lodash.isboolean "^3.0.3"
+    lodash.isinteger "^4.0.4"
+    lodash.isnumber "^3.0.3"
+    lodash.isplainobject "^4.0.6"
+    lodash.isstring "^4.0.1"
+    lodash.once "^4.0.0"
+    ms "^2.0.0"
+    xtend "^4.0.1"
+
+jwa@^1.1.4:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.1.5.tgz#a0552ce0220742cd52e153774a32905c30e756e5"
+  dependencies:
+    base64url "2.0.0"
+    buffer-equal-constant-time "1.0.1"
+    ecdsa-sig-formatter "1.0.9"
+    safe-buffer "^5.0.1"
+
+jws@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/jws/-/jws-3.1.4.tgz#f9e8b9338e8a847277d6444b1464f61880e050a2"
+  dependencies:
+    base64url "^2.0.0"
+    jwa "^1.1.4"
+    safe-buffer "^5.0.1"
+
+lodash.includes@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
+
+lodash.isboolean@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz#6c2e171db2a257cd96802fd43b01b20d5f5870f6"
+
+lodash.isinteger@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz#619c0af3d03f8b04c31f5882840b77b11cd68343"
+
+lodash.isnumber@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz#3ce76810c5928d03352301ac287317f11c0b1ffc"
+
+lodash.isplainobject@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+
+lodash.once@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
+
 lodash@^4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
@@ -76,6 +187,23 @@ moment@^2.19.1:
   version "2.19.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.1.tgz#56da1a2d1cbf01d38b7e1afc31c10bcfa1929167"
 
+ms@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+node-fetch@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
+
+node-rsa@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/node-rsa/-/node-rsa-0.4.2.tgz#d6391729ec16a830ed5a38042b3157d2d5d72530"
+  dependencies:
+    asn1 "0.2.3"
+
 os@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/os/-/os-0.1.1.tgz#208845e89e193ad4d971474b93947736a56d13f3"
@@ -83,3 +211,7 @@ os@^0.1.1:
 safe-buffer@^5.0.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
+
+xtend@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
