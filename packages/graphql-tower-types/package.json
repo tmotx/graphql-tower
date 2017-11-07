@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-types",
-  "version": "3.3.3",
+  "version": "3.6.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

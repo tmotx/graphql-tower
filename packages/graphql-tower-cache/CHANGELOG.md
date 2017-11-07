@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.6.0"></a>
+# [3.6.0](https://github.com/tmotx/graphql-tower/compare/v3.5.0...v3.6.0) (2017-11-07)
+
+
+### Bug Fixes
+
+* **cache:** add cache into model when prime model ([58db2e6](https://github.com/tmotx/graphql-tower/commit/58db2e6))
+
+
+
+
 <a name="3.5.0"></a>
 # [3.5.0](https://github.com/tmotx/graphql-tower/compare/v3.4.4...v3.5.0) (2017-11-03)
 

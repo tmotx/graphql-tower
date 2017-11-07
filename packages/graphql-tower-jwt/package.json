@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-jwt",
-  "version": "3.0.0",
+  "version": "3.6.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -19,10 +19,9 @@
   "files": [
     "lib"
   ],
-  "bin" : {
-    "graphql-tower-generate-key" : "./lib/cli.js"
+  "bin": {
+    "graphql-tower-generate-key": "./lib/cli.js"
   },
-  "devDependencies": {},
   "dependencies": {
     "jsonwebtoken": "^8.1.0",
     "node-rsa": "^0.4.2"
