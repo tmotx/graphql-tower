@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.6.1"></a>
+## [3.6.1](https://github.com/tmotx/graphql-tower/compare/v3.6.0...v3.6.1) (2017-11-07)
+
+
+### Bug Fixes
+
+* **tower:** fix graphql-tower-account-kit should export from graphql-tower ([c99b71c](https://github.com/tmotx/graphql-tower/commit/c99b71c))
+
+
+
+
 <a name="3.6.0"></a>
 # [3.6.0](https://github.com/tmotx/graphql-tower/compare/v3.5.0...v3.6.0) (2017-11-07)
 
