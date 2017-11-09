@@ -5,7 +5,7 @@ export * from 'graphql-tower-middleware';
 export * from 'graphql-tower-model';
 export * from 'graphql-tower-queries';
 export * from 'graphql-tower-types';
-export * from 'graphql-tower-unigue';
+export * from 'graphql-tower-unique';
 
 export { default as AccountKit } from 'graphql-tower-account-kit';
 export { default as JWT } from 'graphql-tower-jwt';

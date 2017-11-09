@@ -103,9 +103,9 @@ graphql-tower-types@^3.6.0:
     lodash "^4.17.4"
     moment "^2.19.1"
 
-graphql-tower-unigue@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-unigue/-/graphql-tower-unigue-3.0.0.tgz#4f8b86afdc96d40590d782bb279c1be11c137ef6"
+graphql-tower-unique@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/graphql-tower-unique/-/graphql-tower-unique-3.6.2.tgz#29bbd878cc448d4a5ea31d93337efe78535687ac"
   dependencies:
     base-x "^3.0.2"
     lodash "^4.17.4"

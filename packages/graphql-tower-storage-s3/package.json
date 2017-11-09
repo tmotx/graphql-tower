@@ -1,6 +1,6 @@
 {
-  "name": "graphql-tower",
-  "version": "3.6.1",
+  "name": "graphql-tower-storage-s3",
+  "version": "3.0.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -19,19 +19,10 @@
   "files": [
     "lib"
   ],
-  "peerDependencies": {
-    "graphql": "^0.11.7"
-  },
   "dependencies": {
-    "graphql-tower-account-kit": "^3.6.0",
-    "graphql-tower-cache": "^3.6.0",
+    "aws-sdk": "^2.148.0",
     "graphql-tower-errors": "^3.0.0",
-    "graphql-tower-global-id": "^3.3.3",
-    "graphql-tower-jwt": "^3.6.0",
-    "graphql-tower-middleware": "^3.3.0",
-    "graphql-tower-model": "^3.5.0",
-    "graphql-tower-queries": "^3.1.0",
-    "graphql-tower-types": "^3.6.0",
-    "graphql-tower-unique": "^3.6.2"
+    "graphql-tower-unique": "^3.6.2",
+    "sharp": "^0.18.4"
   }
 }
