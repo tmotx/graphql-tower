@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-helper",
-  "version": "3.0.0",
+  "version": "3.8.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -18,7 +18,5 @@
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
   "files": [
     "lib"
-  ],
-  "peerDependencies": {},
-  "devDependencies": {}
+  ]
 }
