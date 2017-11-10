@@ -41,10 +41,7 @@
     "lerna": "^2.4.0",
     "pg": "^7.3.0"
   },
-  "dependencies": {
-    "base-x": "^3.0.0",
-    "bignumber.js": "^4.0.2"
-  },
+  "dependencies": {},
   "jest": {
     "testEnvironment": "node",
     "clearMocks": true,
