@@ -184,7 +184,42 @@ Array [
 
 exports[`model static columns object 1`] = `
 Object {
+  "createdAt": DateTimeColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "createdBy": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
   "data": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "deletedAt": DateTimeColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "deletedBy": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "id": PrimaryKeyColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],
@@ -199,6 +234,20 @@ Object {
     "enumerable": true,
   },
   "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "updatedAt": DateTimeColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "updatedBy": ValueColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],
@@ -217,7 +266,28 @@ Object {
 
 exports[`model static columns thunk 1`] = `
 Object {
+  "createdAt": DateTimeColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
   "data": ValueColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "deletedAt": DateTimeColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "id": PrimaryKeyColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],
@@ -232,6 +302,13 @@ Object {
     "enumerable": true,
   },
   "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "updatedAt": DateTimeColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],

@@ -67,6 +67,10 @@ graphql-tower-global-id@^3.3.3:
     bignumber.js "^4.1.0"
     lodash "^4.17.4"
 
+graphql-tower-helper@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.8.0.tgz#26fc7449b381ace9169c749934c4aecda5f0afd7"
+
 graphql-tower-jwt@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/graphql-tower-jwt/-/graphql-tower-jwt-3.6.0.tgz#bb52ac2773a2d4e19e08824b1ec5198029b50008"

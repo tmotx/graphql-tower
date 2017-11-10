@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
+import { next } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
@@ -36,7 +37,26 @@ export default class Model {
 
   static get columns() {
     if (_.isFunction(this._columns)) this.columns = this._columns();
-    return this._columns;
+
+    const {
+      idAttribute, hasOperator, hasTimestamps, softDelete,
+    } = this;
+
+    return _.defaults(
+      this._columns,
+      _.set({}, idAttribute, new PrimaryKeyColumn()),
+      hasTimestamps && {
+        createdAt: new DateTimeColumn(),
+        updatedAt: new DateTimeColumn(),
+      }, softDelete && {
+        deletedAt: new DateTimeColumn(),
+      }, hasOperator && hasTimestamps && {
+        createdBy: new ValueColumn(),
+        updatedBy: new ValueColumn(),
+      }, hasOperator && softDelete && {
+        deletedBy: new ValueColumn(),
+      },
+    );
   }
 
   static set columns(columns) {
@@ -97,10 +117,8 @@ export default class Model {
 
     const nativeId = this.fromGlobalId(id, this.displayName);
 
-    const reply = Promise.resolve(nativeId);
-
-    reply.nativeId = nativeId;
-    reply.then = (resolve, reject) => Promise.resolve()
+    const reply = next(() => Promise
+      .resolve()
       .then(() => {
         const Cache = cache || error;
         if (Cache && Cache.load) return Cache.load(this.toGlobalId(nativeId));
@@ -114,8 +132,7 @@ export default class Model {
         }
 
         return model;
-      })
-      .then(resolve, reject);
+      }), { nativeId });
 
     return reply;
   }
@@ -155,35 +172,16 @@ export default class Model {
   cache = null;
 
   constructor(attrs, options) {
-    const {
-      columns, idAttribute, hasOperator, hasTimestamps, softDelete,
-    } = this.constructor;
+    const { columns } = this.constructor;
 
-    const properties = _.mapValues(
-      _.defaults(
-        columns,
-        _.set({}, idAttribute, new PrimaryKeyColumn()),
-        hasTimestamps && {
-          createdAt: new DateTimeColumn(),
-          updatedAt: new DateTimeColumn(),
-        }, softDelete && {
-          deletedAt: new DateTimeColumn(),
-        }, hasOperator && hasTimestamps && {
-          createdBy: new ValueColumn(),
-          updatedBy: new ValueColumn(),
-        }, hasOperator && softDelete && {
-          deletedBy: new ValueColumn(),
-        },
-      ),
-      (column, name) => {
-        if (!column.name) column.name = name; // eslint-disable-line
-        return {
-          enumerable: column.enumerable,
-          set: value => column.set(value, this._.current, this),
-          get: () => column.get(this._.current, this),
-        };
-      },
-    );
+    const properties = _.mapValues(columns, (column, name) => {
+      if (!column.name) column.name = name; // eslint-disable-line
+      return {
+        enumerable: column.enumerable,
+        set: value => column.set(value, this._.current, this),
+        get: () => column.get(this._.current, this),
+      };
+    });
     Object.defineProperties(this, properties);
 
     if (attrs) this.set(attrs);

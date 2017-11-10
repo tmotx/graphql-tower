@@ -1,6 +1,7 @@
 export * from 'graphql-tower-cache';
 export * from 'graphql-tower-errors';
 export * from 'graphql-tower-global-id';
+export * from 'graphql-tower-helper';
 export * from 'graphql-tower-middleware';
 export * from 'graphql-tower-model';
 export * from 'graphql-tower-queries';

@@ -27,6 +27,7 @@
     "graphql-tower-cache": "^3.6.0",
     "graphql-tower-errors": "^3.0.0",
     "graphql-tower-global-id": "^3.3.3",
+    "graphql-tower-helper": "^3.8.0",
     "graphql-tower-jwt": "^3.6.0",
     "graphql-tower-middleware": "^3.3.0",
     "graphql-tower-model": "^3.5.0",
