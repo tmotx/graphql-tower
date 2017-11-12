@@ -1,5 +1,5 @@
 export function thunk(handler) {
-  return (...props) => (typeof handler === 'function' ? handler(...props) : handler);
+  return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
 
 export function next(handler, properties) {

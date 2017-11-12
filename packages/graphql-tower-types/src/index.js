@@ -1,8 +1,10 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_fields"] }] */
+
 import isObject from 'lodash/isObject';
 import toNumber from 'lodash/toNumber';
 import moment from 'moment';
 import { isGlobalId, toGlobalId } from 'graphql-tower-global-id';
-import { GraphQLScalarType, GraphQLEnumType } from 'graphql';
+import { GraphQLScalarType, GraphQLObjectType, GraphQLEnumType } from 'graphql';
 
 export const GraphQLResponseStatus = new GraphQLEnumType({
   name: 'ResponseStatus',
@@ -104,6 +106,17 @@ export const GraphQLMobile = new GraphQLScalarType({
     try { return parseMobile(ast.value); } catch (e) { return null; }
   },
 });
+
+export class GraphQLInheritanceType extends GraphQLObjectType {
+  getFields() {
+    if (!this._fields) {
+      const interfaces = this.getInterfaces().map(item => item.getFields());
+      this._fields = Object.assign({}, ...interfaces, super.getFields());
+    }
+
+    return this._fields;
+  }
+}
 
 export class GraphQLGlobalIdField {
   type = GraphQLGID;

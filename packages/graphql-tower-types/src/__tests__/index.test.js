@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import faker from 'faker';
 import moment from 'moment';
-import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLError } from 'graphql';
+import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLInterfaceType, GraphQLError } from 'graphql';
 import { toGlobalId } from 'graphql-tower-global-id';
 import {
   GraphQLResponseStatus,
@@ -10,10 +10,19 @@ import {
   GraphQLExpiration,
   GraphQLSentence,
   GraphQLMobile,
+  GraphQLInheritanceType,
   GraphQLGlobalIdField,
 } from '../index';
 
 const resolve = jest.fn();
+
+const base = new GraphQLInterfaceType({
+  name: 'Base',
+  fields: {
+    id: new GraphQLGlobalIdField(),
+  },
+  resolveType: obj => obj.type,
+});
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -56,6 +65,14 @@ const schema = new GraphQLSchema({
             id: new GraphQLGlobalIdField(),
             customId: new GraphQLGlobalIdField('custom'),
           },
+        }),
+        resolve,
+      },
+      inheritance: {
+        type: new GraphQLInheritanceType({
+          name: 'Inheritance',
+          interfaces: [base],
+          fields: () => ({ name: { type: GraphQLSentence } }),
         }),
         resolve,
       },
@@ -280,7 +297,6 @@ describe('type', () => {
         customId: faker.random.number(),
       };
 
-      resolve.mockClear();
       resolve.mockReturnValueOnce(reply);
       const result = await graphql(schema, 'query { node { id customId } }');
       expect(result.data.node).toEqual({
@@ -292,7 +308,6 @@ describe('type', () => {
     it('when resolve is string', async () => {
       const reply = faker.random.number();
 
-      resolve.mockClear();
       resolve.mockReturnValueOnce(reply);
       const result = await graphql(schema, 'query { node { id customId } }');
       expect(result.data.node).toEqual({
@@ -304,10 +319,20 @@ describe('type', () => {
     it('when resolve is global id', async () => {
       const reply = toGlobalId('Node', faker.random.number());
 
-      resolve.mockClear();
       resolve.mockReturnValueOnce(reply);
       const result = await graphql(schema, 'query { node { id } }');
       expect(result.data.node).toEqual({ id: reply });
+    });
+  });
+
+  describe('GraphQLInheritanceType', () => {
+    it('successfully inherited', async () => {
+      resolve.mockReturnValueOnce({ id: '99', name: 'an inheritance object' });
+      const result = await graphql(schema, 'query { inheritance { id name } }');
+      expect(result.data.inheritance).toEqual({
+        id: toGlobalId('Inheritance', '99'),
+        name: 'an inheritance object',
+      });
     });
   });
 });
