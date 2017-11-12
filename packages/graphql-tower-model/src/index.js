@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
-import { next } from 'graphql-tower-helper';
+import { combine } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
@@ -117,7 +117,7 @@ export default class Model {
 
     const nativeId = this.fromGlobalId(id, this.displayName);
 
-    const reply = next(() => Promise
+    const reply = combine(() => Promise
       .resolve()
       .then(() => {
         const Cache = cache || error;

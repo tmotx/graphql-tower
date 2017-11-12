@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { thunk, next } from '../';
+import { thunk, combine, next } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -8,13 +8,23 @@ describe('helper', () => {
     expect(thunk()({ age: 20 })).toBe(undefined);
   });
 
-  it('next', async () => {
-    expect(next(() => { throw new Error(); })).toBeInstanceOf(Promise);
+  it('combine', async () => {
+    expect(combine(() => { throw new Error(); })).toBeInstanceOf(Function);
     await new Promise(setImmediate);
 
-    expect(await next(args => (args), { name: 'yutin' })).toEqual({ name: 'yutin' });
-    expect(await next(next(args => Promise.resolve(args), { name: 'yutin' }), { age: 10 })).toEqual({ name: 'yutin', age: 10 });
-    expect(next(next(args => (args), { name: 'yutin' }), { age: 10 }))
-      .toEqual(expect.objectContaining({ name: 'yutin', age: 10 }));
+    expect(await combine(args => (args), { title: 'yutin' })).toEqual({ title: 'yutin' });
+    expect(await combine(args => Promise.resolve(args), { title: 'yutin' })({ age: 10 })).toEqual({ title: 'yutin', age: 10 });
+    expect(combine(args => (args), { title: 'yutin' })({ age: 10 }))
+      .toEqual(expect.objectContaining({ title: 'yutin', age: 10 }));
+  });
+
+  it('next', async () => {
+    expect(next(() => { throw new Error(); })).toBeInstanceOf(Function);
+    await new Promise(setImmediate);
+
+    expect(await next((...args) => (args), { title: 'yutin' })).toEqual([{ title: 'yutin' }]);
+    expect(await next((...args) => Promise.resolve(args), { title: 'yutin' })({ age: 10 })).toEqual([{ title: 'yutin' }, { age: 10 }]);
+    expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }))
+      .toEqual([{ age: 10 }, { title: 'yutin' }]);
   });
 });

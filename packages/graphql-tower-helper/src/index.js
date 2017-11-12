@@ -2,18 +2,15 @@ export function thunk(handler) {
   return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
 
-export function next(handler, properties) {
-  const reply = Object.assign(Promise.resolve(), handler, properties);
+export function combine(handler, args) {
+  return Object.assign(add => combine(handler, Object.assign({}, args, add)), args, {
+    then: (...promise) => Promise.resolve(handler(args)).then(...promise),
+  });
+}
 
-  reply.then = (...args) => Promise.resolve().then(() => {
-    if (handler instanceof Promise) {
-      Object.assign(handler, properties);
-      return handler;
-    }
-
-    delete reply.then;
-    return handler(Object.assign({}, reply));
-  }).then(...args);
-
-  return reply;
+export function next(handler, ...args) {
+  return Object.assign((...add) => {
+    const fill = args.map(value => (value === undefined ? add.shift() : value));
+    return next(handler, ...fill.concat(add));
+  }, { then: (...promise) => Promise.resolve(handler(...args)).then(...promise) });
 }
