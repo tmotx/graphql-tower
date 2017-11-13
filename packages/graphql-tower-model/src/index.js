@@ -134,7 +134,7 @@ export default class Model {
         return model;
       }), { nativeId });
 
-    return reply;
+    return reply.promise;
   }
 
   static async loadMany(ids, error, cache) {
