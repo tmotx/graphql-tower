@@ -117,7 +117,7 @@ export default class Model {
 
     const nativeId = this.fromGlobalId(id, this.displayName);
 
-    const reply = combine(() => Promise
+    return combine(() => Promise
       .resolve()
       .then(() => {
         const Cache = cache || error;
@@ -132,9 +132,7 @@ export default class Model {
         }
 
         return model;
-      }), { nativeId });
-
-    return reply.promise;
+      }), { nativeId }).promise;
   }
 
   static async loadMany(ids, error, cache) {

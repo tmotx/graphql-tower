@@ -1,9 +1,27 @@
 import knex, { client } from 'jest-mock-knex';
 import _ from 'lodash';
 import faker from 'faker';
+import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLID } from 'graphql';
 import { toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { NotFoundError } from 'graphql-tower-errors';
 import Model, { ValueColumn, HashColumn, ListColumn } from '../';
+
+const resolve = jest.fn();
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: {
+      node: {
+        type: new GraphQLObjectType({
+          name: 'Node',
+          fields: { id: { type: GraphQLID } },
+        }),
+        resolve,
+      },
+    },
+  }),
+});
 
 process.setMaxListeners(0);
 
@@ -461,6 +479,14 @@ describe('model', () => {
       model.search('new');
       expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
       expect(client).toMatchSnapshot();
+    });
+  });
+
+  describe('graphql', () => {
+    it('successfully get from load', async () => {
+      resolve.mockImplementationOnce(() => Default.load('1'));
+      const reply = await graphql(schema, 'query { node { id } }');
+      expect(reply).toEqual({ data: { node: { id: Default.toGlobalId('1') } } });
     });
   });
 });
