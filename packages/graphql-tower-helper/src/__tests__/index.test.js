@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { thunk, combine, next } from '../';
+import { thunk, combine, next, retry } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -34,5 +34,22 @@ describe('helper', () => {
       .toEqual([{ age: 10 }, { title: 'yutin' }]);
     expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }).promise)
       .toEqual([{ age: 10 }, { title: 'yutin' }]);
+  });
+
+  it('retry', async () => {
+    const handler = jest.fn(() => Promise.reject(new Error()));
+    await expect(retry(handler)).rejects.toEqual(new Error());
+    expect(handler).toHaveBeenCalledTimes(4);
+
+    handler.mockClear();
+    handler.mockReturnValueOnce(Promise.reject(new Error()));
+    handler.mockReturnValueOnce(Promise.resolve('ok'));
+    await expect(retry(handler)).resolves.toBe('ok');
+    expect(handler).toHaveBeenCalledTimes(2);
+
+    handler.mockClear();
+    handler.mockReturnValueOnce(Promise.resolve('ok'));
+    await expect(retry(handler, 0)).resolves.toBe('ok');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 });
