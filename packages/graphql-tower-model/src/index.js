@@ -71,11 +71,6 @@ export default class Model {
     return this._dataloader;
   }
 
-  // deprecated
-  static get queryBuilder() {
-    return this.database(this.tableName);
-  }
-
   static get query() {
     return this.database(this.tableName);
   }
@@ -103,13 +98,20 @@ export default class Model {
     return model.forge(attributes);
   }
 
-  static async loader(ids) {
-    const { idAttribute } = this;
-    const collections = {};
-    const queryBuilder = this.queryBuilder.whereIn(_.snakeCase(idAttribute), ids);
-    if (this.softDelete) queryBuilder.whereNull('deleted_at');
+  static batchInsert(rows, chunkSize) {
+    return this.database
+      .batchInsert(this.tableName, rows, chunkSize)
+      .returning(_.snakeCase(this.idAttribute));
+  }
 
-    _.forEach(await queryBuilder, (item) => {
+  static async loader(ids) {
+    const { idAttribute, query } = this;
+    const collections = {};
+
+    query.whereIn(_.snakeCase(idAttribute), ids);
+    if (this.softDelete) query.whereNull('deleted_at');
+
+    _.forEach(await query, (item) => {
       const obj = this.format(item);
       collections[obj[idAttribute]] = obj;
     });
@@ -487,7 +489,7 @@ export default class Model {
 _.forEach([
   'where', 'whereNot', 'whereIn', 'whereNotIn', 'whereNull', 'whereNotNull', 'whereExists',
   'whereNotExists', 'whereBetween', 'whereNotBetween', 'whereRaw',
-  'orderBy', 'orderByRaw',
+  'orderBy', 'orderByRaw', 'increment', 'decrement',
 ], (key) => {
   Model.prototype[key] = function queryBuilder(...args) {
     this.queryBuilder[key](...args);

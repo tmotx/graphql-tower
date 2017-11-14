@@ -65,8 +65,19 @@ class NoOperator extends Model {
   }
 }
 
+class BatchInsert extends Model {
+  static database = database;
+
+  static tableName = 'batch_insert';
+
+  static columns = {
+    name: new ValueColumn(),
+  }
+}
+
 describe('model', () => {
   beforeAll(async () => {
+    await database.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
     await database.schema.dropTableIfExists('default_table');
 
     await database.schema.createTable('default_table', (table) => {
@@ -85,6 +96,13 @@ describe('model', () => {
 
     await database('default_table').insert({ name: 'name is one' });
     await database('default_table').insert({ name: 'name is two' });
+
+    await database.schema.dropTableIfExists('batch_insert');
+
+    await database.schema.createTable('batch_insert', (table) => {
+      table.uuid('id').primary().defaultTo(database.raw('uuid_generate_v1mc()'));
+      table.string('name');
+    });
   });
 
   afterAll(() => database.destroy());
@@ -120,8 +138,13 @@ describe('model', () => {
       expect(Default.dataloader).toMatchSnapshot();
     });
 
-    it('queryBuilder', () => {
-      expect(Default.queryBuilder.toString()).toBe('select * from "default_table"');
+    it('query', () => {
+      expect(Default.query.toString()).toBe('select * from "default_table"');
+    });
+
+    it('batchInsert', async () => {
+      const results = await BatchInsert.batchInsert(_.map(_.range(1, 10000), idx => ({ name: `x${idx}` })));
+      expect(results.length).toBe(9999);
     });
 
     describe('toGlobalId & fromGlobalId', () => {
