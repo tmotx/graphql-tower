@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.12.2"></a>
+## [3.12.2](https://github.com/tmotx/graphql-tower/compare/v3.12.1...v3.12.2) (2017-11-14)
+
+
+### Bug Fixes
+
+* **helper:** libraries shouldn't load polyfills ([9b9e153](https://github.com/tmotx/graphql-tower/commit/9b9e153))
+
+
+
+
 <a name="3.12.1"></a>
 ## [3.12.1](https://github.com/tmotx/graphql-tower/compare/v3.12.0...v3.12.1) (2017-11-14)
 
