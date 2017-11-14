@@ -1,5 +1,3 @@
-if ((window && !window._babelPolyfill) || (global && !global._babelPolyfill)) require('babel-polyfill'); // eslint-disable-line
-
 export function thunk(handler) {
   return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
@@ -16,9 +14,10 @@ export function next(handler, ...args) {
   const reply = Object.assign((...add) => {
     const fill = args.map(value => (value === undefined ? add.shift() : value));
     const nextTo = next(handler, ...fill.concat(add));
-    const replyProperties = Object.getOwnPropertyDescriptors(reply);
-    Object.keys(replyProperties).forEach((key) => {
-      if (nextTo[key] === undefined) Object.defineProperty(nextTo, key, replyProperties[key]);
+    Reflect.ownKeys(reply).forEach((key) => {
+      if (nextTo[key] === undefined) {
+        Object.defineProperty(nextTo, key, Object.getOwnPropertyDescriptor(reply, key));
+      }
     });
     return nextTo;
   }, { then, promise: Object.assign(Promise.resolve(args), args, { then }) });
