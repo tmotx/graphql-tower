@@ -7,7 +7,7 @@ export default class Mutation extends Query {
   constructor(...args) {
     super(...args);
 
-    this._.name = '';
+    this.name = this.constructor.name;
     this.outputFields = {};
     this.inputFields = {};
   }

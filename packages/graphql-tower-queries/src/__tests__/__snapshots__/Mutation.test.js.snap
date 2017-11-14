@@ -5,17 +5,17 @@ MutationNode {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
-    "name": "",
+    "name": "MutationNode",
     "parentArgs": undefined,
     "resolve": [Function],
   },
   "args": Object {
     "input": Object {
-      "type": "Input!",
+      "type": "MutationNodeInput!",
     },
   },
   "resolve": [Function],
-  "type": "Payload",
+  "type": "MutationNodePayload",
 }
 `;
 
@@ -39,7 +39,26 @@ MutationNode {
 `;
 
 exports[`Mutation Mutation with name 1`] = `
-MutationNode {
+PropertyNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "Node",
+    "parentArgs": undefined,
+    "resolve": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "resolve": [Function],
+  "type": "NodePayload",
+}
+`;
+
+exports[`Mutation Mutation with name 2`] = `
+Node {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],

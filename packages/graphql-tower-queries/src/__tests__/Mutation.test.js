@@ -10,13 +10,19 @@ describe('Mutation', () => {
   });
 
   it('Mutation with name', async () => {
-    const MutationNode = class extends Mutation {
+    const PropertyNode = class extends Mutation {
       name = 'Node';
     };
-    const mutation = new MutationNode();
-    expect(mutation).toMatchSnapshot();
-    expect(_.get(mutation, 'type.name')).toBe('NodePayload');
-    expect(_.get(mutation, 'args.input.type.ofType.name')).toBe('NodeInput');
+    const property = new PropertyNode();
+    expect(property).toMatchSnapshot();
+    expect(_.get(property, 'type.name')).toBe('NodePayload');
+    expect(_.get(property, 'args.input.type.ofType.name')).toBe('NodeInput');
+
+    const ClassNameNode = class Node extends Mutation {};
+    const classname = new ClassNameNode();
+    expect(classname).toMatchSnapshot();
+    expect(_.get(classname, 'type.name')).toBe('NodePayload');
+    expect(_.get(classname, 'args.input.type.ofType.name')).toBe('NodeInput');
   });
 
   it('Mutation with fields', async () => {
