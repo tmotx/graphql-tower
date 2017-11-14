@@ -1,3 +1,5 @@
+if ((window && !window._babelPolyfill) || (global && !global._babelPolyfill)) require('babel-polyfill'); // eslint-disable-line
+
 export function thunk(handler) {
   return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
