@@ -34,6 +34,12 @@ describe('helper', () => {
       .toEqual([{ age: 10 }, { title: 'yutin' }]);
     expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }).promise)
       .toEqual([{ age: 10 }, { title: 'yutin' }]);
+
+    const nextTo = next((...args) => (args));
+    Object.defineProperty(nextTo, 'isShow', { get: () => true });
+    nextTo.maxNumber = 99;
+    expect(nextTo.isShow).toBe(true);
+    expect(nextTo({ title: 'yutin' })).toEqual(expect.objectContaining({ isShow: true, maxNumber: 99 }));
   });
 
   it('retry', async () => {

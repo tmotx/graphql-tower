@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 export function thunk(handler) {
   return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
@@ -11,10 +13,17 @@ export function combine(handler, args) {
 
 export function next(handler, ...args) {
   const then = (...promise) => Promise.resolve(args).then(() => handler(...args)).then(...promise);
-  return Object.assign((...add) => {
+  const reply = Object.assign((...add) => {
     const fill = args.map(value => (value === undefined ? add.shift() : value));
-    return next(handler, ...fill.concat(add));
+    const nextTo = next(handler, ...fill.concat(add));
+    const replyProperties = Object.getOwnPropertyDescriptors(reply);
+    Object.keys(replyProperties).forEach((key) => {
+      if (nextTo[key] === undefined) Object.defineProperty(nextTo, key, replyProperties[key]);
+    });
+    return nextTo;
   }, { then, promise: Object.assign(Promise.resolve(args), args, { then }) });
+
+  return reply;
 }
 
 export function retry(handler, times = 3) {
