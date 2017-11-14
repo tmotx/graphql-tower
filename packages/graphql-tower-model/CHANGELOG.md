@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.12.5"></a>
+## [3.12.5](https://github.com/tmotx/graphql-tower/compare/v3.12.4...v3.12.5) (2017-11-14)
+
+
+### Bug Fixes
+
+* **model:** added query static method ([be715a7](https://github.com/tmotx/graphql-tower/commit/be715a7))
+
+
+
+
 <a name="3.12.4"></a>
 ## [3.12.4](https://github.com/tmotx/graphql-tower/compare/v3.12.3...v3.12.4) (2017-11-14)
 
