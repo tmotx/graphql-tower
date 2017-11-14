@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.12.1"></a>
+## [3.12.1](https://github.com/tmotx/graphql-tower/compare/v3.12.0...v3.12.1) (2017-11-14)
+
+
+### Bug Fixes
+
+* **helper:** next support defineProperty will inherit ([71f54f2](https://github.com/tmotx/graphql-tower/commit/71f54f2))
+
+
+
+
 <a name="3.11.0"></a>
 # [3.11.0](https://github.com/tmotx/graphql-tower/compare/v3.10.3...v3.11.0) (2017-11-13)
 
