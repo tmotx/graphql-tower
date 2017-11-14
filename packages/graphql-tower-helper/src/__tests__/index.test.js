@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import _ from 'lodash';
 import { thunk, combine, next, retry } from '../';
 
