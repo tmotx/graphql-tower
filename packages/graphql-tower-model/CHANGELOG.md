@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.13.0"></a>
+# [3.13.0](https://github.com/tmotx/graphql-tower/compare/v3.12.5...v3.13.0) (2017-11-14)
+
+
+### Features
+
+* **model:** added batchInsert static method ([68ffbe6](https://github.com/tmotx/graphql-tower/commit/68ffbe6))
+
+
+
+
 <a name="3.12.5"></a>
 ## [3.12.5](https://github.com/tmotx/graphql-tower/compare/v3.12.4...v3.12.5) (2017-11-14)
 
