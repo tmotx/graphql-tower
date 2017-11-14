@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.12.3"></a>
+## [3.12.3](https://github.com/tmotx/graphql-tower/compare/v3.12.2...v3.12.3) (2017-11-14)
+
+
+### Bug Fixes
+
+* **helper:** conditionally require babel-polyfill ([3d34562](https://github.com/tmotx/graphql-tower/commit/3d34562))
+
+
+
+
 <a name="3.12.2"></a>
 ## [3.12.2](https://github.com/tmotx/graphql-tower/compare/v3.12.1...v3.12.2) (2017-11-14)
 
