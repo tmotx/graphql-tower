@@ -71,7 +71,12 @@ export default class Model {
     return this._dataloader;
   }
 
+  // deprecated
   static get queryBuilder() {
+    return this.database(this.tableName);
+  }
+
+  static get query() {
     return this.database(this.tableName);
   }
 
@@ -202,7 +207,7 @@ export default class Model {
 
   get queryBuilder() {
     if (!this._.queryBuilder) {
-      this._.queryBuilder = this.constructor.queryBuilder;
+      this._.queryBuilder = this.constructor.query;
     }
     return this._.queryBuilder;
   }
@@ -352,7 +357,7 @@ export default class Model {
       values.updatedAt = values.createdAt;
     }
 
-    const [id] = await this.constructor.queryBuilder
+    const [id] = await this.constructor.query
       .insert(signify(values))
       .returning(_.snakeCase(idAttribute));
 
