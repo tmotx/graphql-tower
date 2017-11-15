@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.13.1"></a>
+## [3.13.1](https://github.com/tmotx/graphql-tower/compare/v3.13.0...v3.13.1) (2017-11-15)
+
+
+### Bug Fixes
+
+* **model:** fix increment and decrement should update model ([4954b16](https://github.com/tmotx/graphql-tower/commit/4954b16))
+
+
+
+
 <a name="3.13.0"></a>
 # [3.13.0](https://github.com/tmotx/graphql-tower/compare/v3.12.5...v3.13.0) (2017-11-14)
 
