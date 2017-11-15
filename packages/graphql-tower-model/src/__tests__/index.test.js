@@ -50,6 +50,7 @@ class Default extends Model {
     password: new HashColumn(),
     userIds: new ListColumn(),
     data: new ValueColumn(Object),
+    total: new ValueColumn(Number),
   }
 }
 
@@ -88,6 +89,7 @@ describe('model', () => {
       table.specificType('user_ids', 'bigint[]');
       table.jsonb('data');
       table.timestamps();
+      table.integer('total').defaultTo(0);
       table.integer('created_by');
       table.integer('updated_by');
       table.timestamp('deleted_at');
@@ -493,6 +495,24 @@ describe('model', () => {
 
       (await Default.load(2)).removeValue('userIds', '10');
       expect((await Default.load(2)).userIds).toEqual([]);
+    });
+
+    it('increment', async () => {
+      const model = await Default.load(1);
+      expect(model.total).toBe(0);
+      await model.increment('total', 10);
+
+      expect(model.total).toBe(10);
+      expect((await Default.load(1)).total).toBe(10);
+    });
+
+    it('decrement', async () => {
+      const model = await Default.load(1);
+      expect(model.total).toBe(10);
+      await model.decrement('total', 20);
+
+      expect(model.total).toBe(-10);
+      expect((await Default.load(1)).total).toBe(-10);
     });
 
     it('search', async () => {

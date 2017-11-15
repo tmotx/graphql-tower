@@ -443,7 +443,8 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
     await this.query.update(setValue);
 
-    this.merge(data => _.setWith(data, [_.camelCase(column), key], value, Object));
+    const camel = _.camelCase(column);
+    return this.merge(data => _.setWith(data, [camel, key], value, Object));
   }
 
   async delKeyValue(column, key) {
@@ -453,7 +454,8 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
     await this.query.update(setValue);
 
-    this.merge(data => _.unset(data, [_.camelCase(column), key]));
+    const camel = _.camelCase(column);
+    return this.merge(data => _.unset(data, [camel, key]));
   }
 
   async appendValue(column, value) {
@@ -463,7 +465,9 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
     await this.query.update(setValue);
 
-    this.merge(_.set({}, column, _.concat(_.pull(this.valueOf(column) || [], value), value)));
+    const camel = _.camelCase(column);
+    const original = this._.previous[camel] || [];
+    return this.merge(_.set({}, camel, _.concat(_.pull(original, value), value)));
   }
 
   async removeValue(column, value) {
@@ -473,7 +477,20 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
     await this.query.update(setValue);
 
-    this.merge(_.set({}, column, _.pull(this.valueOf(column) || [], value)));
+    const camel = _.camelCase(column);
+    const original = this._.previous[camel] || [];
+    return this.merge(_.set({}, camel, _.pull(original, value)));
+  }
+
+  async increment(column, value) {
+    await this.query.increment(_.snakeCase(column), value);
+
+    const camel = _.camelCase(column);
+    return this.merge(data => _.set(data, [camel], (data[camel] || 0) + value));
+  }
+
+  async decrement(column, value) {
+    return this.increment(column, -value);
   }
 
   search(keyword) {
@@ -489,7 +506,7 @@ export default class Model {
 _.forEach([
   'where', 'whereNot', 'whereIn', 'whereNotIn', 'whereNull', 'whereNotNull', 'whereExists',
   'whereNotExists', 'whereBetween', 'whereNotBetween', 'whereRaw',
-  'orderBy', 'orderByRaw', 'increment', 'decrement',
+  'orderBy', 'orderByRaw',
 ], (key) => {
   Model.prototype[key] = function queryBuilder(...args) {
     this.queryBuilder[key](...args);

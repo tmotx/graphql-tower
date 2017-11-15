@@ -46,6 +46,7 @@ Object {
   "keyword": null,
   "name": "name is one",
   "password": null,
+  "total": 0,
   "updatedAt": null,
   "updatedBy": null,
   "userIds": null,
@@ -69,6 +70,7 @@ Object {
   "keyword": null,
   "name": "name is one",
   "password": null,
+  "total": 0,
   "updatedAt": null,
   "updatedBy": null,
   "userIds": null,
@@ -124,6 +126,7 @@ Object {
     "keyword": null,
     "name": "a name",
     "password": null,
+    "total": 0,
     "updatedAt": null,
     "updatedBy": null,
     "userIds": null,
@@ -144,6 +147,7 @@ Object {
     "keyword": null,
     "name": "a name",
     "password": null,
+    "total": 0,
     "updatedAt": null,
     "updatedBy": null,
     "userIds": null,
@@ -234,6 +238,13 @@ Object {
     "enumerable": true,
   },
   "password": HashColumn {
+    "_": Object {
+      "name": undefined,
+      "serialize": [Function],
+    },
+    "enumerable": true,
+  },
+  "total": ValueColumn {
     "_": Object {
       "name": undefined,
       "serialize": [Function],
@@ -349,6 +360,7 @@ Default {
   "id": null,
   "name": "my name",
   "password": null,
+  "total": null,
   "updatedAt": null,
   "updatedBy": null,
   "userIds": Array [],
