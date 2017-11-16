@@ -26,7 +26,7 @@ export class ValueColumn {
   }
 
   get isModel() {
-    return Boolean(this._.serialize && this._.serialize.load);
+    return Boolean(this._.serialize && this._.serialize.fromModel);
   }
 
   constructor(serialize = String, name) {
@@ -38,7 +38,7 @@ export class ValueColumn {
   fromModel(value) {
     if (value === null || value === undefined) return null;
 
-    if (this.isModel) return value.nativeId || value;
+    if (this.isModel) return this._.serialize.fromModel(value);
 
     return this.serialize(value);
   }

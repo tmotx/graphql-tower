@@ -3,7 +3,7 @@ import DataLoader from 'dataloader';
 import { fromGlobalId } from 'graphql-tower-global-id';
 import TimeToLiveStore from './TimeToLiveStore';
 
-export default class CacheModel {
+export default class DataCache {
   static ttl = false;
 
   static async loader(ids) {
@@ -24,7 +24,7 @@ export default class CacheModel {
       cacheMap: ttl ? new TimeToLiveStore() : new Map(),
     });
 
-    _.forEach(_.pullAll(_.keys(this.constructor), _.keys(CacheModel)), (name) => {
+    _.forEach(_.pullAll(_.keys(this.constructor), _.keys(DataCache)), (name) => {
       Object.defineProperty(this, _.lowerFirst(name), {
         enumerable: true,
         get: () => {

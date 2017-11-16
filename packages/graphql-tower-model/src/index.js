@@ -11,6 +11,7 @@ _.unionKeys = collections => _.union(..._.map(collections, _.keys));
 _.cloneAndMerge = collections => _.assign(..._.map(collections, _.cloneDeep));
 
 export * from './columns';
+export { default as MixedModel } from './MixedModel';
 
 export default class Model {
   static database = null;

@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import knex, { client } from 'jest-mock-knex';
+import knex, { client } from 'knex';
 import Model, { ValueColumn } from 'graphql-tower-model';
 import { toGlobalId } from 'graphql-tower-global-id';
 import { NotFoundError } from 'graphql-tower-errors';
-import { CacheModel } from '../';
-
-process.setMaxListeners(0);
+import { DataCache } from '../';
 
 const database = knex({
   client: 'pg',
@@ -37,18 +35,18 @@ class House extends Model {
   }
 }
 
-class Cache extends CacheModel {
+class Cache extends DataCache {
   static Car = Car;
   static House = House;
 }
 
-class TTLCache extends CacheModel {
+class TTLCache extends DataCache {
   static ttl = true;
   static Car = Car;
   static House = House;
 }
 
-describe('CacheModel', () => {
+describe('DataCache', () => {
   afterAll(() => database.destroy());
 
   describe('load & loadMany', () => {

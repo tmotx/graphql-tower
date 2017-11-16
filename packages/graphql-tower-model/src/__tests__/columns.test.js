@@ -1,4 +1,4 @@
-import knex, { client } from 'jest-mock-knex';
+import knex, { client } from 'knex';
 import _ from 'lodash';
 import { toGlobalId } from 'graphql-tower-global-id';
 import Model, {
@@ -10,9 +10,8 @@ import Model, {
   ArchiveColumn,
   CustomColumn,
   ReadOnlyColumn,
+  MixedModel,
 } from '../';
-
-process.setMaxListeners(0);
 
 const database = knex({
   client: 'pg',
@@ -34,6 +33,21 @@ class User extends Model {
   }
 }
 
+class Member extends Model {
+  static database = database;
+
+  static tableName = 'column_user';
+
+  static columns = {
+    name: new ValueColumn(),
+  }
+}
+
+class Buyer extends MixedModel {
+  static User = User;
+  static Member = Member;
+}
+
 class Column extends Model {
   static database = database;
 
@@ -44,7 +58,7 @@ class Column extends Model {
     nameAlias: new ValueColumn(String, 'nameAliasNickname'),
     total: new ValueColumn(Number),
     isAdmin: new ValueColumn(Boolean),
-    buyer: new ValueColumn(User, 'buyerId'),
+    buyer: new ValueColumn(Buyer, 'buyerId'),
     password: new HashColumn(),
     birthday: new DateColumn(),
     checkAt: new DateTimeColumn(),
@@ -78,7 +92,7 @@ describe('Columns', () => {
       table.string('name_alias_nickname');
       table.bigInteger('total');
       table.boolean('is_admin');
-      table.integer('buyer_id');
+      table.string('buyer_id');
       table.text('password');
       table.date('birthday');
       table.datetime('check_at');
@@ -172,15 +186,15 @@ describe('Columns', () => {
     expect(model.nameAlias).toBe('my nickname');
     expect(model.total).toBe(2020);
     expect(model.isAdmin).toBe(true);
-    expect(model.buyer.nativeId).toBe(1);
+    expect(model.buyer.nativeId).toBe('1');
     expect((await model.buyer).valueOf()).toEqual(expect.objectContaining({ id: 1, name: 'I`m user' }));
     expect(model.password).not.toBeNull();
     expect(model.birthday).toBe('2020-01-01');
     expect(model.checkAt).toEqual(new Date('2020-04-01T10:00:00'));
     expect(_.map(model.itemIds, ({ nativeId }) => nativeId)).toEqual([2, 3]);
     expect(Promise.all(model.itemIds)).resolves.toEqual([
-      expect.objectContaining({ id: toGlobalId('User', 2) }),
-      expect.objectContaining({ id: toGlobalId('User', 3) }),
+      expect.objectContaining({ id: toGlobalId('User', '2') }),
+      expect.objectContaining({ id: toGlobalId('User', '3') }),
     ]);
 
     expect(model.archiveName).toBe('my archive name');

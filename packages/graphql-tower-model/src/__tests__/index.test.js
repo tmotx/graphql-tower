@@ -1,4 +1,4 @@
-import knex, { client } from 'jest-mock-knex';
+import knex, { client } from 'knex';
 import _ from 'lodash';
 import faker from 'faker';
 import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLID } from 'graphql';
@@ -22,8 +22,6 @@ const schema = new GraphQLSchema({
     },
   }),
 });
-
-process.setMaxListeners(0);
 
 const database = knex({
   client: 'pg',
