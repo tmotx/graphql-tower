@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.14.0"></a>
+# [3.14.0](https://github.com/tmotx/graphql-tower/compare/v3.13.1...v3.14.0) (2017-11-16)
+
+
+
+
+**Note:** Version bump only for package graphql-tower
+
 <a name="3.13.1"></a>
 ## [3.13.1](https://github.com/tmotx/graphql-tower/compare/v3.13.0...v3.13.1) (2017-11-15)
 
