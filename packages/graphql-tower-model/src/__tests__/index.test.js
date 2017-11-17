@@ -495,22 +495,28 @@ describe('model', () => {
       expect((await Default.load(2)).userIds).toEqual([]);
     });
 
-    it('increment', async () => {
-      const model = await Default.load(1);
-      expect(model.total).toBe(0);
-      await model.increment('total', 10);
+    describe('increment', () => {
+      it('single', async () => {
+        const model = await Default.load(1);
+        expect(model.total).toBe(0);
+        await model.increment('total', 10);
 
-      expect(model.total).toBe(10);
-      expect((await Default.load(1)).total).toBe(10);
-    });
+        expect(model.total).toBe(10);
+        expect((await Default.load(1)).total).toBe(10);
 
-    it('decrement', async () => {
-      const model = await Default.load(1);
-      expect(model.total).toBe(10);
-      await model.decrement('total', 20);
+        expect(await model.where('total', 30).increment('total', 10)).toBe(false);
+      });
 
-      expect(model.total).toBe(-10);
-      expect((await Default.load(1)).total).toBe(-10);
+      it('multiple', async () => {
+        const model = await Default.load(1);
+        expect(model.total).toBe(10);
+        await model.increment({ total: 10 });
+
+        expect(model.total).toBe(20);
+        expect((await Default.load(1)).total).toBe(20);
+
+        await expect(model.where('total', 30).increment({ total: 10 }, Error)).rejects.toEqual(new Error());
+      });
     });
 
     it('search', async () => {

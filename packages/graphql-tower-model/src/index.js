@@ -444,8 +444,7 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
     await this.query.update(setValue);
 
-    const camel = _.camelCase(column);
-    return this.merge(data => _.setWith(data, [camel, key], value, Object));
+    return this.merge(data => _.setWith(data, [column, key], value, Object));
   }
 
   async delKeyValue(column, key) {
@@ -455,8 +454,7 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
     await this.query.update(setValue);
 
-    const camel = _.camelCase(column);
-    return this.merge(data => _.unset(data, [camel, key]));
+    return this.merge(data => _.unset(data, [column, key]));
   }
 
   async appendValue(column, value) {
@@ -466,9 +464,8 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
     await this.query.update(setValue);
 
-    const camel = _.camelCase(column);
-    const original = this._.previous[camel] || [];
-    return this.merge(_.set({}, camel, _.concat(_.pull(original, value), value)));
+    const original = this._.previous[column] || [];
+    return this.merge(_.set({}, column, _.concat(_.pull(original, value), value)));
   }
 
   async removeValue(column, value) {
@@ -478,20 +475,30 @@ export default class Model {
     const setValue = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
     await this.query.update(setValue);
 
-    const camel = _.camelCase(column);
-    const original = this._.previous[camel] || [];
-    return this.merge(_.set({}, camel, _.pull(original, value)));
+    const original = this._.previous[column] || [];
+    return this.merge(_.set({}, column, _.pull(original, value)));
   }
 
-  async increment(column, value) {
-    await this.query.increment(_.snakeCase(column), value);
+  async increment(...args) {
+    const { database } = this.constructor;
+    const changes = _.mapValues(
+      _.isPlainObject(args[0]) ? args[0] : _.set({}, [args[0]], args[1]),
+      _.toNumber,
+    );
 
-    const camel = _.camelCase(column);
-    return this.merge(data => _.set(data, [camel], (data[camel] || 0) + value));
-  }
+    const count = await this.query.update(_.mapValues(
+      _.mapKeys(changes, (value, column) => _.snakeCase(column)),
+      (value, column) => database.raw(`${column} + ?`, [value]),
+    ));
 
-  async decrement(column, value) {
-    return this.increment(column, -value);
+    const ConflictError = args[2] || args[1];
+    if (count < 1) {
+      if (ConflictError && (ConflictError.prototype instanceof Error || ConflictError.name === 'Error')) throw new Error();
+      return false;
+    }
+
+    return this.merge(data =>
+      _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) + value)));
   }
 
   search(keyword) {
