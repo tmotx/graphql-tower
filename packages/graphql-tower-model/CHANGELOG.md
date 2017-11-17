@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.15.0"></a>
+# [3.15.0](https://github.com/tmotx/graphql-tower/compare/v3.14.0...v3.15.0) (2017-11-17)
+
+
+### Features
+
+* **model:** increment method support multiple columns ([adb8a1c](https://github.com/tmotx/graphql-tower/commit/adb8a1c))
+
+
+
+
 <a name="3.14.0"></a>
 # [3.14.0](https://github.com/tmotx/graphql-tower/compare/v3.13.1...v3.14.0) (2017-11-16)
 
