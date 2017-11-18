@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-storage-s3",
-  "version": "3.7.0",
+  "version": "3.15.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "aws-sdk": "^2.148.0",
-    "graphql-tower-errors": "^3.0.0",
+    "graphql-tower-errors": "^3.15.1",
     "graphql-tower-unique": "^3.6.2",
     "sharp": "^0.18.4"
   }

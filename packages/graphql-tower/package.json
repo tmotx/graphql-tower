@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "3.15.0",
+  "version": "3.15.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -23,14 +23,14 @@
     "graphql": "^0.11.7"
   },
   "dependencies": {
-    "graphql-tower-account-kit": "^3.6.0",
-    "graphql-tower-cache": "^3.15.0",
-    "graphql-tower-errors": "^3.0.0",
+    "graphql-tower-account-kit": "^3.15.1",
+    "graphql-tower-cache": "^3.15.1",
+    "graphql-tower-errors": "^3.15.1",
     "graphql-tower-global-id": "^3.3.3",
     "graphql-tower-helper": "^3.12.4",
     "graphql-tower-jwt": "^3.6.0",
-    "graphql-tower-middleware": "^3.12.0",
-    "graphql-tower-model": "^3.15.0",
+    "graphql-tower-middleware": "^3.15.1",
+    "graphql-tower-model": "^3.15.1",
     "graphql-tower-queries": "^3.12.0",
     "graphql-tower-types": "^3.9.0",
     "graphql-tower-unique": "^3.6.2"
