@@ -32,6 +32,14 @@ export class PaymentRequiredError extends GraphQLError {
   }
 }
 
+export class NotAcceptableError extends GraphQLError {
+  symbol = 'NotAcceptableError';
+
+  constructor(message = 'NotAcceptableError') {
+    super(message);
+  }
+}
+
 export class GoneDataError extends GraphQLError {
   symbol = 'GoneDataError';
 
