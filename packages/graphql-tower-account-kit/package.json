@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-account-kit",
-  "version": "3.15.1",
+  "version": "3.16.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "lib"
   ],
   "dependencies": {
-    "graphql-tower-errors": "^3.15.1",
+    "graphql-tower-errors": "^3.16.0",
     "node-fetch": "^1.7.3"
   }
 }
