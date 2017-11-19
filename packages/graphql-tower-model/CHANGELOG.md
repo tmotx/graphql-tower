@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.16.1"></a>
+## [3.16.1](https://github.com/tmotx/graphql-tower/compare/v3.16.0...v3.16.1) (2017-11-19)
+
+
+### Bug Fixes
+
+* **model:** will check column when set values ([8df96a5](https://github.com/tmotx/graphql-tower/commit/8df96a5))
+
+
+
+
 <a name="3.16.0"></a>
 # [3.16.0](https://github.com/tmotx/graphql-tower/compare/v3.15.1...v3.16.0) (2017-11-19)
 
