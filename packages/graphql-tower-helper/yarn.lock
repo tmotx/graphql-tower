@@ -2,3 +2,6 @@
 # yarn lockfile v1
 
 
+graphql-tower-errors@^3.15.1:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.15.1.tgz#01227c692d2cefda9348108c3226926283d1d930"

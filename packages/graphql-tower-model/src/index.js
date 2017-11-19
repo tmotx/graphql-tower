@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
-import { combine } from 'graphql-tower-helper';
+import { combine, assertResult } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
@@ -133,14 +133,7 @@ export default class Model {
 
         return this.dataloader.load(nativeId).then(data => (data ? this.forge(data) : null));
       })
-      .then((model) => {
-        const NotFoundError = error;
-        if (!model && NotFoundError && (NotFoundError.prototype instanceof Error || NotFoundError.name === 'Error')) {
-          throw new NotFoundError();
-        }
-
-        return model;
-      }), { nativeId }).promise;
+      .then(model => assertResult(model, error)), { nativeId }).promise;
   }
 
   static async loadMany(ids, error, cache) {
@@ -491,13 +484,7 @@ export default class Model {
       (value, column) => database.raw(`${column} + ?`, [value]),
     ));
 
-    const ConflictError = args[2] || args[1];
-    if (count < 1) {
-      if (ConflictError && (ConflictError.prototype instanceof Error || ConflictError.name === 'Error')) throw new Error();
-      return false;
-    }
-
-    return this.merge(data =>
+    return assertResult(count > 0, args[2] || args[1]) && this.merge(data =>
       _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) + value)));
   }
 

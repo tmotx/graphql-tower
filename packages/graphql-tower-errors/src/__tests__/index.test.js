@@ -4,6 +4,7 @@ import {
   NotFoundError,
   UnauthorizedError,
   PaymentRequiredError,
+  NotAcceptableError,
   GoneDataError,
   LockedError,
   ConflictError,
@@ -45,6 +46,11 @@ describe('error', () => {
   it('PaymentRequiredError', async () => {
     expect(() => { throw new PaymentRequiredError(); }).toThrowError(Error);
     expect(() => { throw new PaymentRequiredError(); }).toThrowError(PaymentRequiredError);
+  });
+
+  it('NotAcceptableError', async () => {
+    expect(() => { throw new NotAcceptableError(); }).toThrowError(Error);
+    expect(() => { throw new NotAcceptableError(); }).toThrowError(NotAcceptableError);
   });
 
   it('GoneDataError', async () => {

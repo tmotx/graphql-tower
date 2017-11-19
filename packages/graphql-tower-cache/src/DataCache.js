@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import DataLoader from 'dataloader';
+import { assertResult } from 'graphql-tower-helper';
 import { fromGlobalId } from 'graphql-tower-global-id';
 import TimeToLiveStore from './TimeToLiveStore';
 
@@ -47,14 +48,7 @@ export default class DataCache {
         if ((Type && typeof Type === 'string') && model.constructor.displayName !== Type) return null;
         return model.clone({ cache: this });
       })
-      .then(async (model) => {
-        const NotFoundError = error;
-        if (!model && NotFoundError && (NotFoundError.prototype instanceof Error || NotFoundError.name === 'Error')) {
-          throw new NotFoundError();
-        }
-
-        return model;
-      });
+      .then(model => assertResult(model, error));
   }
 
   async loadMany(ids, error, type) {

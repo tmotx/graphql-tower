@@ -18,5 +18,8 @@
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
   "files": [
     "lib"
-  ]
+  ],
+  "devDependencies": {
+    "graphql-tower-errors": "^3.15.1"
+  }
 }
