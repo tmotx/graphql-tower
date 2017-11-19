@@ -29,6 +29,7 @@
     "knex": "^0.13.0"
   },
   "devDependencies": {
-    "graphql-tower-errors": "^3.16.0"
+    "graphql-tower-errors": "^3.16.0",
+    "graphql-tower-queries": "^3.12.0"
   }
 }

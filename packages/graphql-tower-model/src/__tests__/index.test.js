@@ -1,12 +1,26 @@
 import knex, { client } from 'knex';
 import _ from 'lodash';
 import faker from 'faker';
-import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLID } from 'graphql';
+import { graphql, GraphQLSchema, GraphQLNonNull, GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt } from 'graphql';
 import { toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
+import { Mutation } from 'graphql-tower-queries';
 import { NotFoundError } from 'graphql-tower-errors';
 import Model, { ValueColumn, HashColumn, ListColumn } from '../';
 
 const resolve = jest.fn();
+
+const UpdateMutation = class extends Mutation {
+  inputFields = {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    total: { type: GraphQLInt },
+  }
+
+  outputFields = {
+    status: { type: GraphQLInt },
+  }
+
+  resolve = resolve;
+};
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -19,6 +33,12 @@ const schema = new GraphQLSchema({
         }),
         resolve,
       },
+    },
+  }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+      update: new UpdateMutation(),
     },
   }),
 });
@@ -243,6 +263,13 @@ describe('model', () => {
   });
 
   describe('model', () => {
+    it('set', () => {
+      const model = new Default({ name: 'isme', price: 99, total: undefined });
+      expect(model.valueOf()).toEqual({ name: 'isme' });
+      model.set({ name: 'new name', price: 99, total: undefined });
+      expect(model.valueOf()).toEqual({ name: 'new name' });
+    });
+
     it('isNew', () => {
       const model = new Default();
       expect(model.isNew).toBe(true);

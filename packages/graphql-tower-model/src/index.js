@@ -286,7 +286,10 @@ export default class Model {
   }
 
   set(data) {
-    _.forEach(data, (value, key) => { this[key] = value; });
+    const { columns } = this.constructor;
+    _.forEach(data, (value, key) => {
+      if (columns[key] && value !== undefined) this[key] = value;
+    });
     return this;
   }
 
