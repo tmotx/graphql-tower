@@ -12,37 +12,56 @@ describe('storage s3', () => {
     expect(() => new StorageS3({ STORAGE_URL: 's3://ap-northeast-1/graphql-tower' })).not.toThrowError();
   });
 
+  describe('checkContentType', () => {
+    it('when type is jpeg', async () => {
+      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/jpeg' }));
+      await storage.checkContentType('XYZ');
+      expect(promise.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledTimes(1);
+    });
+
+    it('when type is png', async () => {
+      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/png' }));
+      await storage.checkContentType('XYZ');
+      expect(promise.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledTimes(1);
+    });
+
+    it('when unsupported file type', async () => {
+      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'application/epub+zip' }));
+      await expect(storage.checkContentType('from XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
+      expect(promise).toHaveBeenCalledTimes(1);
+    });
+
+    it('when not found', async () => {
+      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+      await expect(storage.checkContentType('XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
+      expect(promise).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('upload', () => {
     it('successfully uploaded', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/jpeg' }));
       pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
-      await storage.upload('from XYZ', 'IMAGE_UPLOAD_UUID');
+      await storage.upload('XYZ', 'IMAGE_UPLOAD_UUID');
       expect(promise.mock.calls).toMatchSnapshot();
       expect(pipe.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(3);
+      expect(promise).toHaveBeenCalledTimes(2);
       expect(pipe).toHaveBeenCalledTimes(1);
     });
 
     it('successfully uploaded when use unique', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/png' }));
       pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
-      await storage.upload('from XYZ');
+      await storage.upload('XYZ');
       expect(promise.mock.calls).toMatchSnapshot();
       expect(pipe.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(3);
+      expect(promise).toHaveBeenCalledTimes(2);
       expect(pipe).toHaveBeenCalledTimes(1);
     });
 
     it('when not found', async () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-      await expect(storage.upload('from XYZ')).rejects.toEqual(new NotFoundError());
-      expect(promise).toHaveBeenCalledTimes(1);
-      expect(pipe).toHaveBeenCalledTimes(0);
-    });
-
-    it('when unsupported file type', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'application/epub+zip' }));
-      await expect(storage.upload('from XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
+      await expect(storage.upload('XYZ')).rejects.toEqual(new NotFoundError());
       expect(promise).toHaveBeenCalledTimes(1);
       expect(pipe).toHaveBeenCalledTimes(0);
     });

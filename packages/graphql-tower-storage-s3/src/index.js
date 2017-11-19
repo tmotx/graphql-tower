@@ -34,20 +34,27 @@ export default class StorageS3 {
     return this.s3.upload({ Key: toKey, Body: readStream.pipe(transform) }).promise();
   }
 
-  async upload(key, toKey = unique()) {
+  async checkContentType(key) {
     try {
       const reply = await this.s3.headObject({ Key: `uploader/${key}` }).promise();
 
-      if (['image/png', 'image/jpeg'].indexOf(reply.ContentType) < 0) {
-        throw new TypeError('unsupported file type');
+      if (['image/png', 'image/jpeg'].indexOf(reply.ContentType) > -1) {
+        return true;
       }
 
+      throw new Error();
+    } catch (e) {
+      throw new TypeError('unsupported file type');
+    }
+  }
+
+  async upload(key, toKey = unique()) {
+    try {
       await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
       await this.transform(`media/${toKey}`, `media/${toKey}_cover`);
 
       return toKey;
     } catch (e) {
-      if (e.message === 'unsupported file type') throw e;
       throw new NotFoundError();
     }
   }

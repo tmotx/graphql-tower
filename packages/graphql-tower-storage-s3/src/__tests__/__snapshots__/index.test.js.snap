@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`storage s3 checkContentType when type is jpeg 1`] = `
+Array [
+  Array [
+    Object {
+      "Key": "uploader/XYZ",
+      "method": "headObject",
+    },
+  ],
+]
+`;
+
+exports[`storage s3 checkContentType when type is png 1`] = `
+Array [
+  Array [
+    Object {
+      "Key": "uploader/XYZ",
+      "method": "headObject",
+    },
+  ],
+]
+`;
+
 exports[`storage s3 fetchCover successfully fetch 1`] = `
 Array [
   Array [
@@ -106,13 +128,7 @@ exports[`storage s3 upload successfully uploaded 1`] = `
 Array [
   Array [
     Object {
-      "Key": "uploader/from XYZ",
-      "method": "headObject",
-    },
-  ],
-  Array [
-    Object {
-      "CopySource": "graphql-tower/uploader/from XYZ",
+      "CopySource": "graphql-tower/uploader/XYZ",
       "Key": "media/IMAGE_UPLOAD_UUID",
       "method": "copyObject",
     },
@@ -142,13 +158,7 @@ exports[`storage s3 upload successfully uploaded when use unique 1`] = `
 Array [
   Array [
     Object {
-      "Key": "uploader/from XYZ",
-      "method": "headObject",
-    },
-  ],
-  Array [
-    Object {
-      "CopySource": "graphql-tower/uploader/from XYZ",
+      "CopySource": "graphql-tower/uploader/XYZ",
       "Key": "media/UNIQUE_GUID",
       "method": "copyObject",
     },
