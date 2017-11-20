@@ -44,8 +44,7 @@ class Member extends Model {
 }
 
 class Buyer extends MixedModel {
-  static User = User;
-  static Member = Member;
+  static models = [User, Member];
 }
 
 class Column extends Model {

@@ -1,9 +1,9 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_dataloader", "_columns"] }] */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_dataloader", "_columns", "__columns"] }] */
 
 import _ from 'lodash';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
-import { combine, assertResult } from 'graphql-tower-helper';
+import { thunk, combine, assertResult } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
@@ -32,19 +32,23 @@ export default class Model {
 
   static toKeyword = null;
 
+  static _columns = thunk({});
+
   static get displayName() {
     return this.name;
   }
 
   static get columns() {
-    if (_.isFunction(this._columns)) this.columns = this._columns();
+    if (this.__columns) return this.__columns;
+
+    const columns = this._columns();
 
     const {
       idAttribute, hasOperator, hasTimestamps, softDelete,
     } = this;
 
-    return _.defaults(
-      this._columns,
+    this.__columns = _.defaults(
+      columns,
       _.set({}, idAttribute, new PrimaryKeyColumn()),
       hasTimestamps && {
         createdAt: new DateTimeColumn(),
@@ -58,11 +62,11 @@ export default class Model {
         deletedBy: new ValueColumn(),
       },
     );
+
+    return this.__columns;
   }
 
-  static set columns(columns) {
-    this._columns = columns;
-  }
+  static set columns(columns) { this._columns = thunk(columns); }
 
   static get dataloader() {
     if (!this._dataloader) {

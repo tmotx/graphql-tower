@@ -29,8 +29,7 @@ class Gift extends Model {
 }
 
 class Target extends MixedModel {
-  static Product = Product;
-  static Gift = Gift;
+  static models = [Product, Gift];
 }
 
 describe('mixed model', () => {

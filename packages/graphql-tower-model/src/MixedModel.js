@@ -1,12 +1,25 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_models", "__models"] }] */
 import _ from 'lodash';
+import { thunk } from 'graphql-tower-helper';
 import { fromGlobalId } from 'graphql-tower-global-id';
 
 export default class MixedModel {
+  static _models = thunk([]);
+
+  static get models() {
+    if (this.__models) return this.__models;
+
+    this.__models = _.mapKeys(this._models(), model => model.displayName);
+    return this.__models;
+  }
+
+  static set models(models) { this._models = thunk(models); }
+
   static load(id, error, cache) {
     if (!id) return null;
 
     const gid = fromGlobalId(id);
-    const Model = this[gid.type];
+    const Model = this.models[gid.type];
     if (!Model) return null;
 
     return Model.load(gid.toString(), error, cache);
