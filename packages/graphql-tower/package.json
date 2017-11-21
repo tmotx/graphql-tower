@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "3.17.1",
+  "version": "3.17.2",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "graphql": "^0.11.7"
   },
   "dependencies": {
-    "graphql-tower-account-kit": "^3.16.0",
+    "graphql-tower-account-kit": "^3.17.2",
     "graphql-tower-cache": "^3.17.1",
     "graphql-tower-errors": "^3.16.0",
     "graphql-tower-global-id": "^3.3.3",
