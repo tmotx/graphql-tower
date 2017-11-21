@@ -29,7 +29,7 @@ export default class AccountKit {
       });
 
       const res = await fetch(`${this.host}/access_token?${query}`);
-      const { body: { access_token: token } } = await res.json();
+      const { access_token: token } = await res.json();
       return token;
     } catch (e) {
       throw new UnauthorizedError('AccountKit cannot get access token');
@@ -46,8 +46,7 @@ export default class AccountKit {
       });
 
       const res = await fetch(`${this.host}/me?${query}`);
-      const { body: { phone } } = await res.json();
-      const { country_prefix: prefix, national_number: mobile } = phone;
+      const { phone: { country_prefix: prefix, national_number: mobile } } = await res.json();
 
       return `${prefix}${padStart(mobile, 13, 0)}`;
     } catch (e) {

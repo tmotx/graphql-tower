@@ -16,7 +16,7 @@ describe('account kit', () => {
     let token;
     beforeEach(() => {
       token = faker.random.uuid();
-      fetch.mockReturnValueOnce(Promise.resolve({ body: { access_token: token } }));
+      fetch.mockReturnValueOnce(Promise.resolve({ access_token: token }));
     });
 
     it('getAccessToken', async () => {
@@ -37,7 +37,7 @@ describe('account kit', () => {
       const hash = crypto.createHmac('sha256', 'server secret').update(token).digest('hex');
 
       fetch.mockReturnValueOnce(Promise.resolve({
-        body: { phone: { country_prefix: prefix, national_number: mobile } },
+        phone: { country_prefix: prefix, national_number: mobile },
       }));
 
       const reply = await accountKit.getAccountPhone(code);
