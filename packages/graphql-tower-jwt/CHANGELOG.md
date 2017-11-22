@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.18.1"></a>
+## [3.18.1](https://github.com/tmotx/graphql-tower/compare/v3.18.0...v3.18.1) (2017-11-22)
+
+
+### Bug Fixes
+
+* **jwt:** added assignUser method into req object ([42c242b](https://github.com/tmotx/graphql-tower/commit/42c242b))
+
+
+
+
 <a name="3.18.0"></a>
 # [3.18.0](https://github.com/tmotx/graphql-tower/compare/v3.17.2...v3.18.0) (2017-11-22)
 
