@@ -69,6 +69,14 @@ export default class JsonWebToken {
     return async (req, res, next) => {
       const { toValues, toModel, toModelWithVerification } = configs;
 
+      req.assignUser = (model) => {
+        req.user = model;
+
+        const accessToken = this.accessToken(toValues(model));
+        res.append('Authorization', accessToken);
+        res.append('Set-Cookie', cookie.serialize('access_token', accessToken, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 }));
+      };
+
       let user;
       let renewToken = false;
 
@@ -111,11 +119,7 @@ export default class JsonWebToken {
 
       if (user) {
         req.user = user;
-
-        if (renewToken) {
-          res.append('Authorization', this.accessToken(toValues(user)));
-          res.append('Set-Cookie', cookie.serialize('access_token', this.accessToken(toValues(user)), { httpOnly: true, maxAge: 60 * 60 * 24 * 7 }));
-        }
+        if (renewToken) req.assignUser(user);
       }
 
       if (next) next();

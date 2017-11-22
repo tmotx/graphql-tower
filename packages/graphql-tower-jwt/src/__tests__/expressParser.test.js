@@ -33,6 +33,19 @@ describe('expressParser', () => {
     expect(req.user).toEqual({ id: '10' });
   });
 
+  it('assignUser', async () => {
+    const req = {};
+    const res = { append: jest.fn() };
+
+    await jwt.expressParser()(req, res);
+    expect(req.user).toBeUndefined();
+
+    req.assignUser({ id: '10' });
+    expect(req.user).toEqual({ id: '10' });
+    expect(res.append).toHaveBeenCalledWith('Authorization', expect.anything());
+    expect(res.append).toHaveBeenCalledWith('Set-Cookie', expect.anything());
+  });
+
   describe('refresh token', () => {
     it('successfully get user', async () => {
       const token = jwt.refreshToken({ id: '10' });
