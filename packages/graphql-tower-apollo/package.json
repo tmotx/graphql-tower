@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-apollo",
-  "version": "3.17.1",
+  "version": "3.18.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "apollo-client": "^2.0.3",
     "apollo-link-context": "^1.0.1",
     "apollo-link-http": "^1.2.0",
-    "graphql-tower-helper": "^3.16.0",
+    "graphql-tower-helper": "^3.18.0",
     "isomorphic-unfetch": "^2.0.0"
   }
 }
