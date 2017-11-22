@@ -38,6 +38,10 @@ export function retry(handler, times = 3) {
   });
 }
 
+export function displayName(Component) {
+  return Component.displayName || Component.name || 'Unknown';
+}
+
 export function assertResult(value, ThrowError) {
   if (!value && ThrowError && (ThrowError.prototype instanceof Error || ThrowError.name === 'Error')) {
     throw new ThrowError();

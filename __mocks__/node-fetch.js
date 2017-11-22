@@ -1,3 +1,4 @@
-export const fetch = jest.fn(() => Promise.resolve());
+const request = (...args) => (Promise.resolve({ json: () => request.fetch(...args) }));
+request.fetch = jest.fn(() => Promise.resolve());
 
-export default (...args) => (Promise.resolve({ json: () => fetch(...args) }));
+module.exports = request;

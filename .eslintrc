@@ -12,6 +12,8 @@
     "afterAll": true
   },
   "rules": {
-    "import/no-extraneous-dependencies": [0]
+    "import/no-extraneous-dependencies": [0],
+    "function-paren-newline": ["error", "consistent"],
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx"] }]
   }
 }

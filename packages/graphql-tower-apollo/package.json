@@ -1,0 +1,34 @@
+{
+  "name": "graphql-tower-apollo",
+  "version": "3.17.1",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "peerDependencies": {
+    "next": "^4.1.4",
+    "react-apollo": "^2.0.1"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.1.1",
+    "apollo-client": "^2.0.3",
+    "apollo-link-context": "^1.0.1",
+    "apollo-link-http": "^1.2.0",
+    "graphql-tower-helper": "^3.16.0",
+    "isomorphic-unfetch": "^2.0.0"
+  }
+}

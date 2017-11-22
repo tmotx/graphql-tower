@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { NotFoundError } from 'graphql-tower-errors';
-import { thunk, combine, next, retry, assertResult } from '../';
+import { thunk, combine, next, retry, displayName, assertResult } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -58,6 +58,16 @@ describe('helper', () => {
     handler.mockReturnValueOnce(Promise.resolve('ok'));
     await expect(retry(handler, 0)).resolves.toBe('ok');
     expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('displayName', () => {
+    class DisplayApp { static displayName = 'App'; }
+    expect(displayName(DisplayApp)).toBe('App');
+
+    class App {}
+    expect(displayName(App)).toBe('App');
+
+    expect(displayName({})).toBe('Unknown');
   });
 
   it('assertResult', async () => {
