@@ -23,6 +23,7 @@
     "graphql-tower-generate-key": "./lib/cli.js"
   },
   "dependencies": {
+    "cookie": "^0.3.1",
     "jsonwebtoken": "^8.1.0",
     "node-rsa": "^0.4.2"
   }
