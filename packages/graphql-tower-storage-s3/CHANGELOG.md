@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.19.4"></a>
+## [3.19.4](https://github.com/tmotx/graphql-tower/compare/v3.19.3...v3.19.4) (2017-11-24)
+
+
+### Bug Fixes
+
+* **storage-s3:** remove headers on upload ([510d731](https://github.com/tmotx/graphql-tower/commit/510d731))
+
+
+
+
 <a name="3.19.3"></a>
 ## [3.19.3](https://github.com/tmotx/graphql-tower/compare/v3.19.2...v3.19.3) (2017-11-24)
 
