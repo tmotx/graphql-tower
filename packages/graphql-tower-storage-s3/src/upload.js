@@ -16,7 +16,7 @@ export default async function upload(credentials, file) {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Content-Type': 'multipart/form-data; charset=utf-8',
     },
     body: formData,
   });
