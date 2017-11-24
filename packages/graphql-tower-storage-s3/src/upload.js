@@ -12,9 +12,5 @@ export default async function upload(credentials, file) {
   formData.append('x-amz-date', date);
   formData.append('x-amz-signature', signature);
 
-  return fetch(`https://${bucket}.s3.amazonaws.com/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'multipart/form-data' },
-    body: formData,
-  });
+  return fetch(`https://${bucket}.s3.amazonaws.com/`, { method: 'POST', body: formData });
 }
