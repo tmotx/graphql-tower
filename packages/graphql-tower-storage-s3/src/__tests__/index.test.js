@@ -1,6 +1,7 @@
 import { promise, pipe } from 'aws-sdk';
 import { NotFoundError } from 'graphql-tower-errors';
 import StorageS3 from '../';
+import upload from '../upload';
 
 jest.mock('graphql-tower-unique', () => () => 'UNIQUE_GUID');
 
@@ -135,7 +136,7 @@ describe('storage s3', () => {
 
   describe('upload', () => {
     it('successfully upload', async () => {
-      StorageS3.upload(storage.generateTemporaryCredentials(), 'FILE_PATH');
+      upload(storage.generateTemporaryCredentials(), 'FILE_PATH');
       expect(formData).toHaveBeenCalledWith('file', 'FILE_PATH');
       expect(formData).toHaveBeenCalledWith('policy', expect.anything());
       expect(formData).toHaveBeenCalledWith('x-amz-algorithm', 'AWS4-HMAC-SHA256');

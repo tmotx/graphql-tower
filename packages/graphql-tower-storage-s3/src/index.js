@@ -1,6 +1,6 @@
 import min from 'lodash/min';
-import crypto from 'crypto';
 import url from 'url';
+import crypto from 'crypto';
 import sharp from 'sharp';
 import AWS from 'aws-sdk';
 import { NotFoundError } from 'graphql-tower-errors';
@@ -19,30 +19,6 @@ export default class StorageS3 {
   accessKeyId = '';
 
   secretAccessKey = '';
-
-  static async upload(credentials, file) {
-    const {
-      key, bucket, policy, algorithm, credential, date, signature,
-    } = JSON.parse(credentials);
-
-    const formData = new FormData();
-    formData.append('key', key);
-    formData.append('file', file);
-    formData.append('policy', policy);
-    formData.append('x-amz-algorithm', algorithm);
-    formData.append('x-amz-credential', credential);
-    formData.append('x-amz-date', date);
-    formData.append('x-amz-signature', signature);
-
-    return fetch(`https://${bucket}.s3.amazonaws.com/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-      },
-      body: formData,
-    });
-  }
 
   constructor(env: Object = {}) {
     if (!env.STORAGE_URL) {
