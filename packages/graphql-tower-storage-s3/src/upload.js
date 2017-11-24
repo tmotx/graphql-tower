@@ -14,10 +14,7 @@ export default async function upload(credentials, file) {
 
   return fetch(`https://${bucket}.s3.amazonaws.com/`, {
     method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'multipart/form-data; charset=utf-8',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
     body: formData,
   });
 }
