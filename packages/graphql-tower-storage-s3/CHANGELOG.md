@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.19.6"></a>
+## [3.19.6](https://github.com/tmotx/graphql-tower/compare/v3.19.5...v3.19.6) (2017-11-24)
+
+
+### Bug Fixes
+
+* **storage-s3:** use end and read to create hmac ([b8ea559](https://github.com/tmotx/graphql-tower/commit/b8ea559))
+
+
+
+
 <a name="3.19.5"></a>
 ## [3.19.5](https://github.com/tmotx/graphql-tower/compare/v3.19.4...v3.19.5) (2017-11-24)
 
