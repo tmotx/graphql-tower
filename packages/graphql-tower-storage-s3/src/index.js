@@ -7,7 +7,9 @@ import { NotFoundError } from 'graphql-tower-errors';
 import unique from 'graphql-tower-unique';
 
 function createHmacDigest(key, data) {
-  return crypto.createHmac('sha256', key).update(data).digest('base64');
+  const hmac = crypto.createHmac('sha256', key);
+  hmac.end(data);
+  return hmac.read();
 }
 
 function createDate() {
