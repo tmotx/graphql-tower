@@ -127,7 +127,7 @@ export default class StorageS3 {
     })).toString('base64');
 
     // create signature with policy, aws secret key & other scope information
-    const dateKey = createHmacDigest(`AWS4${this.accessKeyId}`, date);
+    const dateKey = createHmacDigest(`AWS4${this.secretAccessKey}`, date);
     const dateRegionKey = createHmacDigest(dateKey, this.region);
     const dateRegionServiceKey = createHmacDigest(dateRegionKey, 's3');
     const signingKey = createHmacDigest(dateRegionServiceKey, 'aws4_request');
