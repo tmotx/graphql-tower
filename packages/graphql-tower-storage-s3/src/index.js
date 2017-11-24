@@ -107,7 +107,7 @@ export default class StorageS3 {
     // create date string for the current date
     const date = createDate();
 
-    const credential = `${this.secretAccessKey}/${date}/${this.region}/s3/aws4_request`;
+    const credential = `${this.accessKeyId}/${date}/${this.region}/s3/aws4_request`;
 
     // create policy
     const policy = Buffer.from(JSON.stringify({
