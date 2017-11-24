@@ -22,6 +22,66 @@ Array [
 ]
 `;
 
+exports[`storage s3 confirm successfully confirmed 1`] = `
+Array [
+  Array [
+    Object {
+      "CopySource": "graphql-tower/uploader/XYZ",
+      "Key": "media/IMAGE_UPLOAD_UUID",
+      "method": "copyObject",
+    },
+  ],
+  Array [
+    Object {
+      "Body": "IMAGE_STREAM_BODY",
+      "Key": "media/IMAGE_UPLOAD_UUID_cover",
+      "method": "upload",
+    },
+  ],
+]
+`;
+
+exports[`storage s3 confirm successfully confirmed 2`] = `
+Array [
+  Array [
+    Object {
+      "Key": "media/IMAGE_UPLOAD_UUID",
+      "method": "getObject",
+    },
+  ],
+]
+`;
+
+exports[`storage s3 confirm successfully confirmed when use unique 1`] = `
+Array [
+  Array [
+    Object {
+      "CopySource": "graphql-tower/uploader/XYZ",
+      "Key": "media/UNIQUE_GUID",
+      "method": "copyObject",
+    },
+  ],
+  Array [
+    Object {
+      "Body": "IMAGE_STREAM_BODY",
+      "Key": "media/UNIQUE_GUID_cover",
+      "method": "upload",
+    },
+  ],
+]
+`;
+
+exports[`storage s3 confirm successfully confirmed when use unique 2`] = `
+Array [
+  Array [
+    Object {
+      "Key": "media/UNIQUE_GUID",
+      "method": "getObject",
+    },
+  ],
+]
+`;
+
 exports[`storage s3 fetchCover successfully fetch 1`] = `
 Array [
   Array [
@@ -119,66 +179,6 @@ Array [
     Object {
       "Key": "cache/IMAGE_KEY_precover_128x2048",
       "method": "headObject",
-    },
-  ],
-]
-`;
-
-exports[`storage s3 upload successfully uploaded 1`] = `
-Array [
-  Array [
-    Object {
-      "CopySource": "graphql-tower/uploader/XYZ",
-      "Key": "media/IMAGE_UPLOAD_UUID",
-      "method": "copyObject",
-    },
-  ],
-  Array [
-    Object {
-      "Body": "IMAGE_STREAM_BODY",
-      "Key": "media/IMAGE_UPLOAD_UUID_cover",
-      "method": "upload",
-    },
-  ],
-]
-`;
-
-exports[`storage s3 upload successfully uploaded 2`] = `
-Array [
-  Array [
-    Object {
-      "Key": "media/IMAGE_UPLOAD_UUID",
-      "method": "getObject",
-    },
-  ],
-]
-`;
-
-exports[`storage s3 upload successfully uploaded when use unique 1`] = `
-Array [
-  Array [
-    Object {
-      "CopySource": "graphql-tower/uploader/XYZ",
-      "Key": "media/UNIQUE_GUID",
-      "method": "copyObject",
-    },
-  ],
-  Array [
-    Object {
-      "Body": "IMAGE_STREAM_BODY",
-      "Key": "media/UNIQUE_GUID_cover",
-      "method": "upload",
-    },
-  ],
-]
-`;
-
-exports[`storage s3 upload successfully uploaded when use unique 2`] = `
-Array [
-  Array [
-    Object {
-      "Key": "media/UNIQUE_GUID",
-      "method": "getObject",
     },
   ],
 ]

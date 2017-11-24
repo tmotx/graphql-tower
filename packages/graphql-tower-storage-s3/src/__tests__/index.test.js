@@ -4,6 +4,10 @@ import StorageS3 from '../';
 
 jest.mock('graphql-tower-unique', () => () => 'UNIQUE_GUID');
 
+const formData = jest.fn();
+global.FormData = () => ({ append: formData });
+global.fetch = jest.fn();
+
 describe('storage s3', () => {
   const storage = new StorageS3({ STORAGE_URL: 's3://username:secret_key@ap-northeast-1/graphql-tower' });
 
@@ -40,19 +44,19 @@ describe('storage s3', () => {
     });
   });
 
-  describe('upload', () => {
-    it('successfully uploaded', async () => {
+  describe('confirm', () => {
+    it('successfully confirmed', async () => {
       pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
-      await storage.upload('XYZ', 'IMAGE_UPLOAD_UUID');
+      await storage.confirm('XYZ', 'IMAGE_UPLOAD_UUID');
       expect(promise.mock.calls).toMatchSnapshot();
       expect(pipe.mock.calls).toMatchSnapshot();
       expect(promise).toHaveBeenCalledTimes(2);
       expect(pipe).toHaveBeenCalledTimes(1);
     });
 
-    it('successfully uploaded when use unique', async () => {
+    it('successfully confirmed when use unique', async () => {
       pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
-      await storage.upload('XYZ');
+      await storage.confirm('XYZ');
       expect(promise.mock.calls).toMatchSnapshot();
       expect(pipe.mock.calls).toMatchSnapshot();
       expect(promise).toHaveBeenCalledTimes(2);
@@ -61,7 +65,7 @@ describe('storage s3', () => {
 
     it('when not found', async () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-      await expect(storage.upload('XYZ')).rejects.toEqual(new NotFoundError());
+      await expect(storage.confirm('XYZ')).rejects.toEqual(new NotFoundError());
       expect(promise).toHaveBeenCalledTimes(1);
       expect(pipe).toHaveBeenCalledTimes(0);
     });
@@ -126,6 +130,19 @@ describe('storage s3', () => {
       expect(stream).toEqual({ pipe: expect.any(Function) });
       expect(promise.mock.calls).toMatchSnapshot();
       expect(promise).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('upload', () => {
+    it('successfully upload', async () => {
+      StorageS3.upload(storage.generateTemporaryCredentials(), 'FILE_PATH');
+      expect(formData).toHaveBeenCalledWith('file', 'FILE_PATH');
+      expect(formData).toHaveBeenCalledWith('policy', expect.anything());
+      expect(formData).toHaveBeenCalledWith('x-amz-algorithm', 'AWS4-HMAC-SHA256');
+      expect(formData).toHaveBeenCalledWith('x-amz-credential', expect.anything());
+      expect(formData).toHaveBeenCalledWith('x-amz-date', expect.anything());
+      expect(formData).toHaveBeenCalledWith('x-amz-signature', expect.anything());
+      expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
 });

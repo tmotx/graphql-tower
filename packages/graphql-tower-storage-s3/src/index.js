@@ -1,11 +1,49 @@
 import min from 'lodash/min';
+import crypto from 'crypto';
 import url from 'url';
 import sharp from 'sharp';
 import AWS from 'aws-sdk';
 import { NotFoundError } from 'graphql-tower-errors';
 import unique from 'graphql-tower-unique';
 
+function createHmacDigest(key, data) {
+  return crypto.createHmac('sha256', key).update(data).digest('base64');
+}
+
+function createDate() {
+  const date = new Date().toISOString();
+  return date.substr(0, 4) + date.substr(5, 2) + date.substr(8, 2);
+}
+
 export default class StorageS3 {
+  accessKeyId = '';
+
+  secretAccessKey = '';
+
+  static async upload(credentials, file) {
+    const {
+      key, bucket, policy, algorithm, credential, date, signature,
+    } = JSON.parse(credentials);
+
+    const formData = new FormData();
+    formData.append('key', key);
+    formData.append('file', file);
+    formData.append('policy', policy);
+    formData.append('x-amz-algorithm', algorithm);
+    formData.append('x-amz-credential', credential);
+    formData.append('x-amz-date', date);
+    formData.append('x-amz-signature', signature);
+
+    return fetch(`https://${bucket}.s3.amazonaws.com/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      },
+      body: formData,
+    });
+  }
+
   constructor(env: Object = {}) {
     if (!env.STORAGE_URL) {
       throw new TypeError('STORAGE_URL is required');
@@ -13,13 +51,16 @@ export default class StorageS3 {
 
     const uri = url.parse(env.STORAGE_URL);
 
+    this.region = uri.hostname;
     this.bucket = uri.path.substr(1);
 
-    const configs = { region: uri.hostname, params: { Bucket: this.bucket } };
+    const configs = { region: this.region, params: { Bucket: this.bucket } };
 
     if (uri.auth) {
       const [accessKeyId, secretAccessKey] = uri.auth.split(':');
+      this.accessKeyId = accessKeyId;
       configs.accessKeyId = accessKeyId;
+      this.secretAccessKey = secretAccessKey;
       configs.secretAccessKey = secretAccessKey;
     }
 
@@ -48,7 +89,7 @@ export default class StorageS3 {
     }
   }
 
-  async upload(key, toKey = unique()) {
+  async confirm(key, toKey = unique()) {
     try {
       await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
       await this.transform(`media/${toKey}`, `media/${toKey}_cover`);
@@ -82,5 +123,42 @@ export default class StorageS3 {
     }
 
     return this.s3.getObject({ Key: cacheName }).createReadStream();
+  }
+
+  generateTemporaryCredentials(key = `uploader/${unique()}`) {
+    const algorithm = 'AWS4-HMAC-SHA256';
+
+    // create date string for the current date
+    const date = createDate();
+
+    const credential = `${this.secretAccessKey}/${date}/${this.region}/s3/aws4_request`;
+
+    // create policy
+    const policy = Buffer.from(JSON.stringify({
+      expiration: new Date(new Date().getTime() + (60 * 1000)).toISOString(),
+      conditions: [
+        { bucket: this.bucket },
+        { key },
+        { acl: 'public-read-write' }, // http://docs.aws.amazon.com/zh_cn/AmazonS3/latest/API/RESTObjectPOST.html#RESTObjectPOST-requests
+        { success_action_status: '201' },
+        ['content-length-range', 1, 10 * 1024 * 1024],
+        { 'x-amz-algorithm': algorithm },
+        { 'x-amz-credential': credential },
+        { 'x-amz-date': `${date}T000000Z` },
+      ],
+    })).toString('base64');
+
+    // create signature with policy, aws secret key & other scope information
+    const dateKey = createHmacDigest(`AWS4${this.accessKeyId}`, date);
+    const dateRegionKey = createHmacDigest(dateKey, this.region);
+    const dateRegionServiceKey = createHmacDigest(dateRegionKey, 's3');
+    const signingKey = createHmacDigest(dateRegionServiceKey, 'aws4_request');
+
+    // sign policy document with the signing key to generate upload signature
+    const signature = createHmacDigest(signingKey, policy).toString('hex');
+
+    return JSON.stringify({
+      key, bucket: this.bucket, policy, algorithm, credential, date, signature,
+    });
   }
 }

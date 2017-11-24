@@ -9,7 +9,9 @@
     "beforeEach": true,
     "afterEach": true,
     "beforeAll": true,
-    "afterAll": true
+    "afterAll": true,
+    "fetch": true,
+    "FormData": true
   },
   "rules": {
     "import/no-extraneous-dependencies": [0],
