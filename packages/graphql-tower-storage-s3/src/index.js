@@ -103,11 +103,17 @@ export default class StorageS3 {
     return this.s3.getObject({ Key: cacheName }).createReadStream();
   }
 
-  generateTemporaryCredentials(key = `uploader/${unique()}`) {
+  generateTemporaryCredentials(filename = unique()) {
+    const key = `uploader/${filename}`;
     const algorithm = 'AWS4-HMAC-SHA256';
 
     // create date string for the current date
     const date = createDate();
+
+    // http://docs.aws.amazon.com/zh_cn/AmazonS3/latest/API/RESTObjectPOST.html#RESTObjectPOST-requests
+    const acl = 'public-read-write';
+
+    const successActionStatus = '201';
 
     const credential = `${this.accessKeyId}/${date}/${this.region}/s3/aws4_request`;
 
@@ -117,8 +123,8 @@ export default class StorageS3 {
       conditions: [
         { bucket: this.bucket },
         { key },
-        { acl: 'public-read-write' }, // http://docs.aws.amazon.com/zh_cn/AmazonS3/latest/API/RESTObjectPOST.html#RESTObjectPOST-requests
-        { success_action_status: '201' },
+        { acl },
+        { success_action_status: successActionStatus },
         ['content-length-range', 1, 10 * 1024 * 1024],
         { 'x-amz-algorithm': algorithm },
         { 'x-amz-credential': credential },
@@ -136,7 +142,18 @@ export default class StorageS3 {
     const signature = createHmacDigest(signingKey, policy).toString('hex');
 
     return JSON.stringify({
-      key, bucket: this.bucket, policy, algorithm, credential, date, signature,
+      endpointUrl: `https://${this.bucket}.s3.amazonaws.com`,
+      filename,
+      params: {
+        key,
+        acl,
+        success_action_status: successActionStatus,
+        policy,
+        'x-amz-algorithm': algorithm,
+        'x-amz-credential': credential,
+        'x-amz-date': `${date}T000000Z`,
+        'x-amz-signature': signature,
+      },
     });
   }
 }

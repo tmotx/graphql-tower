@@ -4,6 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
+    "dev": "nodemon ./src/__develop__/server.js --exec babel-node --ignore pages/*",
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
   },
   "repository": {
@@ -24,5 +25,12 @@
     "graphql-tower-errors": "^3.16.0",
     "graphql-tower-unique": "^3.6.2",
     "sharp": "^0.18.4"
+  },
+  "devDependencies": {
+    "graphql-tower-storage-s3": "^3.19.7",
+    "next": "^4.1.4",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-dropzone": "^4.2.3"
   }
 }
