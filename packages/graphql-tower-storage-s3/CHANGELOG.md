@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.19.8"></a>
+## [3.19.8](https://github.com/tmotx/graphql-tower/compare/v3.19.7...v3.19.8) (2017-11-26)
+
+
+### Bug Fixes
+
+* **storage-s3:** fix upload use params data ([152426b](https://github.com/tmotx/graphql-tower/commit/152426b))
+
+
+
+
 <a name="3.19.7"></a>
 ## [3.19.7](https://github.com/tmotx/graphql-tower/compare/v3.19.6...v3.19.7) (2017-11-24)
 
