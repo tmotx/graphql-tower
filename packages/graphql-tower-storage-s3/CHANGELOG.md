@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.19.9"></a>
+## [3.19.9](https://github.com/tmotx/graphql-tower/compare/v3.19.8...v3.19.9) (2017-11-26)
+
+
+### Bug Fixes
+
+* **storage:** added on progress ([06b20cb](https://github.com/tmotx/graphql-tower/commit/06b20cb))
+* **storage-s3:** remove .next build files ([4b5eb2c](https://github.com/tmotx/graphql-tower/commit/4b5eb2c))
+
+
+
+
 <a name="3.19.8"></a>
 ## [3.19.8](https://github.com/tmotx/graphql-tower/compare/v3.19.7...v3.19.8) (2017-11-26)
 

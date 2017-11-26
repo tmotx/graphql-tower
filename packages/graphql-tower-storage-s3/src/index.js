@@ -103,8 +103,8 @@ export default class StorageS3 {
     return this.s3.getObject({ Key: cacheName }).createReadStream();
   }
 
-  generateTemporaryCredentials(filename = unique()) {
-    const key = `uploader/${filename}`;
+  generateTemporaryCredentials(key = unique()) {
+    const path = `uploader/${key}`;
     const algorithm = 'AWS4-HMAC-SHA256';
 
     // create date string for the current date
@@ -122,7 +122,7 @@ export default class StorageS3 {
       expiration: new Date(new Date().getTime() + (60 * 1000)).toISOString(),
       conditions: [
         { bucket: this.bucket },
-        { key },
+        { key: path },
         { acl },
         { success_action_status: successActionStatus },
         ['content-length-range', 1, 10 * 1024 * 1024],
@@ -143,9 +143,9 @@ export default class StorageS3 {
 
     return JSON.stringify({
       endpointUrl: `https://${this.bucket}.s3.amazonaws.com`,
-      filename,
+      key,
       params: {
-        key,
+        key: path,
         acl,
         success_action_status: successActionStatus,
         policy,
