@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { GraphQLInt } from 'graphql';
 import { UnauthorizedError } from 'graphql-tower-errors';
-import { Query } from 'graphql-tower-queries';
+import Query from '../Query';
 import { authentication } from '../';
 
 describe('middleware', () => {

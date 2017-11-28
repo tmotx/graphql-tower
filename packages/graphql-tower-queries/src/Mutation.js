@@ -1,11 +1,22 @@
 import _ from 'lodash';
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import resolveMaybeThunk from './resolveMaybeThunk';
-import Query from './Query';
+import GraphQLField from './GraphQLField';
 
-export default class Mutation extends Query {
-  constructor(...args) {
-    super(...args);
+export default class Mutation extends GraphQLField {
+  constructor() {
+    super();
+
+    Object.defineProperty(this, 'resolve', {
+      enumerable: true,
+      set: (resolve) => { this._.resolve = resolve; },
+      get: () => {
+        const { middleware, resolve } = this.constructor;
+        return async (...args) => {
+          await middleware.apply(this, args);
+          return resolve.apply(this, args);
+        };
+      },
+    });
 
     this.name = this.constructor.name;
     this.outputFields = {};
@@ -18,19 +29,12 @@ export default class Mutation extends Query {
     this._.name = value;
   }
 
-  set outputFields(value) {
-    this.type = new GraphQLObjectType({
-      name: `${this._.name}Payload`,
-      fields: resolveMaybeThunk(value),
-    });
+  set outputFields(fields) {
+    this.type = new GraphQLObjectType({ name: `${this._.name}Payload`, fields });
   }
 
-  set inputFields(value) {
-    const inputType = new GraphQLInputObjectType({
-      name: `${this._.name}Input`,
-      fields: resolveMaybeThunk(value),
-    });
-
+  set inputFields(fields) {
+    const inputType = new GraphQLInputObjectType({ name: `${this._.name}Input`, fields });
     _.set(this, 'args.input.type', new GraphQLNonNull(inputType));
   }
 }

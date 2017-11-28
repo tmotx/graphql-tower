@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import PayloadField from './PayloadField';
+import GraphQLField from './GraphQLField';
 
-export default class Query {
+export default class Query extends GraphQLField {
   static resolveArgs(...args) {
     return _.defaultsDeep(_.mapValues(this._.parentArgs, (value, key) => (
       value instanceof PayloadField ? value.resolveValue(...args, key) : value
@@ -9,23 +10,15 @@ export default class Query {
   }
 
   static async preResolve(payload, client, context, info) {
-    const { resolveArgs, resolve } = this.constructor;
+    const { resolveArgs, middleware, resolve } = this.constructor;
     const args = resolveArgs.call(this, payload, client, context, info);
+    await middleware.call(this, payload, args, context, info);
     return resolve.call(this, payload, args, context, info);
   }
 
-  static async resolve(...args) {
-    await this._.middleware.reduce(async (prev, middleware) => {
-      await prev;
-      await middleware(...args);
-    }, Promise.resolve());
-
-    return this._.afterware.reduce(async (prev, afterware) => (
-      afterware(...args, await prev)
-    ), this._.resolve(...args));
-  }
-
   constructor(parentArgs) {
+    super();
+
     this._.parentArgs = parentArgs;
 
     Object.defineProperty(this, 'resolve', {
@@ -33,36 +26,5 @@ export default class Query {
       set: (resolve) => { this._.resolve = resolve; },
       get: () => this.constructor.preResolve.bind(this),
     });
-  }
-
-  args = {};
-
-  _ = {
-    middleware: [],
-    afterware: [],
-    resolve: _.identity,
-    parentArgs: {},
-  }
-
-  get node() {
-    return _.defaultTo(this._.node, this.type);
-  }
-
-  set middleware(handler) {
-    if (_.isFunction(handler) || _.isArray(handler)) {
-      this._.middleware = _.concat(this._.middleware, handler);
-      return;
-    }
-
-    throw new Error('middleware a function array is required');
-  }
-
-  set afterware(handler) {
-    if (_.isFunction(handler) || _.isArray(handler)) {
-      this._.afterware = _.concat(this._.afterware, handler);
-      return;
-    }
-
-    throw new Error('afterware a function array is required');
   }
 }

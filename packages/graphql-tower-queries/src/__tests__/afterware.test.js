@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { GraphQLInt, GraphQLList } from 'graphql';
-import { QueryWithConnection } from 'graphql-tower-queries';
+import QueryWithConnection from '../QueryWithConnection';
 import { pagination } from '../';
 
 describe('afterware', () => {

@@ -20,9 +20,15 @@
     "lib"
   ],
   "dependencies": {
+    "graphql-tower-errors": "^3.16.0",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "graphql": "^0.11.7"
+  },
+  "devDependencies": {
+    "graphql-subscriptions": "^0.5.5",
+    "subscriptions-transport-ws": "^0.9.1",
+    "ws": "^3.3.2"
   }
 }

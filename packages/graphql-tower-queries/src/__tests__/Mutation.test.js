@@ -1,18 +1,16 @@
 import _ from 'lodash';
-import { GraphQLID, GraphQLInt } from 'graphql';
+import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLID, GraphQLInt } from 'graphql';
 import { Mutation } from '../';
 
 describe('Mutation', () => {
-  it('Mutation', async () => {
+  it('snapshot', async () => {
     const MutationNode = class extends Mutation {};
     const mutation = new MutationNode();
     expect(mutation).toMatchSnapshot();
   });
 
-  it('Mutation with name', async () => {
-    const PropertyNode = class extends Mutation {
-      name = 'Node';
-    };
+  it('with name', async () => {
+    const PropertyNode = class extends Mutation { name = 'Node'; };
     const property = new PropertyNode();
     expect(property).toMatchSnapshot();
     expect(_.get(property, 'type.name')).toBe('NodePayload');
@@ -25,29 +23,8 @@ describe('Mutation', () => {
     expect(_.get(classname, 'args.input.type.ofType.name')).toBe('NodeInput');
   });
 
-  it('Mutation with fields', async () => {
+  it('with fields', async () => {
     const MutationNode = class extends Mutation {
-      name = 'Node';
-      inputFields = {
-        id: { type: GraphQLID },
-        value: { type: GraphQLInt },
-      };
-      outputFields = {
-        id: { type: GraphQLID },
-        value: { type: GraphQLInt },
-      };
-    };
-    const mutation = new MutationNode();
-    expect(mutation).toMatchSnapshot();
-    expect(mutation.type.getFields()).toHaveProperty('id');
-    expect(mutation.type.getFields()).toHaveProperty('value');
-    expect(mutation.args.input.type.ofType.getFields()).toHaveProperty('id');
-    expect(mutation.args.input.type.ofType.getFields()).toHaveProperty('value');
-  });
-
-  it('Mutation with thunk fields', async () => {
-    const MutationNode = class extends Mutation {
-      name = 'Node';
       inputFields = () => ({
         id: { type: GraphQLID },
         value: { type: GraphQLInt },
@@ -56,12 +33,14 @@ describe('Mutation', () => {
         id: { type: GraphQLID },
         value: { type: GraphQLInt },
       });
+      resolve = (payload, { input }) => input;
     };
-    const mutation = new MutationNode();
-    expect(mutation).toMatchSnapshot();
-    expect(mutation.type.getFields()).toHaveProperty('id');
-    expect(mutation.type.getFields()).toHaveProperty('value');
-    expect(mutation.args.input.type.ofType.getFields()).toHaveProperty('id');
-    expect(mutation.args.input.type.ofType.getFields()).toHaveProperty('value');
+
+    const schema = new GraphQLSchema({
+      query: new GraphQLObjectType({ name: 'Query', fields: { mutation: new MutationNode() } }),
+    });
+
+    const { data } = await graphql(schema, 'query { mutation ( input: { id: 10 value: 99 }) { id value } }');
+    expect(data).toEqual({ mutation: { id: '10', value: 99 } });
   });
 });
