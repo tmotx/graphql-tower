@@ -28,7 +28,14 @@
     "apollo-client": "^2.0.3",
     "apollo-link-context": "^1.0.1",
     "apollo-link-http": "^1.2.0",
+    "apollo-link-ws": "^1.0.1",
+    "apollo-utilities": "^1.0.2",
     "graphql-tower-helper": "^3.18.0",
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^2.0.0",
+    "subscriptions-transport-ws": "^0.9.1"
+  },
+  "devDependencies": {
+    "graphql-subscriptions": "^0.5.5",
+    "graphql-tower-queries": "^3.12.0"
   }
 }
