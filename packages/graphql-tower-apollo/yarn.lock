@@ -38,10 +38,6 @@ apollo-client@^2.0.3:
   optionalDependencies:
     "@types/async" "2.0.45"
 
-apollo-link-context@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/apollo-link-context/-/apollo-link-context-1.0.1.tgz#a1a0a53c80abae36fe9cf3685360e0b9c1bb312f"
-
 apollo-link-dedup@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.2.tgz#bab659dde41f8dd627839142d4dad90e55251110"
@@ -49,6 +45,12 @@ apollo-link-dedup@^1.0.0:
 apollo-link-http@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.2.0.tgz#48464c2ebfa6474f7a89908696827d66b2deb5cc"
+
+apollo-link-retry@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/apollo-link-retry/-/apollo-link-retry-1.0.1.tgz#c846e4dd2b7c808036ffa32e4e4d1aba13af55fc"
+  dependencies:
+    "@types/zen-observable" "0.5.3"
 
 apollo-link-ws@^1.0.1:
   version "1.0.1"
@@ -152,6 +154,10 @@ node-fetch@^1.7.1:
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
+
+regenerator-runtime@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.0.tgz#7e54fe5b5ccd5d6624ea6255c3473be090b802e1"
 
 safe-buffer@~5.1.0:
   version "5.1.1"

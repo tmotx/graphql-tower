@@ -1,9 +1,9 @@
 import 'isomorphic-unfetch';
 import { ApolloClient } from 'apollo-client';
-import { split } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
-import { setContext } from 'apollo-link-context';
+import { RetryLink } from 'apollo-link-retry';
 // https://github.com/apollographql/apollo-client/issues/2591
 import { getMainDefinition } from 'apollo-utilities'; // eslint-disable-line
 import { InMemoryCache } from 'apollo-cache-inmemory'; // eslint-disable-line
@@ -19,13 +19,15 @@ function create(cache, {
   // Create an http link:
   link = new HttpLink({ ...options, uri: httpUri, credentials: 'same-origin' });
   if (token) {
-    link = setContext(
-      (_, { headers }) => ({ headers: { ...headers, authorization: thunkToken(context) } }),
-    ).concat(link);
+    link = new ApolloLink((operation, forward) => {
+      operation.setContext(({ headers }) =>
+        ({ headers: { ...headers, authorization: thunkToken(context) } }));
+      return forward(operation);
+    }).concat(link);
   }
 
+  // Create a WebSocket link:
   if (wsUri && process.browser) {
-    // Create a WebSocket link:
     const wsLink = new WebSocketLink({
       ...options,
       uri: wsUri,
@@ -43,7 +45,7 @@ function create(cache, {
   return new ApolloClient({
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
-    link,
+    link: new RetryLink().concat(link),
     cache: new InMemoryCache().restore(cache),
   });
 }
