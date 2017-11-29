@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.20.0"></a>
+# [3.20.0](https://github.com/tmotx/graphql-tower/compare/v3.19.10...v3.20.0) (2017-11-29)
+
+
+### Features
+
+* **queries:** added subscription ([b7498e0](https://github.com/tmotx/graphql-tower/commit/b7498e0))
+
+
+
+
 <a name="3.18.1"></a>
 ## [3.18.1](https://github.com/tmotx/graphql-tower/compare/v3.18.0...v3.18.1) (2017-11-22)
 
