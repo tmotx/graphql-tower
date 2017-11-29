@@ -105,7 +105,18 @@ describe('withData', () => {
       expect(component).toMatchSnapshot();
     });
 
+    it('when throw error', async () => {
+      resolveSpy.mockReturnValueOnce(Promise.resolve(new Error()));
+      const WrapApp = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
+
+      const props = await WrapApp.getInitialProps();
+      expect(props).toMatchSnapshot();
+      expect(resolveSpy.mock.calls).toMatchSnapshot();
+      expect(resolveSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('when no getInitialProps', async () => {
+      resolveSpy.mockReturnValueOnce(Promise.resolve({ id: '50', name: 'hello' }));
       const WrapApp = withData(apollo)(graphql(gql`query { me { id name } }`)(() => <div />));
       expect(await WrapApp.getInitialProps()).toMatchSnapshot();
       expect(resolveSpy).toHaveBeenCalledTimes(1);

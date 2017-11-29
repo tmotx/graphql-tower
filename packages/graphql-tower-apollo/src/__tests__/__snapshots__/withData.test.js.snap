@@ -2689,29 +2689,334 @@ exports[`withData process.browser is false when no getInitialProps 1`] = `
 Object {
   "cache": Object {
     "ROOT_QUERY": Object {
-      "me": null,
+      "me": Object {
+        "generated": false,
+        "id": "User:50",
+        "type": "id",
+      },
+    },
+    "User:50": Object {
+      "__typename": "User",
+      "id": "50",
+      "name": "hello",
     },
   },
 }
 `;
 
+exports[`withData process.browser is false when throw error 1`] = `
+Object {
+  "value": 99,
+}
+`;
+
+exports[`withData process.browser is false when throw error 2`] = `
+Array [
+  Array [
+    undefined,
+    Object {},
+    Object {},
+    Object {
+      "fieldName": "me",
+      "fieldNodes": Array [
+        Object {
+          "alias": null,
+          "arguments": Array [],
+          "directives": Array [],
+          "kind": "Field",
+          "loc": Object {
+            "end": 43,
+            "start": 4,
+          },
+          "name": Object {
+            "kind": "Name",
+            "loc": Object {
+              "end": 6,
+              "start": 4,
+            },
+            "value": "me",
+          },
+          "selectionSet": Object {
+            "kind": "SelectionSet",
+            "loc": Object {
+              "end": 43,
+              "start": 7,
+            },
+            "selections": Array [
+              Object {
+                "alias": null,
+                "arguments": Array [],
+                "directives": Array [],
+                "kind": "Field",
+                "loc": Object {
+                  "end": 15,
+                  "start": 13,
+                },
+                "name": Object {
+                  "kind": "Name",
+                  "loc": Object {
+                    "end": 15,
+                    "start": 13,
+                  },
+                  "value": "id",
+                },
+                "selectionSet": null,
+              },
+              Object {
+                "alias": null,
+                "arguments": Array [],
+                "directives": Array [],
+                "kind": "Field",
+                "loc": Object {
+                  "end": 24,
+                  "start": 20,
+                },
+                "name": Object {
+                  "kind": "Name",
+                  "loc": Object {
+                    "end": 24,
+                    "start": 20,
+                  },
+                  "value": "name",
+                },
+                "selectionSet": null,
+              },
+              Object {
+                "alias": null,
+                "arguments": Array [],
+                "directives": Array [],
+                "kind": "Field",
+                "loc": Object {
+                  "end": 39,
+                  "start": 29,
+                },
+                "name": Object {
+                  "kind": "Name",
+                  "loc": Object {
+                    "end": 39,
+                    "start": 29,
+                  },
+                  "value": "__typename",
+                },
+                "selectionSet": null,
+              },
+            ],
+          },
+        },
+      ],
+      "fragments": Object {},
+      "operation": Object {
+        "directives": Array [],
+        "kind": "OperationDefinition",
+        "loc": Object {
+          "end": 45,
+          "start": 0,
+        },
+        "name": null,
+        "operation": "query",
+        "selectionSet": Object {
+          "kind": "SelectionSet",
+          "loc": Object {
+            "end": 45,
+            "start": 0,
+          },
+          "selections": Array [
+            Object {
+              "alias": null,
+              "arguments": Array [],
+              "directives": Array [],
+              "kind": "Field",
+              "loc": Object {
+                "end": 43,
+                "start": 4,
+              },
+              "name": Object {
+                "kind": "Name",
+                "loc": Object {
+                  "end": 6,
+                  "start": 4,
+                },
+                "value": "me",
+              },
+              "selectionSet": Object {
+                "kind": "SelectionSet",
+                "loc": Object {
+                  "end": 43,
+                  "start": 7,
+                },
+                "selections": Array [
+                  Object {
+                    "alias": null,
+                    "arguments": Array [],
+                    "directives": Array [],
+                    "kind": "Field",
+                    "loc": Object {
+                      "end": 15,
+                      "start": 13,
+                    },
+                    "name": Object {
+                      "kind": "Name",
+                      "loc": Object {
+                        "end": 15,
+                        "start": 13,
+                      },
+                      "value": "id",
+                    },
+                    "selectionSet": null,
+                  },
+                  Object {
+                    "alias": null,
+                    "arguments": Array [],
+                    "directives": Array [],
+                    "kind": "Field",
+                    "loc": Object {
+                      "end": 24,
+                      "start": 20,
+                    },
+                    "name": Object {
+                      "kind": "Name",
+                      "loc": Object {
+                        "end": 24,
+                        "start": 20,
+                      },
+                      "value": "name",
+                    },
+                    "selectionSet": null,
+                  },
+                  Object {
+                    "alias": null,
+                    "arguments": Array [],
+                    "directives": Array [],
+                    "kind": "Field",
+                    "loc": Object {
+                      "end": 39,
+                      "start": 29,
+                    },
+                    "name": Object {
+                      "kind": "Name",
+                      "loc": Object {
+                        "end": 39,
+                        "start": 29,
+                      },
+                      "value": "__typename",
+                    },
+                    "selectionSet": null,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        "variableDefinitions": null,
+      },
+      "parentType": "Query",
+      "path": Object {
+        "key": "me",
+        "prev": undefined,
+      },
+      "returnType": "User",
+      "rootValue": undefined,
+      "schema": GraphQLSchema {
+        "_directives": Array [
+          GraphQLDirective {
+            "args": Array [
+              Object {
+                "astNode": undefined,
+                "defaultValue": undefined,
+                "description": "Included when true.",
+                "name": "if",
+                "type": "Boolean!",
+              },
+            ],
+            "astNode": undefined,
+            "description": "Directs the executor to include this field or fragment only when the \`if\` argument is true.",
+            "locations": Array [
+              "FIELD",
+              "FRAGMENT_SPREAD",
+              "INLINE_FRAGMENT",
+            ],
+            "name": "include",
+          },
+          GraphQLDirective {
+            "args": Array [
+              Object {
+                "astNode": undefined,
+                "defaultValue": undefined,
+                "description": "Skipped when true.",
+                "name": "if",
+                "type": "Boolean!",
+              },
+            ],
+            "astNode": undefined,
+            "description": "Directs the executor to skip this field or fragment when the \`if\` argument is true.",
+            "locations": Array [
+              "FIELD",
+              "FRAGMENT_SPREAD",
+              "INLINE_FRAGMENT",
+            ],
+            "name": "skip",
+          },
+          GraphQLDirective {
+            "args": Array [
+              Object {
+                "astNode": undefined,
+                "defaultValue": "No longer supported",
+                "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
+                "name": "reason",
+                "type": "String",
+              },
+            ],
+            "astNode": undefined,
+            "description": "Marks an element of a GraphQL schema as no longer supported.",
+            "locations": Array [
+              "FIELD_DEFINITION",
+              "ENUM_VALUE",
+            ],
+            "name": "deprecated",
+          },
+        ],
+        "_implementations": Object {},
+        "_mutationType": undefined,
+        "_queryType": "Query",
+        "_subscriptionType": "Subscription",
+        "_typeMap": Object {
+          "Boolean": "Boolean",
+          "ID": "ID",
+          "Query": "Query",
+          "String": "String",
+          "Subscription": "Subscription",
+          "User": "User",
+          "__Directive": "__Directive",
+          "__DirectiveLocation": "__DirectiveLocation",
+          "__EnumValue": "__EnumValue",
+          "__Field": "__Field",
+          "__InputValue": "__InputValue",
+          "__Schema": "__Schema",
+          "__Type": "__Type",
+          "__TypeKind": "__TypeKind",
+        },
+        "astNode": null,
+      },
+      "variableValues": Object {},
+    },
+  ],
+]
+`;
+
 exports[`withData process.browser is true getInitialProps with token 1`] = `
 Object {
-  "cache": Object {},
   "value": 99,
 }
 `;
 
 exports[`withData process.browser is true getInitialProps without token 1`] = `
 Object {
-  "cache": Object {},
   "value": 99,
 }
 `;
 
 exports[`withData process.browser is true has not websocket 1`] = `
 Object {
-  "cache": Object {},
   "value": 99,
 }
 `;
