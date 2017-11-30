@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`QueryWithConnection QueryWithConnection 1`] = `
-QueryConnection {
+exports[`QueryWithConnection snapshot 1`] = `
+QueryWithConnection {
   "_": Object {
     "afterware": Array [],
     "args": Object {
@@ -11,18 +11,15 @@ QueryConnection {
       "first": Object {
         "type": "Int",
       },
-      "id": Object {
-        "type": "Int",
-      },
       "offset": Object {
         "type": "Int",
       },
     },
     "middleware": Array [],
-    "node": "Int",
+    "name": undefined,
     "parentArgs": undefined,
     "resolve": [Function],
-    "type": "[Int]",
+    "subscribe": [Function],
   },
   "args": Object {
     "after": Object {
@@ -31,14 +28,11 @@ QueryConnection {
     "first": Object {
       "type": "Int",
     },
-    "id": Object {
-      "type": "Int",
-    },
     "offset": Object {
       "type": "Int",
     },
   },
   "resolve": [Function],
-  "type": "[Int]",
+  "type": undefined,
 }
 `;

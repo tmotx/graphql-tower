@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Query snapshot 1`] = `
-Query {
+exports[`Subscription snapshot 1`] = `
+Subscription {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
     "name": undefined,
-    "parentArgs": undefined,
     "resolve": [Function],
     "subscribe": [Function],
   },
   "args": Object {},
   "resolve": [Function],
+  "subscribe": [Function],
 }
 `;

@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphQLField extends with name 1`] = `
+Children {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": undefined,
+    "resolve": [Function],
+    "subscribe": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "ChildrenInput!",
+    },
+  },
+  "type": "ChildrenPayload",
+}
+`;
+
+exports[`GraphQLField snapshot 1`] = `
+GraphQLField {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": undefined,
+    "resolve": [Function],
+    "subscribe": [Function],
+  },
+  "args": Object {},
+}
+`;
+
+exports[`GraphQLField with name 1`] = `
+PropertyNode {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": "Node",
+    "resolve": [Function],
+    "subscribe": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "type": "NodePayload",
+}
+`;
+
+exports[`GraphQLField with name 2`] = `
+Node {
+  "_": Object {
+    "afterware": Array [],
+    "middleware": Array [],
+    "name": undefined,
+    "resolve": [Function],
+    "subscribe": [Function],
+  },
+  "args": Object {
+    "input": Object {
+      "type": "NodeInput!",
+    },
+  },
+  "type": "NodePayload",
+}
+`;

@@ -19,9 +19,11 @@ QueryPagination {
       },
     },
     "middleware": Array [],
+    "name": undefined,
     "node": "Int",
     "parentArgs": undefined,
     "resolve": [Function],
+    "subscribe": [Function],
     "type": "[Int]",
   },
   "args": Object {

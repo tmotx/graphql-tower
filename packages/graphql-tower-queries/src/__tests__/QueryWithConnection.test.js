@@ -1,10 +1,14 @@
-import _ from 'lodash';
 import faker from 'faker';
 import { graphql, GraphQLInt, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { QueryWithConnection } from '../';
 
 describe('QueryWithConnection', () => {
-  it('QueryWithConnection', async () => {
+  it('snapshot', async () => {
+    const query = new QueryWithConnection();
+    expect(query).toMatchSnapshot();
+  });
+
+  it('successfully query', async () => {
     const resolve = jest.fn();
     const QueryConnection = class extends QueryWithConnection {
       type = GraphQLInt;
@@ -13,15 +17,7 @@ describe('QueryWithConnection', () => {
     };
 
     const query = new QueryConnection();
-    expect(query).toMatchSnapshot();
-
     expect(query.node).toEqual(GraphQLInt);
-
-    const queryExtend = _.extend({}, query);
-    expect(queryExtend.node).toBeUndefined();
-    expect(queryExtend.args).not.toBeUndefined();
-    expect(queryExtend.type).not.toBeUndefined();
-    expect(queryExtend.resolve).not.toBeUndefined();
 
     const first = faker.random.number();
     const offset = faker.random.number();
@@ -41,6 +37,8 @@ describe('QueryWithConnection', () => {
         connection (first: $first offset: $offset after: $after)
       }`, {}, {}, { first, offset, after });
 
+    expect(resolve).toHaveBeenCalledWith({}, { first, offset, after }, {}, expect.anything());
+    expect(resolve).toHaveBeenCalledTimes(1);
     expect(result.data.connection).toEqual(reply);
   });
 });

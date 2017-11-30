@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import GraphQLField from './GraphQLField';
 
 export default class Mutation extends GraphQLField {
@@ -17,24 +15,5 @@ export default class Mutation extends GraphQLField {
         };
       },
     });
-
-    this.name = this.constructor.name;
-    this.outputFields = {};
-    this.inputFields = {};
-  }
-
-  set name(value) {
-    _.set(this, 'type.name', `${value}Payload`);
-    _.set(this, 'args.input.type.ofType.name', `${value}Input`);
-    this._.name = value;
-  }
-
-  set outputFields(fields) {
-    this.type = new GraphQLObjectType({ name: `${this._.name}Payload`, fields });
-  }
-
-  set inputFields(fields) {
-    const inputType = new GraphQLInputObjectType({ name: `${this._.name}Input`, fields });
-    _.set(this, 'args.input.type', new GraphQLNonNull(inputType));
   }
 }

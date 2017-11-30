@@ -1,20 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`QueryWithNode QueryWithNode 1`] = `
-QueryNode {
+exports[`QueryWithNode snapshot 1`] = `
+QueryWithNode {
   "_": Object {
     "afterware": Array [],
     "middleware": Array [],
+    "name": undefined,
     "parentArgs": Object {
       "id": PayloadField {
         "resolveValue": [Function],
       },
     },
     "resolve": [Function],
+    "subscribe": [Function],
   },
   "args": Object {},
   "fieldName": undefined,
   "resolve": [Function],
-  "type": "Int",
 }
 `;

@@ -3,15 +3,17 @@ import { graphql, GraphQLInt, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { QueryWithNode } from '../';
 
 describe('QueryWithNode', () => {
-  it('QueryWithNode', async () => {
+  it('snapshot', async () => {
+    const query = new QueryWithNode();
+    expect(query).toMatchSnapshot();
+  });
+
+  it('successfully query', async () => {
     const resolve = jest.fn((payload, { id }) => id);
     const QueryNode = class extends QueryWithNode {
       type = GraphQLInt;
       resolve = resolve;
     };
-
-    const query = new QueryNode();
-    expect(query).toMatchSnapshot();
 
     const fieldId = faker.random.number();
     const tempId = faker.random.number();
@@ -24,7 +26,7 @@ describe('QueryWithNode', () => {
             type: new GraphQLObjectType({
               name: 'Node',
               fields: {
-                field: query,
+                field: new QueryNode(),
                 custom: new QueryNode('tempId'),
                 empty: new QueryNode(),
               },

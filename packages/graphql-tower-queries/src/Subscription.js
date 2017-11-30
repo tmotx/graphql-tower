@@ -1,11 +1,8 @@
-import _ from 'lodash';
 import GraphQLField from './GraphQLField';
 
 export default class Subscription extends GraphQLField {
   constructor() {
     super();
-
-    this._.subscribe = _.identity;
 
     Object.defineProperty(this, 'resolve', {
       enumerable: true,

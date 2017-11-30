@@ -41,6 +41,11 @@ new SubscriptionServer(options, { server: httpServer, path: '/' }); // eslint-di
 const { port } = httpServer.address();
 
 describe('Subscription', () => {
+  it('snapshot', async () => {
+    const subscription = new Subscription();
+    expect(subscription).toMatchSnapshot();
+  });
+
   it('subscribe successfully', async (done) => {
     const results = await subscribe(schema, gql`subscription { onMessageAdd }`, {}, { user: { id: 10 } });
     results.next().then(({ value: { data } }) => {

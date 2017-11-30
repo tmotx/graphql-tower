@@ -4,15 +4,12 @@ import Query from './Query';
 import PayloadField from './PayloadField';
 
 export default class QueryWithNode extends Query {
-  fieldName = null;
-
   static async resolve(...args) {
-    if (!args[1].id) {
-      return null;
-    }
-
+    if (!args[1].id) return null;
     return super.resolve(...args);
   }
+
+  fieldName = null;
 
   constructor(fieldName) {
     super({

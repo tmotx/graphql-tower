@@ -3,9 +3,14 @@ import { graphql, GraphQLInt, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { Query, PayloadField } from '../';
 
 describe('PayloadField', () => {
-  it('PayloadField', async () => {
+  it('snapshot', async () => {
+    const payloadField = new PayloadField();
+    expect(payloadField).toMatchSnapshot();
+  });
+
+  it('successfully query', async () => {
     const resolve = jest.fn((payload, { id }) => id);
-    const QueryNode = class extends Query {
+    const Node = class extends Query {
       type = GraphQLInt;
       resolve = resolve;
     };
@@ -22,9 +27,10 @@ describe('PayloadField', () => {
             type: new GraphQLObjectType({
               name: 'Node',
               fields: {
-                field: new QueryNode({ id: new PayloadField() }),
-                custom: new QueryNode({ id: new PayloadField('tempId') }),
-                value: new QueryNode({ id: value }),
+                field: new Node({ id: new PayloadField() }),
+                custom: new Node({ id: new PayloadField('tempId') }),
+                handler: new Node({ id: new PayloadField(({ tempId: id }) => id) }),
+                value: new Node({ id: value }),
               },
             }),
             resolve: () => ({ id: fieldId, tempId }),
@@ -33,7 +39,9 @@ describe('PayloadField', () => {
       }),
     });
 
-    const result = await graphql(schema, 'query { node { field custom value } }');
-    expect(result.data.node).toEqual({ field: fieldId, custom: tempId, value });
+    const result = await graphql(schema, 'query { node { field custom handler value } }');
+    expect(result.data.node).toEqual({
+      field: fieldId, custom: tempId, handler: tempId, value,
+    });
   });
 });
