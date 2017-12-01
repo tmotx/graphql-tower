@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.21.1"></a>
+## [3.21.1](https://github.com/tmotx/graphql-tower/compare/v3.21.0...v3.21.1) (2017-12-01)
+
+
+### Bug Fixes
+
+* **apollo:** rename token to authorization ([6c7a760](https://github.com/tmotx/graphql-tower/commit/6c7a760))
+
+
+
+
 <a name="3.18.1"></a>
 ## [3.18.1](https://github.com/tmotx/graphql-tower/compare/v3.18.0...v3.18.1) (2017-11-22)
 
