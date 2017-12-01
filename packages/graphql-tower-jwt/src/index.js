@@ -17,7 +17,7 @@ export default class JsonWebToken {
     return Buffer.from(new NodeRSA().generateKeyPair().exportKey('pkcs1-private-pem')).toString('base64');
   }
 
-  constructor(env: Object = {}) {
+  constructor(env: Object = {}, handlers = {}) {
     if (env.PRIVATE_KEY) {
       this.privateKey = Buffer.from(env.PRIVATE_KEY, 'base64');
       this.publicKey = new NodeRSA(this.privateKey).exportKey('pkcs8-public-pem');
@@ -37,6 +37,16 @@ export default class JsonWebToken {
       subject: defaultTo(env.JWT_ISSUER, 'jwt'),
       audience: defaultTo(env.JWT_AUDIENCE, 'everyone'),
     };
+
+    const { toValues, toModel, toModelWithVerification } = defaults(handlers, {
+      toValues: obj => obj.valueOf(),
+      toModel: identity,
+      toModelWithVerification: identity,
+    });
+
+    this.toValues = toValues;
+    this.toModel = toModel;
+    this.toModelWithVerification = toModelWithVerification;
 
     return this;
   }
@@ -59,15 +69,21 @@ export default class JsonWebToken {
     return this.sign({ data });
   }
 
-  expressParser(options) {
-    const configs = defaults(options, {
-      toValues: obj => obj.valueOf(),
-      toModel: identity,
-      toModelWithVerification: identity,
-    });
+  async fetchModel(token, verification = false) {
+    const { toModel, toModelWithVerification } = this;
+    const { data, exp } = this.verify(token);
+    const expiresOn = exp - (Date.now() / 1000);
 
+    if (expiresOn < VERIFICATION_IS_REQUIRED || verification) {
+      return { expiresOn, model: await toModelWithVerification(data) };
+    }
+
+    return { expiresOn, model: await toModel(data) };
+  }
+
+  expressParser() {
     return async (req, res, next) => {
-      const { toValues, toModel, toModelWithVerification } = configs;
+      const { toValues } = this;
 
       req.assignUser = (model) => {
         req.user = model;
@@ -83,15 +99,14 @@ export default class JsonWebToken {
       try {
         const token = split(req.headers.authorization, / +/i, 2);
         if (token && token.length === 2) {
-          const { data, exp } = this.verify(token[1]);
-          const expiresOn = exp - (Date.now() / 1000);
+          const verification = token[0] === 'Basic';
 
-          if (expiresOn < VERIFICATION_IS_REQUIRED || token[0] === 'Basic') {
-            user = await toModelWithVerification(data);
+          const { model, expiresOn } = await this.fetchModel(token[1], verification);
+          user = model;
+
+          if (verification) {
             renewToken = true;
             if (expiresOn < RENEW_IS_REQUIRED) res.append('X-Refresh-Token', this.refreshToken(toValues(user)));
-          } else {
-            user = await toModel(data);
           }
         }
       } catch (e) {
@@ -103,15 +118,10 @@ export default class JsonWebToken {
 
         const cookies = cookie.parse(req.headers.cookie || '');
         if (cookies.access_token) {
-          const { data, exp } = this.verify(cookies.access_token);
-          const expiresOn = exp - (Date.now() / 1000);
+          const { model, expiresOn } = await this.fetchModel(cookies.access_token);
+          user = model;
 
-          if (expiresOn < VERIFICATION_IS_REQUIRED) {
-            user = await toModelWithVerification(data);
-            renewToken = true;
-          } else {
-            user = await toModel(data);
-          }
+          if (expiresOn < VERIFICATION_IS_REQUIRED) renewToken = true;
         }
       } catch (e) {
         // empty

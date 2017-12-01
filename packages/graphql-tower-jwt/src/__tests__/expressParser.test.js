@@ -3,15 +3,15 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import JWT from '../';
 
-const jwt = new JWT({ JWT_SECRET: 'XYZ' });
-
-const toModel = jest.fn();
-const toModelWithVerification = jest.fn();
+const toModel = jest.fn(values => Promise.resolve(values));
+const toModelWithVerification = jest.fn(values => Promise.resolve(values));
 const reqListener = jest.fn();
+
+const jwt = new JWT({ JWT_SECRET: 'XYZ' }, { toModel, toModelWithVerification });
 
 const server = express();
 server.use(bodyParser.json());
-server.use(jwt.expressParser({ toModel, toModelWithVerification }));
+server.use(jwt.expressParser());
 server.use((req, res) => { reqListener(req); res.send('ok'); });
 
 const app = request(server);
@@ -49,7 +49,6 @@ describe('expressParser', () => {
   describe('refresh token', () => {
     it('successfully get user', async () => {
       const token = jwt.refreshToken({ id: '10' });
-      toModelWithVerification.mockImplementationOnce(values => Promise.resolve(values));
 
       const { headers } = await app.post().set('authorization', `Basic ${token}`).send();
       expect(toModelWithVerification).toHaveBeenCalledWith({ id: '10' });
@@ -63,7 +62,6 @@ describe('expressParser', () => {
 
     it('expiring soon', async () => {
       const token = jwt.accessToken({ id: '10' });
-      toModelWithVerification.mockImplementationOnce(values => Promise.resolve(values));
 
       const { headers } = await app.post().set('authorization', `Basic ${token}`).send();
       expect(toModelWithVerification).toHaveBeenCalledWith({ id: '10' });

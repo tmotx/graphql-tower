@@ -10,6 +10,9 @@ JsonWebToken {
   },
   "privateKey": "XYZ",
   "publicKey": "XYZ",
+  "toModel": [Function],
+  "toModelWithVerification": [Function],
+  "toValues": [Function],
 }
 `;
 
@@ -23,6 +26,9 @@ JsonWebToken {
   },
   "privateKey": "XYZ",
   "publicKey": "XYZ",
+  "toModel": [Function],
+  "toModelWithVerification": [Function],
+  "toValues": [Function],
 }
 `;
 
@@ -1725,5 +1731,8 @@ blLpNmN2z0by/S8ipH7t+zTZnTdf2APP7u94jDiP6Ag5dyFiJUz4eA3DeITnFp21
 bVLAALyYqqLVEznjNuGpsCtKGokjJ2hFVCmt0CBFIlIBtbePRh/xCNdw4K0Rs7J3
 swIDAQAB
 -----END PUBLIC KEY-----",
+  "toModel": [Function],
+  "toModelWithVerification": [Function],
+  "toValues": [Function],
 }
 `;

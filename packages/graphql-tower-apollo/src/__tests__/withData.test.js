@@ -94,7 +94,7 @@ describe('withData', () => {
 
     it('getInitialProps with cookie', async () => {
       resolveSpy.mockReturnValueOnce(Promise.resolve({ id: '50', name: 'hello' }));
-      const WrapApp = withData({ ...apollo, token: ({ cookie }) => cookie })(graphql(gql`query { me { id name } }`)(App));
+      const WrapApp = withData({ ...apollo, authorization: ({ cookie }) => cookie })(graphql(gql`query { me { id name } }`)(App));
 
       const props = await WrapApp.getInitialProps({ cookie: 'key of token' });
       expect(props).toMatchSnapshot();
@@ -157,7 +157,7 @@ describe('withData', () => {
     });
 
     it('subscription', async (done) => {
-      const client = initApollo({}, { ...apollo, token: 'key of token' });
+      const client = initApollo({}, { ...apollo, authorization: 'key of token' });
       execute(client.link, { query: gql`subscription { me { id name } }` }).subscribe({});
       setTimeout(() => {
         expect(subscribeSpy.mock.calls).toMatchSnapshot();
@@ -167,7 +167,7 @@ describe('withData', () => {
     });
 
     it('query', async (done) => {
-      const client = initApollo({}, { ...apollo, token: 'key of token' });
+      const client = initApollo({}, { ...apollo, authorization: 'key of token' });
       execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
       setTimeout(() => {
         expect(resolveSpy.mock.calls).toMatchSnapshot();

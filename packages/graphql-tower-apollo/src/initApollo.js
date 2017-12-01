@@ -10,18 +10,18 @@ import { InMemoryCache } from 'apollo-cache-inmemory'; // eslint-disable-line
 import { thunk } from 'graphql-tower-helper';
 
 function create(cache, {
-  httpUri, wsUri, token, context, ...options
+  httpUri, wsUri, authorization, context, ...options
 } = {}) {
-  const thunkToken = thunk(token);
+  const thunkAuthorization = thunk(authorization);
 
   let link;
 
   // Create an http link:
   link = new HttpLink({ ...options, uri: httpUri, credentials: 'same-origin' });
-  if (token) {
+  if (authorization) {
     link = new ApolloLink((operation, forward) => {
       operation.setContext(({ headers }) =>
-        ({ headers: { ...headers, authorization: thunkToken(context) } }));
+        ({ headers: { ...headers, authorization: thunkAuthorization(context) } }));
       return forward(operation);
     }).concat(link);
   }
@@ -31,7 +31,10 @@ function create(cache, {
     const wsLink = new WebSocketLink({
       ...options,
       uri: wsUri,
-      options: { reconnect: true, connectionParams: () => ({ token: thunkToken(context) }) },
+      options: {
+        reconnect: true,
+        connectionParams: () => ({ authorization: thunkAuthorization(context) }),
+      },
     });
 
     // using the ability to split links, you can send data to each link

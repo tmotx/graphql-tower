@@ -310,7 +310,7 @@ Array [
     undefined,
     Object {},
     Object {
-      "token": "key of token",
+      "authorization": "key of token",
     },
     Object {
       "fieldName": "me",
