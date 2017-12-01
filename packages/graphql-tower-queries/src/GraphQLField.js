@@ -11,7 +11,8 @@ export default class GraphQLField {
     return this._.middleware.reduce(async (prev, middleware) => {
       await prev;
       await middleware(...args);
-    }, Promise.resolve());
+      return true;
+    }, Promise.resolve(true));
   }
 
   static async resolve(...args) {

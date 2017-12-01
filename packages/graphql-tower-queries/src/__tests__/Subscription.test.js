@@ -10,11 +10,12 @@ import Subscription from '../Subscription';
 const pubsub = new PubSub();
 
 const subscribeSpy = jest.fn(() => pubsub.asyncIterator('messageAdd'));
+const resolveSpy = jest.fn(payload => payload * 2);
 
 const OnMessageAdd = class extends Subscription {
   type = GraphQLInt;
   middleware = [authentication];
-  resolve = payload => payload * 2;
+  resolve = resolveSpy;
   subscribe = subscribeSpy;
 };
 
@@ -63,6 +64,8 @@ describe('Subscription', () => {
         expect(data).toEqual({ onMessageAdd: 20 });
         expect(subscribeSpy)
           .toHaveBeenLastCalledWith(undefined, {}, { user: { id: 10 } }, expect.anything());
+        expect(resolveSpy)
+          .toHaveBeenLastCalledWith(10, {}, { user: { id: 10 } }, expect.anything());
         client.close();
         done();
       },
@@ -75,9 +78,12 @@ describe('Subscription', () => {
     const client = new SubscriptionClient(`ws://localhost:${port}/`, {}, ws);
     client.request({ query: 'subscription { onMessageAdd }' }).subscribe({});
     setTimeout(() => {
-      expect(subscribeSpy).toHaveBeenCalledTimes(0);
+      expect(subscribeSpy).toHaveBeenCalledTimes(1);
+      expect(resolveSpy).toHaveBeenCalledTimes(0);
       client.close();
       done();
-    }, 100);
+    }, 200);
+
+    setTimeout(() => pubsub.publish('messageAdd', 10), 100);
   });
 });

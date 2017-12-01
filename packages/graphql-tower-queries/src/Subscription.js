@@ -1,3 +1,4 @@
+import { withFilter } from 'graphql-subscriptions';
 import GraphQLField from './GraphQLField';
 
 export default class Subscription extends GraphQLField {
@@ -13,10 +14,10 @@ export default class Subscription extends GraphQLField {
     Object.defineProperty(this, 'subscribe', {
       enumerable: true,
       set: (subscribe) => { this._.subscribe = subscribe; },
-      get: () => async (...args) => {
-        await this.constructor.middleware.apply(this, args);
-        return this._.subscribe.apply(this, args);
-      },
+      get: () => withFilter(
+        this._.subscribe.bind(this),
+        this.constructor.middleware.bind(this),
+      ),
     });
   }
 }
