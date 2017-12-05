@@ -27,10 +27,6 @@
     "sharp": "^0.18.4"
   },
   "devDependencies": {
-    "graphql-tower-storage-s3": "^3.19.10",
-    "next": "^4.1.4",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-dropzone": "^4.2.3"
+    "graphql-tower-storage-s3": "^3.19.10"
   }
 }

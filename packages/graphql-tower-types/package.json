@@ -24,9 +24,6 @@
     "lodash": "^4.17.4",
     "moment": "^2.19.1"
   },
-  "devDependencies": {
-    "faker": "^4.1.0"
-  },
   "peerDependencies": {
     "graphql": "^0.11.7"
   }

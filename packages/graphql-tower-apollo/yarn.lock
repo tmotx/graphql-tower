@@ -103,16 +103,6 @@ graphql-subscriptions@^0.5.5:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
 
-graphql-tower-helper@^3.18.0:
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.18.0.tgz#1af489dcf3a059f1e397c779096f2c033955d6d5"
-
-graphql-tower-queries@^3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.12.0.tgz#83f795844ee779ed3f1b0db5c4d72a32e74b8f6a"
-  dependencies:
-    lodash "^4.17.4"
-
 iconv-lite@~0.4.13:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
@@ -143,10 +133,6 @@ lodash.isobject@^3.0.2:
 lodash.isstring@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
-
-lodash@^4.17.4:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
 node-fetch@^1.7.1:
   version "1.7.3"

@@ -8,10 +8,6 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
-graphql-tower-errors@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.0.0.tgz#1b9caade14dfed12ac37bfc5a44287100a07347e"
-
 iconv-lite@~0.4.13:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
