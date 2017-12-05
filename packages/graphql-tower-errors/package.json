@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-errors",
-  "version": "3.16.0",
+  "version": "3.21.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-model",
-  "version": "3.21.2",
+  "version": "3.21.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -22,14 +22,14 @@
   "dependencies": {
     "dataloader": "^1.3.0",
     "graphql-tower-global-id": "^3.3.3",
-    "graphql-tower-helper": "^3.18.0",
+    "graphql-tower-helper": "^3.21.3",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "knex": "^0.13.0"
   },
   "devDependencies": {
-    "graphql-tower-errors": "^3.16.0",
-    "graphql-tower-queries": "^3.21.2"
+    "graphql-tower-errors": "^3.21.3",
+    "graphql-tower-queries": "^3.21.3"
   }
 }
