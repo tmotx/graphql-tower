@@ -65,6 +65,7 @@ class Default extends Model {
 
   static columns = {
     name: new ValueColumn(),
+    nickName: new ValueColumn(),
     password: new HashColumn(),
     userIds: new ListColumn(),
     data: new ValueColumn(Object),
@@ -102,6 +103,7 @@ describe('model', () => {
     await database.schema.createTable('default_table', (table) => {
       table.increments();
       table.string('name');
+      table.string('nick_name');
       table.text('password');
       table.specificType('keyword', 'tsvector');
       table.specificType('user_ids', 'bigint[]');
@@ -114,7 +116,7 @@ describe('model', () => {
       table.integer('deleted_by');
     });
 
-    await database('default_table').insert({ name: 'name is one' });
+    await database('default_table').insert({ name: 'name is one', nick_name: 'nick name is one' });
     await database('default_table').insert({ name: 'name is two' });
 
     await database.schema.dropTableIfExists('batch_insert');
@@ -160,6 +162,10 @@ describe('model', () => {
 
     it('query', () => {
       expect(Default.query.toString()).toBe('select * from "default_table"');
+    });
+
+    it('raw', () => {
+      expect(Default.raw('name = ?', [10]).toString()).toBe('name = 10');
     });
 
     it('batchInsert', async () => {
@@ -445,7 +451,10 @@ describe('model', () => {
 
     it('fetch with where', async () => {
       const model = new Default();
-      model.where({ name: 'name is one' });
+      model.where({ nickName: 'nick name is one' });
+      model.where(function where() { return this.where('name', 'name is one'); });
+      model.orderBy('createdAt');
+      model.whereRaw('data IS NULL');
       await model.fetch();
       expect(model.valueOf()).toMatchSnapshot();
       expect(client).toMatchSnapshot();

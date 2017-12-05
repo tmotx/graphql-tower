@@ -80,6 +80,10 @@ export default class Model {
     return this.database(this.tableName);
   }
 
+  static raw(...args) {
+    return this.database.raw(...args);
+  }
+
   static fromGlobalId(value) {
     const id = isGlobalId(value) ? fromGlobalId(value, this.displayName) : value;
     if (this.hasUUID && !Model.isUUID(id)) throw new TypeError();
@@ -96,6 +100,12 @@ export default class Model {
 
   static signify(data) {
     return _.mapKeys(data, (value, key) => _.snakeCase(key));
+  }
+
+  static signifyBuilder(column) {
+    if (_.isPlainObject(column)) return this.signify(column);
+    if (_.isString(column)) return _.snakeCase(column);
+    return column;
   }
 
   static forge(attributes, options) {
@@ -506,11 +516,23 @@ export default class Model {
 }
 
 _.forEach([
-  'where', 'whereNot', 'whereIn', 'whereNotIn', 'whereNull', 'whereNotNull', 'whereExists',
-  'whereNotExists', 'whereBetween', 'whereNotBetween', 'whereRaw',
-  'orderBy', 'orderByRaw',
+  'where', 'whereNot', 'orWhere', 'orWhereNot',
+  'whereIn', 'whereNotIn', 'orWhereIn', 'orWhereNotIn',
+  'whereNull', 'whereNotNull', 'orWhereNull', 'orWhereNotNull',
+  'whereExists', 'whereNotExists', 'orWhereExists', 'orWhereNotExists',
+  'whereBetween', 'whereNotBetween', 'orWhereBetween', 'orWhereNotBetween',
+  'orderBy',
 ], (key) => {
-  Model.prototype[key] = function queryBuilder(...args) {
+  Model.prototype[key] = function queryBuilder(column, ...args) {
+    this.queryBuilder[key](this.constructor.signifyBuilder(column), ...args);
+    return this;
+  };
+});
+
+_.forEach([
+  'whereRaw', 'orderByRaw',
+], (key) => {
+  Model.prototype[key] = function queryBuilderRaw(...args) {
     this.queryBuilder[key](...args);
     return this;
   };
