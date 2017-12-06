@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_fields"] }] */
 
 import isObject from 'lodash/isObject';
+import isNaN from 'lodash/isNaN';
 import toNumber from 'lodash/toNumber';
 import moment from 'moment';
 import { isGlobalId, toGlobalId } from 'graphql-tower-global-id';
@@ -17,7 +18,7 @@ export const GraphQLResponseStatus = new GraphQLEnumType({
 export function parseGlobalId(value) {
   const id = String(value);
 
-  if (!/^[0-9A-Za-z]+$/.test(id)) {
+  if (!isGlobalId(id)) {
     throw new TypeError('invalid global id');
   }
 
@@ -88,10 +89,11 @@ export const GraphQLSentence = new GraphQLScalarType({
   },
 });
 
+const mobileRegex = /^[1-9]{1,5}0[0-9]{12}$/;
 export const parseMobile = (value) => {
   const mobile = String(value);
 
-  if (!/^[1-9]{1,5}0[0-9]{12}$/.test(mobile)) {
+  if (!mobileRegex.test(mobile)) {
     throw new TypeError(`Mobile cannot represent non value: ${mobile}`);
   }
 
@@ -104,6 +106,75 @@ export const GraphQLMobile = new GraphQLScalarType({
   parseValue: parseMobile,
   parseLiteral: (ast) => {
     try { return parseMobile(ast.value); } catch (e) { return null; }
+  },
+});
+
+export const parseJSON = (value) => {
+  if (isObject(value)) return value;
+  return JSON.parse(value);
+};
+
+export const GraphQLJSON = new GraphQLScalarType({
+  name: 'JSON',
+  serialize: value => (isObject(value) ? value : JSON.parse(value)),
+  parseValue: parseJSON,
+  parseLiteral: (ast) => {
+    try { return parseJSON(ast.value); } catch (e) { return null; }
+  },
+});
+
+// http://emailregex.com/
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
+
+export const parseEmail = (value) => {
+  const email = String(value);
+
+  if (!emailRegex.test(email)) {
+    throw new TypeError(`Email cannot represent non value: ${email}`);
+  }
+
+  return email;
+};
+
+export const GraphQLEmail = new GraphQLScalarType({
+  name: 'Email',
+  serialize: String,
+  parseValue: parseEmail,
+  parseLiteral: (ast) => {
+    try { return parseEmail(ast.value); } catch (e) { return null; }
+  },
+});
+
+export const GraphQLGender = new GraphQLEnumType({
+  name: 'Gender',
+  values: {
+    male: { value: 1 },
+    female: { value: 2 },
+  },
+});
+
+export const parseAge = (value) => {
+  const age = parseInt(value, 10);
+
+  if (isNaN(age) || age < 1 || age > 150) {
+    throw new TypeError(`Age cannot represent non value: ${age}`);
+  }
+
+  return moment(Date.now())
+    .utc()
+    .set({
+      month: 0, date: 1, hour: 0, minute: 0, second: 0, millisecond: 0,
+    })
+    .add(-age, 'year')
+    .toDate();
+};
+
+export const GraphQLAge = new GraphQLScalarType({
+  name: 'Age',
+  serialize: value => moment(value).diff(Date.now(), 'year') * -1,
+  parseValue: parseAge,
+  parseLiteral: (ast) => {
+    try { return parseAge(ast.value); } catch (e) { return null; }
   },
 });
 

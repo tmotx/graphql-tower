@@ -10,6 +10,10 @@ import {
   GraphQLExpiration,
   GraphQLSentence,
   GraphQLMobile,
+  GraphQLJSON,
+  GraphQLEmail,
+  GraphQLGender,
+  GraphQLAge,
   GraphQLInheritanceType,
   GraphQLGlobalIdField,
 } from '../index';
@@ -56,6 +60,26 @@ const schema = new GraphQLSchema({
       mobile: {
         type: GraphQLMobile,
         args: { input: { type: GraphQLMobile } },
+        resolve,
+      },
+      json: {
+        type: GraphQLJSON,
+        args: { input: { type: GraphQLJSON } },
+        resolve,
+      },
+      email: {
+        type: GraphQLEmail,
+        args: { input: { type: GraphQLEmail } },
+        resolve,
+      },
+      gender: {
+        type: GraphQLGender,
+        args: { input: { type: GraphQLGender } },
+        resolve,
+      },
+      age: {
+        type: GraphQLAge,
+        args: { input: { type: GraphQLAge } },
         resolve,
       },
       node: {
@@ -130,7 +154,7 @@ describe('type', () => {
   });
 
   it('GraphQLGID', async () => {
-    const value = faker.lorem.word();
+    const value = toGlobalId('Type', faker.lorem.word());
 
     await _.reduce([{
       value,
@@ -287,6 +311,112 @@ describe('type', () => {
       args: { input: 963066131 },
       result: { errors: [new TypeError('Variable "$input" got invalid value 963066131.\nExpected type "Mobile", found 963066131: Mobile cannot represent non value: 963066131')] },
       calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLJSON', async () => {
+    const json = faker.helpers.userCard();
+    await _.reduce([{
+      value: json,
+      query: 'query { json }',
+      result: { data: { json } },
+    }, {
+      value: JSON.stringify(json),
+      query: 'query { json }',
+      result: { data: { json } },
+    }, {
+      query: `query { json (input: "${JSON.stringify(json).replace(/"/g, '\\"')}") }`,
+      calledWith: [undefined, { input: json }, undefined, expect.anything()],
+    }, {
+      query: 'query { json (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "JSON", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: JSON) { json (input: $input) }',
+      args: { input: json },
+      calledWith: [undefined, { input: json }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: JSON) { json (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new TypeError('Variable "$input" got invalid value "XYZ".\nExpected type "JSON", found "XYZ": Unexpected token X in JSON at position 0')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLEmail', async () => {
+    const email = faker.internet.email();
+    await _.reduce([{
+      value: email,
+      query: 'query { email }',
+      result: { data: { email } },
+    }, {
+      query: `query { email (input: "${email}") }`,
+      calledWith: [undefined, { input: email }, undefined, expect.anything()],
+    }, {
+      query: 'query { email (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "Email", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: Email) { email (input: $input) }',
+      args: { input: email },
+      calledWith: [undefined, { input: email }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: Email) { email (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new TypeError('Variable "$input" got invalid value "XYZ".\nExpected type "Email", found "XYZ": Email cannot represent non value: XYZ')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLAge', async () => {
+    Date.now = () => 1512557954249;
+    const age = 30;
+
+    await _.reduce([{
+      value: '1987-09-19',
+      query: 'query { age }',
+      result: { data: { age } },
+    }, {
+      value: new Date(536457600000),
+      query: 'query { age }',
+      result: { data: { age } },
+    }, {
+      query: `query { age (input: "${age}") }`,
+      calledWith: [undefined, { input: new Date(536457600000) }, undefined, expect.anything()],
+    }, {
+      query: 'query { age (input: "200") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "200".\nExpected type "Age", found "200".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query { age (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "Age", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: Age) { age (input: $input) }',
+      args: { input: age },
+      calledWith: [undefined, { input: new Date(536457600000) }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: Age) { age (input: $input) }',
+      args: { input: -10 },
+      result: { errors: [new TypeError('Variable "$input" got invalid value -10.\nExpected type "Age", found -10: Age cannot represent non value: -10')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: Age) { age (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new TypeError('Variable "$input" got invalid value "XYZ".\nExpected type "Age", found "XYZ": Age cannot represent non value: NaN')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLGender', async () => {
+    await _.reduce([{
+      value: 1,
+      query: 'query { gender }',
+      result: { data: { gender: 'male' } },
+    }, {
+      value: 2,
+      query: 'query { gender }',
+      result: { data: { gender: 'female' } },
     }], expectGraphql, Promise.resolve());
   });
 
