@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "3.21.3",
+  "version": "3.22.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "graphql-tower-jwt": "^3.21.1",
     "graphql-tower-model": "^3.21.3",
     "graphql-tower-queries": "^3.21.3",
-    "graphql-tower-types": "^3.21.3",
+    "graphql-tower-types": "^3.22.1",
     "graphql-tower-unique": "^3.6.2"
   }
 }
