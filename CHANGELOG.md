@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.23.0"></a>
+# [3.23.0](https://github.com/tmotx/graphql-tower/compare/v3.22.2...v3.23.0) (2017-12-07)
+
+
+### Features
+
+* **model:** added fetchOrInsert and batchDestroy ([e203f47](https://github.com/tmotx/graphql-tower/commit/e203f47))
+
+
+
+
 <a name="3.22.2"></a>
 ## [3.22.2](https://github.com/tmotx/graphql-tower/compare/v3.22.1...v3.22.2) (2017-12-06)
 
