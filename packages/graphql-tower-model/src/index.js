@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
-import { thunk, combine, assertResult } from 'graphql-tower-helper';
+import { thunk, combine, assertResult, batch } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
@@ -172,6 +172,31 @@ export default class Model {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
   }
 
+  static async batchDestroy(keys) {
+    const { signify, hasOperator, softDelete } = this;
+    const idAttribute = _.snakeCase(this.idAttribute);
+
+    if (!softDelete) {
+      await this.query.whereIn(idAttribute, _.map(keys, ({ id }) => id)).delete();
+      return [];
+    }
+
+    const operators = {};
+    _.forEach(keys, ({ id, operator }) => {
+      if (!operators[operator]) operators[operator] = [];
+      operators[operator].push(id);
+    });
+
+    const results = _.mapKeys(await Promise.all(_.map(operators, async (ids, operator) => {
+      const data = { deletedAt: new Date() };
+      if (hasOperator) data.deletedBy = Model.fromModel(operator);
+      await this.query.whereNull('deleted_at').whereIn(idAttribute, ids).update(signify(data));
+      return { operator, data };
+    })), ({ operator }) => operator);
+
+    return _.map(keys, ({ operator }) => results[operator].data);
+  }
+
   _ = {
     current: {},
     previous: {},
@@ -185,7 +210,7 @@ export default class Model {
   cache = null;
 
   constructor(attrs, options) {
-    const { columns } = this.constructor;
+    const { columns, batchDestroy } = this.constructor;
 
     const properties = _.mapValues(columns, (column, name) => {
       if (!column.name) column.name = name; // eslint-disable-line
@@ -196,6 +221,10 @@ export default class Model {
       };
     });
     Object.defineProperties(this, properties);
+
+    if (!this.constructor.destroy) {
+      this.constructor.destroy = batch(batchDestroy.bind(this.constructor));
+    }
 
     if (attrs) this.set(attrs);
     if (options && options.cache) this.cache = options.cache;
@@ -334,6 +363,10 @@ export default class Model {
     return this;
   }
 
+  async fetchOrInsert(operator, tempData) {
+    return await this.fetch() || this.insert(operator, tempData);
+  }
+
   async fetchAll(NotFoundError) {
     const data = await this.loadQuery(
       this.query.limit(1000),
@@ -421,29 +454,19 @@ export default class Model {
   }
 
   async destroy(operator) {
-    const { signify, hasOperator, softDelete } = this.constructor;
-    return Promise.resolve()
-      .then(() => {
-        if (!softDelete) return this.query.delete();
+    const { hasOperator, destroy } = this.constructor;
+    const operatorId = Model.fromModel(operator);
 
-        if (hasOperator && !operator) {
-          throw new Error('operator is required');
-        }
+    if (hasOperator && !operatorId) {
+      throw new Error('operator is required');
+    }
 
-        if (!this.valueOf('deletedAt')) {
-          const data = { deletedAt: new Date() };
-          if (hasOperator) data.deletedBy = Model.fromModel(operator);
-          this.merge(data);
+    const data = await destroy({ id: this.nativeId, operator: operatorId || 0 });
+    if (data) this.merge(data);
 
-          return this.query.update(signify(data));
-        }
+    this.clear();
 
-        return this;
-      })
-      .then(() => {
-        this.clear();
-        return this;
-      });
+    return this;
   }
 
   async addKeyValue(column, key, value) {

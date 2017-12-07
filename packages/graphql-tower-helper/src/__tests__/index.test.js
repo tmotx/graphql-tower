@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { NotFoundError } from 'graphql-tower-errors';
-import { thunk, combine, next, retry, displayName, assertResult } from '../';
+import { thunk, combine, next, retry, displayName, assertResult, batch } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -80,5 +80,39 @@ describe('helper', () => {
     expect(() => assertResult(1, Error)).not.toThrowError();
     expect(() => assertResult(true, Error)).not.toThrowError();
     expect(assertResult(null)).toBe(null);
+  });
+
+  it('batch', async () => {
+    const handler = jest.fn(() => Promise.resolve());
+    const tasker = batch(handler);
+
+    expect(await Promise.all([tasker('a'), tasker('b')])).toEqual([undefined, undefined]);
+    expect(handler).toHaveBeenLastCalledWith(['a', 'b']);
+
+    handler.mockReturnValueOnce(Promise.reject(new Error('throw error')));
+    await expect(Promise.all([tasker('a'), tasker('b')])).rejects.toEqual(new Error('throw error'));
+
+    let times = 0;
+    let promiseContinue;
+    const pass = () => {
+      times += 1;
+      if (times >= 2) promiseContinue();
+    };
+    const resolve = jest.fn(pass);
+    const reject = jest.fn(pass);
+    handler.mockReturnValueOnce(Promise.resolve(['ok', new Error()]));
+    tasker('a').then(resolve, reject);
+    tasker('b').then(resolve, reject);
+
+    await new Promise((promise) => { promiseContinue = promise; });
+    expect(resolve).toHaveBeenLastCalledWith('ok');
+    expect(resolve).toHaveBeenCalledTimes(1);
+    expect(reject).toHaveBeenLastCalledWith(new Error());
+    expect(reject).toHaveBeenCalledTimes(1);
+
+    handler.mockClear();
+    await tasker('a');
+    await tasker('b');
+    expect(handler).toHaveBeenCalledTimes(2);
   });
 });

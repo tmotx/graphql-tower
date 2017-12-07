@@ -85,6 +85,10 @@ class NoOperator extends Model {
   }
 }
 
+class DirectDelete extends NoOperator {
+  static softDelete = false;
+}
+
 class BatchInsert extends Model {
   static database = database;
 
@@ -116,9 +120,6 @@ describe('model', () => {
       table.integer('deleted_by');
     });
 
-    await database('default_table').insert({ name: 'name is one', nick_name: 'nick name is one' });
-    await database('default_table').insert({ name: 'name is two' });
-
     await database.schema.dropTableIfExists('batch_insert');
 
     await database.schema.createTable('batch_insert', (table) => {
@@ -128,6 +129,13 @@ describe('model', () => {
   });
 
   afterAll(() => database.destroy());
+
+  beforeEach(async () => {
+    await Default.query.truncate();
+    await database('default_table').insert({ name: 'name is one', nick_name: 'nick name is one' });
+    await database('default_table').insert({ name: 'name is two', data: { 10: 'xyz' }, user_ids: ['10', '20'] });
+    client.mockClear();
+  });
 
   describe('static', () => {
     describe('columns', () => {
@@ -238,9 +246,6 @@ describe('model', () => {
       });
 
       it('no soft delete', async () => {
-        class DirectDelete extends NoOperator {
-          static softDelete = false;
-        }
         const model = new Default({ name: 'for no soft delete load' });
         await (await model.save(10)).destroy(10);
         expect(await DirectDelete.load(3))
@@ -378,13 +383,13 @@ describe('model', () => {
         const model = new NoOperator({}, { cache });
         await model.save(null, { name: 'new is no operator insert' });
         expect(client).toMatchSnapshot();
-        expect(cache.prime).toHaveBeenCalledWith(toGlobalId('NoOperator', '6'), expect.anything());
+        expect(cache.prime).toHaveBeenCalledWith(toGlobalId('NoOperator', '3'), expect.anything());
       });
     });
 
     describe('update of save', async () => {
       it('has operator', async () => {
-        const model = await Default.load(4);
+        const model = await Default.load(1);
 
         await model.save(20);
 
@@ -399,7 +404,7 @@ describe('model', () => {
       });
 
       it('no operator', async () => {
-        const model = await NoOperator.load(6);
+        const model = await NoOperator.load(1);
         await model.save(null, { name: 'name is no operator update' });
         expect(client).toMatchSnapshot();
       });
@@ -407,7 +412,7 @@ describe('model', () => {
 
     describe('destroy', () => {
       it('has operator', async () => {
-        const model = await Default.load(4);
+        const model = await Default.load(1);
 
         await expect(model.destroy())
           .rejects.toEqual(new Error('operator is required'));
@@ -418,22 +423,30 @@ describe('model', () => {
         expect(client).toMatchSnapshot();
       });
 
+      it('batch', async () => {
+        const one = await Default.load(1);
+        const two = await Default.load(2);
+        await Promise.all([one.destroy('10'), two.destroy('10')]);
+        expect(await new Default().fetchAll()).toEqual([]);
+        expect(client).toMatchSnapshot();
+        expect(client).toHaveBeenCalledTimes(4);
+      });
+
       it('no operator', async () => {
-        const model = await NoOperator.load(5);
+        const model = await NoOperator.load(1);
         await model.destroy();
         expect(client).toMatchSnapshot();
       });
 
       it('is not soft delete', async () => {
-        class DirectDelete extends NoOperator {
-          static softDelete = false;
-        }
-        const model = await DirectDelete.load(6);
+        const model = await DirectDelete.load(1);
         model.cache = { clear: jest.fn() };
+
+        expect(model.query.toString()).toBe('select * from "default_table" where "id" = 1');
 
         await model.destroy();
         expect(client).toMatchSnapshot();
-        expect(model.cache.clear).toHaveBeenCalledWith(toGlobalId('DirectDelete', 6));
+        expect(model.cache.clear).toHaveBeenCalledWith(toGlobalId('DirectDelete', 1));
       });
     });
 
@@ -458,6 +471,13 @@ describe('model', () => {
       await model.fetch();
       expect(model.valueOf()).toMatchSnapshot();
       expect(client).toMatchSnapshot();
+    });
+
+    it('fetchOrInsert', async () => {
+      expect((await new Default({ name: 'name is one' }).fetchOrInsert()).nativeId).toBe(1);
+      expect((await new Default({ name: 'name is new' }).fetchOrInsert('10')).nativeId).toBe(3);
+      expect(client).toMatchSnapshot();
+      expect(client).toHaveBeenCalledTimes(3);
     });
 
     describe('fetchAll', () => {
@@ -491,7 +511,7 @@ describe('model', () => {
     });
 
     it('delKeyValue', async () => {
-      const model = await Default.load(1);
+      const model = await Default.load(2);
 
       expect(model.valueOf('data')).toEqual({ 10: 'xyz' });
       await model.delKeyValue('data', '10');
@@ -517,18 +537,12 @@ describe('model', () => {
     });
 
     it('removeValue', async () => {
-      const model = await Default.load(1);
-
-      await model.appendValue('userIds', '30');
-      expect(model.userIds).toEqual(['20', '10', '30']);
+      const model = await Default.load(2);
 
       await model.removeValue('userIds', '10');
-      expect(model.userIds).toEqual(['20', '30']);
+      expect(model.userIds).toEqual(['20']);
 
-      expect((await Default.load(1)).userIds).toEqual(['20', '30']);
-
-      (await Default.load(2)).removeValue('userIds', '10');
-      expect((await Default.load(2)).userIds).toEqual([]);
+      expect((await (await Default.load(1)).removeValue('userIds', '10')).userIds).toEqual([]);
     });
 
     describe('increment', () => {
@@ -545,11 +559,11 @@ describe('model', () => {
 
       it('multiple', async () => {
         const model = await Default.load(1);
-        expect(model.total).toBe(10);
+        expect(model.total).toBe(0);
         await model.increment({ total: 10 });
 
-        expect(model.total).toBe(20);
-        expect((await Default.load(1)).total).toBe(20);
+        expect(model.total).toBe(10);
+        expect((await Default.load(1)).total).toBe(10);
 
         await expect(model.where('total', 30).increment({ total: 10 }, Error)).rejects.toEqual(new Error());
       });
