@@ -3,17 +3,34 @@ export function thunk(handler) {
 }
 
 export function combine(handler, args) {
-  const then = (...promise) => Promise.resolve(args).then(handler).then(...promise);
+  // promise
+  let promise;
+  Promise.resolve(args);
+  const then = (...resolve) => {
+    if (!promise) promise = Promise.resolve(args).then(handler);
+    promise.then(...resolve);
+  };
+
+  // merge
   return Object.assign(add => combine(handler, Object.assign({}, args, add)), args, {
     then, promise: Object.assign(Promise.resolve(args), args, { then }),
   });
 }
 
 export function next(handler, ...args) {
-  const then = (...promise) => Promise.resolve(args).then(() => handler(...args)).then(...promise);
+  // promise
+  let promise;
+  const then = (...resolve) => {
+    if (!promise) promise = Promise.resolve(args).then(() => handler(...args));
+    promise.then(...resolve);
+  };
+
+  // merge
   const reply = Object.assign((...add) => {
     const fill = args.map(value => (value === undefined ? add.shift() : value));
     const nextTo = next(handler, ...fill.concat(add));
+
+    // support defineProperty
     Reflect.ownKeys(reply).forEach((key) => {
       if (nextTo[key] === undefined) {
         Object.defineProperty(nextTo, key, Object.getOwnPropertyDescriptor(reply, key));
