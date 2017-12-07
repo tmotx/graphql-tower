@@ -8,7 +8,7 @@ export function combine(handler, args) {
   Promise.resolve(args);
   const then = (...resolve) => {
     if (!promise) promise = Promise.resolve(args).then(handler);
-    promise.then(...resolve);
+    return promise.then(...resolve);
   };
 
   // merge
@@ -22,7 +22,7 @@ export function next(handler, ...args) {
   let promise;
   const then = (...resolve) => {
     if (!promise) promise = Promise.resolve(args).then(() => handler(...args));
-    promise.then(...resolve);
+    return promise.then(...resolve);
   };
 
   // merge

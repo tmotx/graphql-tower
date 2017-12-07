@@ -16,6 +16,9 @@ describe('helper', () => {
       expect(combine(handler).promise).toBeInstanceOf(Promise);
       await new Promise(setImmediate);
       expect(handler).toHaveBeenCalledTimes(0);
+
+      await expect(combine(() => { throw new Error(); })).rejects.toEqual(new Error());
+      await expect(combine(() => { throw new Error(); }).then()).rejects.toEqual(new Error());
     });
 
     it('promise', async () => {
@@ -25,6 +28,10 @@ describe('helper', () => {
         .toEqual(expect.objectContaining({ title: 'yutin', age: 10 }));
       expect(combine(args => (args), { title: 'yutin' })({ age: 10 }).promise)
         .toEqual(expect.objectContaining({ title: 'yutin', age: 10 }));
+
+      const { promise } = combine(() => {});
+      expect(typeof promise).toBe('object');
+      expect(typeof promise.then).toBe('function');
     });
 
     it('multi promise', async () => {
@@ -43,6 +50,9 @@ describe('helper', () => {
       expect(next(handler).promise).toBeInstanceOf(Promise);
       await new Promise(setImmediate);
       expect(handler).toHaveBeenCalledTimes(0);
+
+      await expect(next(() => { throw new Error(); })).rejects.toEqual(new Error());
+      await expect(next(() => { throw new Error(); }).then()).rejects.toEqual(new Error());
     });
 
     it('promise', async () => {
@@ -52,6 +62,10 @@ describe('helper', () => {
         .toEqual([{ age: 10 }, { title: 'yutin' }]);
       expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }).promise)
         .toEqual([{ age: 10 }, { title: 'yutin' }]);
+
+      const { promise } = next(() => {});
+      expect(typeof promise).toBe('object');
+      expect(typeof promise.then).toBe('function');
     });
 
     it('multi promise', async () => {
