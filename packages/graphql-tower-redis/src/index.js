@@ -3,8 +3,8 @@ import redis from 'redis';
 import commands from 'redis-commands';
 
 export default class Redis {
-  constructor(...args) {
-    this.client = redis.createClient(...args);
+  constructor(env = '') {
+    this.client = redis.createClient(env.REDIS_URL || env);
   }
 
   on(...args) {

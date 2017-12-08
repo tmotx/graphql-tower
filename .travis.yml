@@ -1,30 +1,23 @@
 language: node_js
-
 notifications:
   email: false
-
 node_js:
-  - '7'
-  - '6'
-
+- '7'
+- '6'
 services:
-  - postgresql
-
+- postgresql
+- redis-server
 addons:
   postgresql: '9.5'
-
 before_install:
-    - npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-
+- npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 before_script:
-  - psql -c 'create database graphql_tower;' -U postgres
-  - npm prune
-  - npm run bootstrap
-
+- psql -c 'create database graphql_tower;' -U postgres
+- npm prune
+- npm run bootstrap
 after_success:
-  - npm install -g coveralls
-  - cat ./coverage/lcov.info | coveralls
-
+- npm install -g coveralls
+- cat ./coverage/lcov.info | coveralls
 branches:
   except:
-    - /^v\d+\.\d+\.\d+$/
+  - /^v\d+\.\d+\.\d+$/

@@ -1,0 +1,27 @@
+{
+  "name": "graphql-tower-redis-subscriptions",
+  "version": "3.22.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "graphql-subscriptions": "^0.5.5",
+    "graphql-tower-redis": "^3.22.0",
+    "lodash": "^4.17.4"
+  }
+}
