@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-queries",
-  "version": "3.21.3",
+  "version": "3.24.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
