@@ -9,11 +9,14 @@ export default class RedisPubSub extends PubSub {
     this.sub = new Redis(env.PUBSUB_URL);
     this.sub.on('connect', () => this.sub.psubscribe('TOWER_PUBSUB::*'));
     this.sub.on('pmessage', async (pattern, channel, message) => {
-      super.publish(channel.replace(/^TOWER_PUBSUB::/, ''), await this.format(message));
+      const payload = await this.format(message);
+      payload._ = await this.onMessage(payload);
+      super.publish(channel.replace(/^TOWER_PUBSUB::/, ''), payload);
     });
 
     this.format = options.format || JSON.parse;
     this.stringify = options.stringify || JSON.stringify;
+    this.onMessage = options.onMessage || (() => ({}));
     if (env.PUBSUB_INTERVAL) this.setInterval();
   }
 
@@ -21,13 +24,15 @@ export default class RedisPubSub extends PubSub {
     return this.pub.publish(`TOWER_PUBSUB::${triggerName}`, await this.stringify(payload));
   }
 
-  quit() {
+  async quit() {
     if (this.interval) clearTimeout(this.interval);
     return Promise.all([this.pub.quit(), this.sub.quit()]);
   }
 
-  setInterval() {
-    super.publish('onInterval', { timestamp: floor(Date.now(), -4) });
+  async setInterval() {
+    const payload = { timestamp: floor(Date.now(), -4) };
+    payload._ = await this.onMessage(payload);
+    super.publish('onInterval', payload);
     this.interval = setTimeout(() => this.setInterval(), 10000);
   }
 }
