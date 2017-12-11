@@ -1,5 +1,6 @@
 import { $$asyncIterator } from 'iterall';
 import assign from 'lodash/assign';
+import get from 'lodash/get';
 import GraphQLField from './GraphQLField';
 
 export function withFilter(asyncIteratorFn, filterFn) {
@@ -10,9 +11,12 @@ export function withFilter(asyncIteratorFn, filterFn) {
       .next()
       .then(payload => Promise.all([
         payload,
-        Promise.resolve(
-          filterFn(payload.value, args, assign({}, context, payload.value._), info),
-        ).catch(() => false),
+        Promise.resolve(filterFn(
+          get(payload.value, ['data'], payload.value),
+          args,
+          assign({}, context, get(payload.value, ['contextValue'])),
+          info,
+        )).catch(() => false),
       ]))
       .then(([payload, filterResult]) => {
         if (filterResult === true || payload.done === true) {
@@ -47,9 +51,7 @@ export default class Subscription extends GraphQLField {
     Object.defineProperty(this, 'resolve', {
       enumerable: true,
       set: (resolve) => { this._.resolve = resolve; },
-      get: () => (rootValue, args, context, info) => this.constructor.resolve.call(
-        this, rootValue, args, assign({}, context, rootValue._), info,
-      ),
+      get: () => this.constructor.resolve.bind(this),
     });
 
     Object.defineProperty(this, 'subscribe', {

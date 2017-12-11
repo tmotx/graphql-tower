@@ -9,9 +9,9 @@ export default class RedisPubSub extends PubSub {
     this.sub = new Redis(env.PUBSUB_URL);
     this.sub.on('connect', () => this.sub.psubscribe('TOWER_PUBSUB::*'));
     this.sub.on('pmessage', async (pattern, channel, message) => {
-      const payload = await this.format(message);
-      payload._ = await this.onMessage(payload);
-      super.publish(channel.replace(/^TOWER_PUBSUB::/, ''), payload);
+      const data = await this.format(message);
+      const contextValue = await this.onMessage(pattern, channel, data);
+      super.publish(channel.replace(/^TOWER_PUBSUB::/, ''), { data, contextValue });
     });
 
     this.format = options.format || JSON.parse;

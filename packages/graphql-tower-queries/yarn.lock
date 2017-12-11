@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-graphql-tower-errors@^3.21.3:
-  version "3.21.3"
-  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.21.3.tgz#10422a2c7e4f99e812ef78e114bd1230597d561f"
-
 iterall@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"

@@ -11,7 +11,7 @@ describe('redis pubsub', () => {
 
     redis.sub.on('psubscribe', () => redis.publish('onAddMessage', { x: 1 }));
     redis.subscribe('onAddMessage', resolve);
-    expect(await promise).toEqual({ _: {}, x: 1 });
+    expect(await promise).toEqual({ contextValue: {}, data: { x: 1 } });
     await redis.quit();
   });
 
@@ -26,7 +26,7 @@ describe('redis pubsub', () => {
 
     redis.sub.on('psubscribe', () => redis.publish('onAddMessage', 1));
     redis.subscribe('onAddMessage', resolve);
-    expect(await promise).toEqual(3);
+    expect(await promise).toEqual({ contextValue: {}, data: 3 });
     await redis.quit();
   });
 
@@ -40,7 +40,7 @@ describe('redis pubsub', () => {
     redis.sub.on('psubscribe', () => redis.publish('onAddMessage', { times: 10 }));
     redis.subscribe('onAddMessage', resolve);
 
-    expect(await promise).toEqual({ _: { name: 'yutin' }, times: 10 });
+    expect(await promise).toEqual({ contextValue: { name: 'yutin' }, data: { times: 10 } });
     await redis.quit();
   });
 
