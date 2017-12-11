@@ -17,7 +17,7 @@ export function combine(handler, args) {
   });
 }
 
-export function next(handler, ...args) {
+export function functional(handler, ...args) {
   // promise
   let promise;
   const then = (...resolve) => {
@@ -28,7 +28,7 @@ export function next(handler, ...args) {
   // merge
   const reply = Object.assign((...add) => {
     const fill = args.map(value => (value === undefined ? add.shift() : value));
-    const nextTo = next(handler, ...fill.concat(add));
+    const nextTo = functional(handler, ...fill.concat(add));
 
     // support defineProperty
     Reflect.ownKeys(reply).forEach((key) => {
@@ -40,6 +40,17 @@ export function next(handler, ...args) {
   }, { then, promise: Object.assign(Promise.resolve(args), args, { then }) });
 
   return reply;
+}
+
+export function next(handler) {
+  // promise
+  let promise;
+  const then = (...resolve) => {
+    if (!promise) promise = Promise.resolve().then(handler);
+    return promise.then(...resolve);
+  };
+
+  return Object.assign(Promise.resolve(), { then });
 }
 
 export function retry(handler, times = 3) {

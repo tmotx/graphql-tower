@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { NotFoundError } from 'graphql-tower-errors';
-import { thunk, combine, next, retry, displayName, assertResult, batch } from '../';
+import { thunk, next, combine, functional, retry, displayName, assertResult, batch } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -43,29 +43,57 @@ describe('helper', () => {
     });
   });
 
+  describe('functional', () => {
+    it('throw error', async () => {
+      const handler = jest.fn();
+      expect(functional(handler)).toBeInstanceOf(Function);
+      expect(functional(handler).promise).toBeInstanceOf(Promise);
+      await new Promise(setImmediate);
+      expect(handler).toHaveBeenCalledTimes(0);
+
+      await expect(functional(() => { throw new Error(); })).rejects.toEqual(new Error());
+      await expect(functional(() => { throw new Error(); }).then()).rejects.toEqual(new Error());
+    });
+
+    it('promise', async () => {
+      expect(await functional((...args) => (args), { title: 'yutin' })).toEqual([{ title: 'yutin' }]);
+      expect(await functional((...args) => Promise.resolve(args), { title: 'yutin' })({ age: 10 })).toEqual([{ title: 'yutin' }, { age: 10 }]);
+      expect(await functional((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }))
+        .toEqual([{ age: 10 }, { title: 'yutin' }]);
+      expect(await functional((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }).promise)
+        .toEqual([{ age: 10 }, { title: 'yutin' }]);
+
+      const { promise } = functional(() => {});
+      expect(typeof promise).toBe('object');
+      expect(typeof promise.then).toBe('function');
+    });
+
+    it('multi promise', async () => {
+      const handler = jest.fn(() => Promise.resolve('x'));
+      const promise = functional(handler);
+      const results = await Promise.all([promise, promise]);
+      expect(results).toEqual(['x', 'x']);
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it('defineProperty', () => {
+      const functionalTo = functional((...args) => (args));
+      Object.defineProperty(functionalTo, 'isShow', { get: () => true });
+      functionalTo.maxNumber = 99;
+      expect(functionalTo.isShow).toBe(true);
+      expect(functionalTo({ title: 'yutin' })).toEqual(expect.objectContaining({ isShow: true, maxNumber: 99 }));
+    });
+  });
+
   describe('next', () => {
     it('throw error', async () => {
       const handler = jest.fn();
-      expect(next(handler)).toBeInstanceOf(Function);
-      expect(next(handler).promise).toBeInstanceOf(Promise);
+      expect(next(handler)).toBeInstanceOf(Promise);
       await new Promise(setImmediate);
       expect(handler).toHaveBeenCalledTimes(0);
 
       await expect(next(() => { throw new Error(); })).rejects.toEqual(new Error());
       await expect(next(() => { throw new Error(); }).then()).rejects.toEqual(new Error());
-    });
-
-    it('promise', async () => {
-      expect(await next((...args) => (args), { title: 'yutin' })).toEqual([{ title: 'yutin' }]);
-      expect(await next((...args) => Promise.resolve(args), { title: 'yutin' })({ age: 10 })).toEqual([{ title: 'yutin' }, { age: 10 }]);
-      expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }))
-        .toEqual([{ age: 10 }, { title: 'yutin' }]);
-      expect(await next((...args) => (args))(undefined, { title: 'yutin' })({ age: 10 }).promise)
-        .toEqual([{ age: 10 }, { title: 'yutin' }]);
-
-      const { promise } = next(() => {});
-      expect(typeof promise).toBe('object');
-      expect(typeof promise.then).toBe('function');
     });
 
     it('multi promise', async () => {
@@ -74,14 +102,6 @@ describe('helper', () => {
       const results = await Promise.all([promise, promise]);
       expect(results).toEqual(['x', 'x']);
       expect(handler).toHaveBeenCalledTimes(1);
-    });
-
-    it('defineProperty', () => {
-      const nextTo = next((...args) => (args));
-      Object.defineProperty(nextTo, 'isShow', { get: () => true });
-      nextTo.maxNumber = 99;
-      expect(nextTo.isShow).toBe(true);
-      expect(nextTo({ title: 'yutin' })).toEqual(expect.objectContaining({ isShow: true, maxNumber: 99 }));
     });
   });
 
