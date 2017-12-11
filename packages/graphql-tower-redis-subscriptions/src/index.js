@@ -8,10 +8,11 @@ export default class RedisPubSub extends PubSub {
     this.pub = new Redis(env.PUBSUB_URL);
     this.sub = new Redis(env.PUBSUB_URL);
     this.sub.on('connect', () => this.sub.psubscribe('TOWER_PUBSUB::*'));
-    this.sub.on('pmessage', async (pattern, channel, message) => {
-      const data = await this.format(message);
-      const contextValue = await this.onMessage(pattern, channel, data);
-      super.publish(channel.replace(/^TOWER_PUBSUB::/, ''), { data, contextValue });
+    this.sub.on('pmessage', async (pattern, patternChannel, message) => {
+      const channel = patternChannel.replace(/^TOWER_PUBSUB::/, '');
+      const contextValue = await this.onMessage(message, channel);
+      const data = await this.format(message, channel, contextValue);
+      super.publish(channel, { data, contextValue });
     });
 
     this.format = options.format || JSON.parse;
@@ -30,9 +31,10 @@ export default class RedisPubSub extends PubSub {
   }
 
   async setInterval() {
-    const payload = { timestamp: floor(Date.now(), -4) };
-    payload._ = await this.onMessage(payload);
-    super.publish('onInterval', payload);
+    const message = JSON.stringify({ timestamp: floor(Date.now(), -4) });
+    const contextValue = await this.onMessage(message, 'onInterval');
+    const data = await this.format(message, 'onInterval', contextValue);
+    super.publish('onInterval', { data, contextValue });
     this.interval = setTimeout(() => this.setInterval(), 10000);
   }
 }

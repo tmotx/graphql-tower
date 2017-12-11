@@ -56,7 +56,9 @@ describe('redis pubsub', () => {
 
     expect(setTimeout).toHaveBeenCalledTimes(1);
     jest.runOnlyPendingTimers();
-    expect(listener).toHaveBeenLastCalledWith({ _: {}, timestamp: expect.any(Number) });
+    expect(listener).toHaveBeenLastCalledWith({
+      data: { timestamp: expect.any(Number) }, contextValue: {},
+    });
     expect(listener).toHaveBeenCalledTimes(1);
 
     await redis.quit();
