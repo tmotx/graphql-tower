@@ -67,5 +67,6 @@
       "<rootDir>/node_modules/enzyme-to-json/serializer",
       "<rootDir>/node_modules/jest-mock-knex/serializer"
     ]
-  }
+  },
+  "dependencies": {}
 }

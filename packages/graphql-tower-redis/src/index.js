@@ -7,10 +7,6 @@ export default class Redis {
     this.client = redis.createClient(env.REDIS_URL || env);
   }
 
-  on(...args) {
-    return this.client.on(...args);
-  }
-
   multi(items) {
     if (!items) return this.client.multi();
     return new Promise((resolve, rejects) => {
@@ -38,5 +34,12 @@ forEach(commands.list, (key) => {
       });
       this.client[key](...args);
     });
+  };
+});
+
+
+forEach(['on', 'once', 'addListener', 'removeListener'], (key) => {
+  Redis.prototype[key] = function Command(...args) {
+    this.client[key](...args);
   };
 });

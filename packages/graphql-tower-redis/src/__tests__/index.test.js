@@ -52,6 +52,14 @@ describe('redis', () => {
     await pub.quit();
   });
 
+  it('on / off', async () => {
+    const listener = jest.fn();
+    redis.on('ready', listener);
+    redis.once('ready', listener);
+    redis.addListener('ready', listener);
+    redis.removeListener('ready', listener);
+  });
+
   it('throw', async () => {
     await expect(redis.hget('hash')).rejects.toEqual(
       new Error('HGET can\'t be processed. The connection is already closed.'),
