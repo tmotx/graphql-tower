@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.25.0"></a>
+# [3.25.0](https://github.com/tmotx/graphql-tower/compare/v3.24.4...v3.25.0) (2017-12-11)
+
+
+### Features
+
+* **helper:** change functional name to next ([bb7bb2d](https://github.com/tmotx/graphql-tower/commit/bb7bb2d))
+
+
+
+
 <a name="3.24.4"></a>
 ## [3.24.4](https://github.com/tmotx/graphql-tower/compare/v3.24.3...v3.24.4) (2017-12-11)
 
