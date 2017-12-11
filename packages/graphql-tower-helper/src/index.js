@@ -50,7 +50,7 @@ export function next(handler) {
     return promise.then(...resolve);
   };
 
-  return Object.assign(Promise.resolve(), { then });
+  return Object.assign(Promise.resolve(handler), { then });
 }
 
 export function retry(handler, times = 3) {
