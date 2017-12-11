@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.25.1"></a>
+## [3.25.1](https://github.com/tmotx/graphql-tower/compare/v3.25.0...v3.25.1) (2017-12-11)
+
+
+### Bug Fixes
+
+* **helper:** fix Maximum call stack size exceeded on next ([4d84cf8](https://github.com/tmotx/graphql-tower/commit/4d84cf8))
+
+
+
+
 <a name="3.25.0"></a>
 # [3.25.0](https://github.com/tmotx/graphql-tower/compare/v3.24.4...v3.25.0) (2017-12-11)
 
