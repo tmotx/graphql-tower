@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.24.4"></a>
+## [3.24.4](https://github.com/tmotx/graphql-tower/compare/v3.24.3...v3.24.4) (2017-12-11)
+
+
+### Bug Fixes
+
+* **redis-subscriptions:** pass context value to format ([958b4c1](https://github.com/tmotx/graphql-tower/commit/958b4c1))
+
+
+
+
 <a name="3.24.3"></a>
 ## [3.24.3](https://github.com/tmotx/graphql-tower/compare/v3.24.2...v3.24.3) (2017-12-11)
 
