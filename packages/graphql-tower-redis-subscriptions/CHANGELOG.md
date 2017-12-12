@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.25.2"></a>
+## [3.25.2](https://github.com/tmotx/graphql-tower/compare/v3.25.1...v3.25.2) (2017-12-12)
+
+
+### Bug Fixes
+
+* **redis-subscriptions:** fix PUBSUB_INTERVAL env value ([7642ccb](https://github.com/tmotx/graphql-tower/commit/7642ccb))
+
+
+
+
 <a name="3.24.4"></a>
 ## [3.24.4](https://github.com/tmotx/graphql-tower/compare/v3.24.3...v3.24.4) (2017-12-11)
 
