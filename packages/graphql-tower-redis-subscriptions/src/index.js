@@ -18,7 +18,7 @@ export default class RedisPubSub extends PubSub {
     this.format = options.format || JSON.parse;
     this.stringify = options.stringify || JSON.stringify;
     this.onMessage = options.onMessage || (() => ({}));
-    if (env.PUBSUB_INTERVAL) this.setInterval();
+    if (parseInt(env.PUBSUB_INTERVAL, 10)) this.setInterval();
   }
 
   async publish(triggerName, payload) {
