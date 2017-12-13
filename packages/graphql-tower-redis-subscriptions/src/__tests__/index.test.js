@@ -46,7 +46,7 @@ describe('redis pubsub', () => {
 
   it('onInterval', async () => {
     const listener = jest.fn();
-    const redis = new RedisPubSub({ PUBSUB_INTERVAL: true });
+    const redis = new RedisPubSub({ PUBSUB_INTERVAL: 1 });
     redis.subscribe('onInterval', listener);
 
     let resolve;

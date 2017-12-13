@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import faker from 'faker';
-import moment from 'moment';
 import { graphql, GraphQLSchema, GraphQLObjectType, GraphQLInterfaceType, GraphQLError } from 'graphql';
 import { toGlobalId } from 'graphql-tower-global-id';
 import {
   GraphQLResponseStatus,
   GraphQLGID,
   GraphQLDate,
+  GraphQLDateTime,
+  GraphQLTimeZone,
   GraphQLExpiration,
   GraphQLSentence,
   GraphQLMobile,
@@ -45,6 +46,16 @@ const schema = new GraphQLSchema({
       date: {
         type: GraphQLDate,
         args: { input: { type: GraphQLDate } },
+        resolve,
+      },
+      datetime: {
+        type: GraphQLDateTime,
+        args: { input: { type: GraphQLDateTime } },
+        resolve,
+      },
+      timezone: {
+        type: GraphQLTimeZone,
+        args: { input: { type: GraphQLTimeZone } },
         resolve,
       },
       expiration: {
@@ -181,41 +192,130 @@ describe('type', () => {
 
   it('GraphQLDate', async () => {
     const value = new Date();
+    const date = value.toISOString().substr(0, 10);
 
     await _.reduce([{
       value: null,
       query: 'query { date }',
       result: { data: { date: null } },
     }, {
+      value: null,
+      query: 'query { date }',
+      result: { data: { date: null } },
+    }, {
       value,
       query: 'query { date }',
-      result: { data: { date: moment(value).utc().format() } },
+      result: { data: { date } },
     }, {
       value: value.getTime(),
       query: 'query { date }',
-      result: { data: { date: moment(value).utc().format() } },
+      result: { data: { date } },
     }, {
-      query: `query { date (input: "${value.toISOString()}") }`,
-      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+      query: `query { date (input: "${date}") }`,
+      calledWith: [undefined, { input: date }, undefined, expect.anything()],
     }, {
       query: `query { date (input: "${value.getTime()}") }`,
-      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+      calledWith: [undefined, { input: date }, undefined, expect.anything()],
     }, {
       query: 'query { date (input: "XYZ") }',
       result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "Date", found "XYZ".')] },
       calledTimes: 0,
     }, {
       query: 'query($input: Date) { date (input: $input) }',
-      args: { input: value.toISOString() },
-      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+      args: { input: date },
+      calledWith: [undefined, { input: date }, undefined, expect.anything()],
     }, {
       query: 'query($input: Date) { date (input: $input) }',
       args: { input: value.getTime() },
-      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+      calledWith: [undefined, { input: date }, undefined, expect.anything()],
     }, {
       query: 'query($input: Date) { date (input: $input) }',
       args: { input: 'XYZ' },
       result: { errors: [new GraphQLError('Variable "$input" got invalid value "XYZ".\nExpected type "Date", found "XYZ": Date cannot represent non value: XYZ')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLDateTime', async () => {
+    const value = new Date();
+
+    await _.reduce([{
+      value: null,
+      query: 'query { datetime }',
+      result: { data: { datetime: null } },
+    }, {
+      value,
+      query: 'query { datetime }',
+      result: { data: { datetime: value.toISOString() } },
+    }, {
+      value: value.getTime(),
+      query: 'query { datetime }',
+      result: { data: { datetime: value.toISOString() } },
+    }, {
+      query: `query { datetime (input: "${value.toISOString()}") }`,
+      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+    }, {
+      query: `query { datetime (input: "${value.getTime()}") }`,
+      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+    }, {
+      query: 'query { datetime (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "DateTime", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: DateTime) { datetime (input: $input) }',
+      args: { input: value.toISOString() },
+      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: DateTime) { datetime (input: $input) }',
+      args: { input: value.getTime() },
+      calledWith: [undefined, { input: value }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: DateTime) { datetime (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new GraphQLError('Variable "$input" got invalid value "XYZ".\nExpected type "DateTime", found "XYZ": Date cannot represent non value: XYZ')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLTimeZone', async () => {
+    await _.reduce([{
+      value: null,
+      query: 'query { timezone }',
+      result: { data: { timezone: null } },
+    }, {
+      value: '+08:30',
+      query: 'query { timezone }',
+      result: { data: { timezone: '+08:30' } },
+    }, {
+      value: '-8.5',
+      query: 'query { timezone }',
+      result: { data: { timezone: '-08:30' } },
+    }, {
+      value: 60 * 8.5 * -1,
+      query: 'query { timezone }',
+      result: { data: { timezone: '+08:30' } },
+    }, {
+      query: 'query { timezone (input: "+08:30") }',
+      calledWith: [undefined, { input: '+08:30' }, undefined, expect.anything()],
+    }, {
+      query: 'query { timezone (input: "-8.5") }',
+      calledWith: [undefined, { input: '-08:30' }, undefined, expect.anything()],
+    }, {
+      query: 'query { timezone (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "TimeZone", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: TimeZone) { timezone (input: $input) }',
+      args: { input: '+08:30' },
+      calledWith: [undefined, { input: '+08:30' }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: TimeZone) { timezone (input: $input) }',
+      args: { input: 60 * 8.5 * -1 },
+      calledWith: [undefined, { input: '+08:30' }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: TimeZone) { timezone (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new GraphQLError('Variable "$input" got invalid value "XYZ".\nExpected type "TimeZone", found "XYZ": TimeZone cannot represent non value: XYZ')] },
       calledTimes: 0,
     }], expectGraphql, Promise.resolve());
   });
@@ -235,7 +335,7 @@ describe('type', () => {
     }, {
       value: future,
       query: 'query { expiration }',
-      result: { data: { expiration: moment(future).utc().format() } },
+      result: { data: { expiration: future.toISOString() } },
     }, {
       query: `query { expiration (input: "${past.getTime()}") }`,
       calledWith: [undefined, { input: past }, undefined, expect.anything()],

@@ -77,14 +77,16 @@ export class DateColumn extends ValueColumn {
   }
 
   set(value, ...args) {
-    super.set(value instanceof Date ? value.toISOString().substr(0, 10) : value, ...args);
+    super.set(value ? new Date(value).toISOString().substr(0, 10) : value, ...args);
   }
 
   get(...args) {
     const value = super.get(...args);
 
     if (value instanceof Date) {
-      return `${value.getFullYear()}-${_.padStart(value.getMonth() + 1, 2, 0)}-${_.padStart(value.getDate(), 2, 0)}`;
+      return new Date(Date.UTC(value.getFullYear(), value.getMonth(), value.getDate(), 0, 0, 0))
+        .toISOString()
+        .substr(0, 10);
     }
 
     return value;

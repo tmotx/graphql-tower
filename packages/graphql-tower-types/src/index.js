@@ -3,9 +3,13 @@
 import isObject from 'lodash/isObject';
 import isNaN from 'lodash/isNaN';
 import toNumber from 'lodash/toNumber';
-import moment from 'moment';
 import { isGlobalId, toGlobalId } from 'graphql-tower-global-id';
 import { GraphQLScalarType, GraphQLObjectType, GraphQLEnumType } from 'graphql';
+
+function pad(value) {
+  if (value < 10) return `0${value}`;
+  return value;
+}
 
 export const GraphQLResponseStatus = new GraphQLEnumType({
   name: 'ResponseStatus',
@@ -28,7 +32,7 @@ export function parseGlobalId(value) {
 export const GraphQLGID = new GraphQLScalarType({
   name: 'GlobalID',
   description: 'The global id of an object',
-  serialize: String,
+  serialize: parseGlobalId,
   parseValue: parseGlobalId,
   parseLiteral: (ast) => {
     try { return parseGlobalId(ast.value); } catch (e) { return null; }
@@ -36,21 +40,65 @@ export const GraphQLGID = new GraphQLScalarType({
 });
 
 export const parseDate = (value) => {
-  const date = moment(new Date(/^[0-9]+$/.test(value) ? toNumber(value) : value));
+  const date = new Date(/^[0-9]+$/.test(value) ? toNumber(value) : value);
 
-  if (!date.isValid()) {
+  if (isNaN(date.getTime())) {
     throw new TypeError(`Date cannot represent non value: ${value}`);
   }
 
-  return date.toDate();
+  return date.toISOString().substr(0, 10);
 };
 
 export const GraphQLDate = new GraphQLScalarType({
   name: 'Date',
-  serialize: value => moment(value).utc().format(),
+  serialize: parseDate,
   parseValue: parseDate,
   parseLiteral: (ast) => {
     try { return parseDate(ast.value); } catch (e) { return null; }
+  },
+});
+
+export const parseDateTime = (value) => {
+  const date = new Date(/^[0-9]+$/.test(value) ? toNumber(value) : value);
+
+  if (isNaN(date.getTime())) {
+    throw new TypeError(`Date cannot represent non value: ${value}`);
+  }
+
+  return date;
+};
+
+export const GraphQLDateTime = new GraphQLScalarType({
+  name: 'DateTime',
+  serialize: value => new Date(value).toISOString(),
+  parseValue: parseDateTime,
+  parseLiteral: (ast) => {
+    try { return parseDateTime(ast.value); } catch (e) { return null; }
+  },
+});
+
+const timezoneRegex = /^[+-](?:2[0-3]|[01][0-9]):[0-5][0-9]$/;
+export const parseTimeZone = (value) => {
+  if (timezoneRegex.test(value)) return value;
+
+  let zone = toNumber(value);
+
+  if (isNaN(zone)) {
+    throw new TypeError(`TimeZone cannot represent non value: ${value}`);
+  }
+
+  zone *= (zone < 24 && zone > -24) ? 60 : -1;
+
+  const abs = Math.abs(zone);
+  return `${zone >= 0 ? '+' : '-'}${pad(parseInt(abs / 60, 10) % 24)}:${pad(abs % 60)}`;
+};
+
+export const GraphQLTimeZone = new GraphQLScalarType({
+  name: 'TimeZone',
+  serialize: parseTimeZone,
+  parseValue: parseTimeZone,
+  parseLiteral: (ast) => {
+    try { return parseTimeZone(ast.value); } catch (e) { return null; }
   },
 });
 
@@ -59,14 +107,14 @@ export const GraphQLExpiration = new GraphQLScalarType({
   serialize: (value) => {
     if (!value) return false;
 
-    const date = moment(value);
-    if (!date.isAfter()) return false;
+    const date = new Date(value);
+    if (date.getTime() < Date.now()) return false;
 
-    return date.utc().format();
+    return date.toISOString();
   },
-  parseValue: parseDate,
+  parseValue: parseDateTime,
   parseLiteral: (ast) => {
-    try { return parseDate(ast.value); } catch (e) { return null; }
+    try { return parseDateTime(ast.value); } catch (e) { return null; }
   },
 });
 
@@ -82,7 +130,7 @@ export const parseSentence = (value) => {
 
 export const GraphQLSentence = new GraphQLScalarType({
   name: 'Sentence',
-  serialize: String,
+  serialize: parseSentence,
   parseValue: parseSentence,
   parseLiteral: (ast) => {
     try { return parseSentence(ast.value); } catch (e) { return null; }
@@ -102,7 +150,7 @@ export const parseMobile = (value) => {
 
 export const GraphQLMobile = new GraphQLScalarType({
   name: 'Mobile',
-  serialize: String,
+  serialize: parseMobile,
   parseValue: parseMobile,
   parseLiteral: (ast) => {
     try { return parseMobile(ast.value); } catch (e) { return null; }
@@ -116,7 +164,7 @@ export const parseJSON = (value) => {
 
 export const GraphQLJSON = new GraphQLScalarType({
   name: 'JSON',
-  serialize: value => (isObject(value) ? value : JSON.parse(value)),
+  serialize: parseJSON,
   parseValue: parseJSON,
   parseLiteral: (ast) => {
     try { return parseJSON(ast.value); } catch (e) { return null; }
@@ -138,7 +186,7 @@ export const parseEmail = (value) => {
 
 export const GraphQLEmail = new GraphQLScalarType({
   name: 'Email',
-  serialize: String,
+  serialize: parseEmail,
   parseValue: parseEmail,
   parseLiteral: (ast) => {
     try { return parseEmail(ast.value); } catch (e) { return null; }
@@ -160,18 +208,12 @@ export const parseAge = (value) => {
     throw new TypeError(`Age cannot represent non value: ${age}`);
   }
 
-  return moment(Date.now())
-    .utc()
-    .set({
-      month: 0, date: 1, hour: 0, minute: 0, second: 0, millisecond: 0,
-    })
-    .add(-age, 'year')
-    .toDate();
+  return new Date(Date.UTC(new Date(Date.now()).getUTCFullYear() - age, 0, 1, 0, 0, 0));
 };
 
 export const GraphQLAge = new GraphQLScalarType({
   name: 'Age',
-  serialize: value => moment(value).diff(Date.now(), 'year') * -1,
+  serialize: value => new Date(Date.now()).getUTCFullYear() - new Date(value).getUTCFullYear(),
   parseValue: parseAge,
   parseLiteral: (ast) => {
     try { return parseAge(ast.value); } catch (e) { return null; }
