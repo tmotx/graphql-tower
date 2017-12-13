@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.26.0"></a>
+# [3.26.0](https://github.com/tmotx/graphql-tower/compare/v3.25.2...v3.26.0) (2017-12-13)
+
+
+### Features
+
+* **types:** added GraphQLTimeZone and GraphQLDateTime ([f906f55](https://github.com/tmotx/graphql-tower/commit/f906f55))
+
+
+
+
 <a name="3.22.1"></a>
 ## [3.22.1](https://github.com/tmotx/graphql-tower/compare/v3.22.0...v3.22.1) (2017-12-06)
 
