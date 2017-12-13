@@ -83,27 +83,44 @@ describe('Subscription', () => {
     const promise = new Promise((__) => { next = __; });
     client.request({ query: 'subscription { onMessageAdd }' }).subscribe({ next });
 
-    setTimeout(() => pubsub.publish('messageAdd', { data: 10 }), 100);
+    let newListenerResolve;
+    const newListener = new Promise((__) => { newListenerResolve = __; });
+    pubsub.ee.once('newListener', newListenerResolve);
+
+    await newListener;
+
+    pubsub.publish('messageAdd', { data: 10 });
 
     expect(await promise).toEqual({ data: { onMessageAdd: 20 } });
     expect(subscribeSpy)
       .toHaveBeenLastCalledWith(undefined, {}, { user: { id: 10 } }, expect.anything());
     expect(resolveSpy)
       .toHaveBeenLastCalledWith(10, {}, { user: { id: 10 } }, expect.anything());
+
     client.close();
   });
 
   it('when is guest', async (done) => {
+    const next = jest.fn();
+
     const client = new SubscriptionClient(`ws://localhost:${port}/`, {}, ws);
-    client.request({ query: 'subscription { onMessageAdd }' }).subscribe({});
+    client.request({ query: 'subscription { onMessageAdd }' }).subscribe({ next });
+
+    let newListenerResolve;
+    const newListener = new Promise((__) => { newListenerResolve = __; });
+    pubsub.ee.once('newListener', newListenerResolve);
+
+    await newListener;
+
+    pubsub.publish('messageAdd', { data: 10 });
+
     setTimeout(() => {
       expect(subscribeSpy).toHaveBeenCalledTimes(1);
       expect(resolveSpy).toHaveBeenCalledTimes(0);
+      expect(next).toHaveBeenCalledTimes(0);
       client.close();
       done();
-    }, 200);
-
-    setTimeout(() => pubsub.publish('messageAdd', { data: 10 }), 100);
+    }, 100);
   });
 
   it('when not found path', async () => {
