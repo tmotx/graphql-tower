@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.27.0"></a>
+# [3.27.0](https://github.com/tmotx/graphql-tower/compare/v3.26.0...v3.27.0) (2017-12-14)
+
+
+### Features
+
+* **jwt:** added subscriptionParser ([de24d18](https://github.com/tmotx/graphql-tower/commit/de24d18))
+* **jwt:** cookies token first ([e6d58d8](https://github.com/tmotx/graphql-tower/commit/e6d58d8))
+
+
+
+
 <a name="3.26.0"></a>
 # [3.26.0](https://github.com/tmotx/graphql-tower/compare/v3.25.2...v3.26.0) (2017-12-13)
 
