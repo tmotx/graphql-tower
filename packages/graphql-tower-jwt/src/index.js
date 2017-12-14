@@ -118,4 +118,28 @@ export default class JsonWebToken {
       if (next) next();
     };
   }
+
+  subscriptionParser() {
+    return async (params, ws) => {
+      try {
+        const cookies = cookie.parse(ws.upgradeReq.headers.cookie || '');
+        if (cookies.access_token) {
+          return { ...params, user: (await this.fetchModel(cookies.access_token)).model };
+        }
+      } catch (e) {
+        // empty
+      }
+
+      try {
+        const token = /^Bearer (.+)$/.exec(params.authorization);
+        if (token) {
+          return { ...params, user: (await this.fetchModel(token[1])).model };
+        }
+      } catch (e) {
+        // empty
+      }
+
+      return params;
+    };
+  }
 }
