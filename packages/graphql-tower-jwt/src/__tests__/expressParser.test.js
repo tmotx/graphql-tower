@@ -18,7 +18,7 @@ const app = request(server);
 
 describe('expressParser', () => {
   it('when token is invalid', async () => {
-    const { headers } = await app.post().set('authorization', 'XXYYZZ').send();
+    const { headers } = await app.post().set('authorization', 'Basic XXYYZZ').send();
 
     expect(headers['set-cookie']).toBeUndefined();
     expect(headers['x-refresh-token']).toBeUndefined();
@@ -42,6 +42,7 @@ describe('expressParser', () => {
 
     req.assignUser({ id: '10' });
     expect(req.user).toEqual({ id: '10' });
+    expect(res.append).toHaveBeenCalledWith('X-Refresh-Token', expect.anything());
     expect(res.append).toHaveBeenCalledWith('Authorization', expect.anything());
     expect(res.append).toHaveBeenCalledWith('Set-Cookie', expect.anything());
   });
@@ -50,25 +51,12 @@ describe('expressParser', () => {
     it('successfully get user', async () => {
       const token = jwt.refreshToken({ id: '10' });
 
-      const { headers } = await app.post().set('authorization', `Basic ${token}`).send();
+      const { headers } = await app.post().set('authorization', `Bearer ${token}`).send();
       expect(toModelWithVerification).toHaveBeenCalledWith({ id: '10' });
       expect(toModelWithVerification).toHaveBeenCalledTimes(1);
 
       expect(headers['set-cookie'][0]).toEqual(expect.stringContaining('access_token='));
-      expect(headers['x-refresh-token']).toBeUndefined();
-      expect(jwt.verify(headers.authorization)).toEqual(expect.objectContaining({ data: { id: '10' } }));
-      expect(reqListener).toHaveBeenCalledWith(expect.objectContaining({ user: { id: '10' } }));
-    });
-
-    it('expiring soon', async () => {
-      const token = jwt.accessToken({ id: '10' });
-
-      const { headers } = await app.post().set('authorization', `Basic ${token}`).send();
-      expect(toModelWithVerification).toHaveBeenCalledWith({ id: '10' });
-      expect(toModelWithVerification).toHaveBeenCalledTimes(1);
-
-      expect(headers['set-cookie'][0]).toEqual(expect.stringContaining('access_token='));
-      expect(jwt.verify(headers['x-refresh-token'])).toEqual(expect.objectContaining({ data: { id: '10' } }));
+      expect(headers['x-refresh-token']).not.toBeUndefined();
       expect(jwt.verify(headers.authorization)).toEqual(expect.objectContaining({ data: { id: '10' } }));
       expect(reqListener).toHaveBeenCalledWith(expect.objectContaining({ user: { id: '10' } }));
     });
@@ -77,7 +65,18 @@ describe('expressParser', () => {
       const token = jwt.refreshToken({ id: '10' });
       toModelWithVerification.mockImplementationOnce(() => Promise.reject(new Error()));
 
-      const { headers } = await app.post().set('authorization', `Basic ${token}`).send();
+      const { headers } = await app.post().set('authorization', `Bearer ${token}`).send();
+
+      expect(headers['set-cookie']).toBeUndefined();
+      expect(headers['x-refresh-token']).toBeUndefined();
+      expect(headers.authorization).toBeUndefined();
+      expect(reqListener).not.toHaveBeenCalledWith(expect.objectContaining({ user: { id: '10' } }));
+    });
+
+    it('expired', async () => {
+      const token = jwt.sign({ data: { id: '10' } }, { expiresIn: 0 });
+
+      const { headers } = await app.post().set('authorization', `Bearer ${token}`).send();
 
       expect(headers['set-cookie']).toBeUndefined();
       expect(headers['x-refresh-token']).toBeUndefined();
@@ -114,7 +113,6 @@ describe('expressParser', () => {
   describe('cookie', () => {
     it('successfully get user', async () => {
       const token = jwt.accessToken({ id: '10' });
-      toModel.mockImplementationOnce(values => Promise.resolve(values));
 
       const { headers } = await app.post().set('cookie', `access_token=${token}`).send();
       expect(toModel).toHaveBeenCalledWith({ id: '10' });
@@ -126,18 +124,18 @@ describe('expressParser', () => {
       expect(reqListener).toHaveBeenCalledWith(expect.objectContaining({ user: { id: '10' } }));
     });
 
-    it('expiring soon', async () => {
-      const token = jwt.sign({ data: { id: '10' } }, { expiresIn: '5m' });
-      toModelWithVerification.mockImplementationOnce(values => Promise.resolve(values));
+    it('expired', async () => {
+      const token = jwt.sign({ data: { id: '10' } }, { expiresIn: 0 });
+      const refreshToken = jwt.refreshToken({ id: '20' });
 
-      const { headers } = await app.post().set('cookie', `access_token=${token}`).send();
-      expect(toModelWithVerification).toHaveBeenCalledWith({ id: '10' });
+      const { headers } = await app.post().set('cookie', `access_token=${token}`).set('authorization', `Bearer ${refreshToken}`).send();
+      expect(toModelWithVerification).toHaveBeenCalledWith({ id: '20' });
       expect(toModelWithVerification).toHaveBeenCalledTimes(1);
 
       expect(headers['set-cookie'][0]).toEqual(expect.stringContaining('access_token='));
-      expect(headers['x-refresh-token']).toBeUndefined();
-      expect(jwt.verify(headers.authorization)).toEqual(expect.objectContaining({ data: { id: '10' } }));
-      expect(reqListener).toHaveBeenCalledWith(expect.objectContaining({ user: { id: '10' } }));
+      expect(headers['x-refresh-token']).not.toBeUndefined();
+      expect(headers.authorization).not.toBeUndefined();
+      expect(reqListener).toHaveBeenCalledWith(expect.objectContaining({ user: { id: '20' } }));
     });
   });
 });

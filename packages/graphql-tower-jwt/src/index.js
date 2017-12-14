@@ -1,5 +1,4 @@
 import identity from 'lodash/identity';
-import split from 'lodash/split';
 import omit from 'lodash/omit';
 import defaults from 'lodash/defaults';
 import defaultTo from 'lodash/defaultTo';
@@ -7,8 +6,7 @@ import NodeRSA from 'node-rsa';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 
-const VERIFICATION_IS_REQUIRED = 10 * 60;
-const RENEW_IS_REQUIRED = 5 * 24 * 60 * 60;
+const VERIFICATION_IS_REQUIRED = 60 * 60; // one hour in seconds
 
 const BLACKLISTED = ['acr', 'amr', 'at_hash', 'aud', 'auth_time', 'azp', 'exp', 'cnf', 'c_hash', 'iat', 'iss', 'jti', 'nbf', 'nonce'];
 
@@ -32,7 +30,7 @@ export default class JsonWebToken {
     }
 
     this.options = {
-      expiresIn: defaultTo(env.JWT_EXPIRES_IN, 60 * 60), // one hour in seconds
+      expiresIn: defaultTo(env.JWT_EXPIRES_IN, VERIFICATION_IS_REQUIRED), // one hour in seconds
       issuer: defaultTo(env.JWT_ISSUER, 'jwt'),
       subject: defaultTo(env.JWT_ISSUER, 'jwt'),
       audience: defaultTo(env.JWT_AUDIENCE, 'everyone'),
@@ -61,24 +59,24 @@ export default class JsonWebToken {
     return jsonwebtoken.verify(token, this.publicKey, opt);
   }
 
-  refreshToken(data) {
-    return this.sign({ data }, { expiresIn: '60d' });
+  refreshToken(data, hash) {
+    return this.sign({ data, hash }, { expiresIn: '60d' });
   }
 
   accessToken(data) {
     return this.sign({ data });
   }
 
-  async fetchModel(token, verification = false) {
+  async fetchModel(token) {
     const { toModel, toModelWithVerification } = this;
     const { data, exp } = this.verify(token);
     const expiresOn = exp - (Date.now() / 1000);
 
-    if (expiresOn < VERIFICATION_IS_REQUIRED || verification) {
-      return { expiresOn, model: await toModelWithVerification(data) };
-    }
+    const renewToken = expiresOn > VERIFICATION_IS_REQUIRED;
 
-    return { expiresOn, model: await toModel(data) };
+    const model = await (renewToken ? toModelWithVerification(data) : toModel(data));
+
+    return { model, renewToken };
   }
 
   expressParser() {
@@ -89,47 +87,32 @@ export default class JsonWebToken {
         req.user = model;
 
         const accessToken = this.accessToken(toValues(model));
+        res.append('X-Refresh-Token', this.refreshToken(toValues(model)));
         res.append('Authorization', accessToken);
         res.append('Set-Cookie', cookie.serialize('access_token', accessToken, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 }));
       };
 
-      let user;
-      let renewToken = false;
-
       try {
-        const token = split(req.headers.authorization, / +/i, 2);
-        if (token && token.length === 2) {
-          const verification = token[0] === 'Basic';
-
-          const { model, expiresOn } = await this.fetchModel(token[1], verification);
-          user = model;
-
-          if (verification) {
-            renewToken = true;
-            if (expiresOn < RENEW_IS_REQUIRED) res.append('X-Refresh-Token', this.refreshToken(toValues(user)));
-          }
-        }
-      } catch (e) {
-        // empty
-      }
-
-      try {
-        if (user) throw new Error();
-
         const cookies = cookie.parse(req.headers.cookie || '');
         if (cookies.access_token) {
-          const { model, expiresOn } = await this.fetchModel(cookies.access_token);
-          user = model;
-
-          if (expiresOn < VERIFICATION_IS_REQUIRED) renewToken = true;
+          req.user = (await this.fetchModel(cookies.access_token)).model;
         }
       } catch (e) {
         // empty
       }
 
-      if (user) {
-        req.user = user;
-        if (renewToken) req.assignUser(user);
+      try {
+        if (req.user) throw new Error();
+
+        const token = /^Bearer (.+)$/.exec(req.headers.authorization);
+        if (token) {
+          const { model, renewToken } = await this.fetchModel(token[1]);
+          req.user = model;
+
+          if (renewToken) req.assignUser(model);
+        }
+      } catch (e) {
+        // empty
       }
 
       if (next) next();
