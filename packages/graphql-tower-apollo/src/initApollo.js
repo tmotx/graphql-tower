@@ -1,4 +1,8 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_token"] }] */
+
 import 'isomorphic-unfetch';
+import cookie from 'cookie';
+import get from 'lodash/get';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
@@ -8,23 +12,36 @@ import { RetryLink } from 'apollo-link-retry';
 import { getMainDefinition } from 'apollo-utilities'; // eslint-disable-line
 import { InMemoryCache } from 'apollo-cache-inmemory'; // eslint-disable-line
 import { thunk } from 'graphql-tower-helper';
+import localStorage from './localStorage';
 
 function create(cache, {
   httpUri, wsUri, authorization, context, ...options
 } = {}) {
-  const thunkAuthorization = thunk(authorization);
+  let client;
+
+  const thunkAuthorization = thunk(authorization || ((server) => {
+    const cookies = cookie.parse(get(server, ['req', 'headers', 'cookie'], ''));
+    if (cookies.access_token) return `Bearer ${cookies.access_token}`;
+
+    const { token } = client;
+    if (token) return `Bearer ${token}`;
+
+    return undefined;
+  }));
 
   let link;
 
   // Create an http link:
-  link = new HttpLink({ ...options, uri: httpUri, credentials: 'same-origin' });
-  if (authorization) {
-    link = new ApolloLink((operation, forward) => {
-      operation.setContext(({ headers }) =>
-        ({ headers: { ...headers, authorization: thunkAuthorization(context) } }));
-      return forward(operation);
-    }).concat(link);
-  }
+  link = new ApolloLink((operation, forward) => {
+    operation.setContext(({ headers }) =>
+      ({ headers: { ...headers, authorization: thunkAuthorization(context) } }));
+    return forward(operation).map((response) => {
+      const { response: { headers } } = operation.getContext();
+      const refreshToken = headers.get('x-refresh-token');
+      if (refreshToken) client.token = refreshToken;
+      return response;
+    });
+  }).concat(new HttpLink({ ...options, uri: httpUri, credentials: 'same-origin' }));
 
   // Create a WebSocket link:
   if (wsUri && process.browser) {
@@ -45,12 +62,25 @@ function create(cache, {
     }, wsLink, link);
   }
 
-  return new ApolloClient({
+  client = new ApolloClient({
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: new RetryLink().concat(link),
     cache: new InMemoryCache().restore(cache),
   });
+
+  Object.defineProperty(client, 'token', {
+    get: function GET() {
+      if (client._token) return client._token;
+      return localStorage.getItem('graphql-tower-token');
+    },
+    set: function SET(token) {
+      client._token = token;
+      localStorage.setItem('graphql-tower-token', token);
+    },
+  });
+
+  return client;
 }
 
 export default function initApollo(cache, options) {

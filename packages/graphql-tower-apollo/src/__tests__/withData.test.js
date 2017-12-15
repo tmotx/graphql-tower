@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import _ from 'lodash';
 import React from 'react';
 import http from 'http';
 import gql from 'graphql-tag';
@@ -16,13 +17,14 @@ import { execute } from 'apollo-link';
 import { graphqlExpress } from 'apollo-server-express';
 import { Query } from 'graphql-tower-queries';
 import { withData, initApollo } from '../';
+import localStorage from '../localStorage';
 
 jest.unmock('node-fetch');
 
 const pubsub = new PubSub();
 
+const renewToken = jest.fn();
 const resolveSpy = jest.fn(payload => payload * 2);
-
 const subscribeSpy = jest.fn(() => pubsub.asyncIterator('me'));
 
 const User = new GraphQLObjectType({
@@ -45,7 +47,15 @@ const schema = new GraphQLSchema({
 });
 
 const app = express();
-app.use('/graphql', bodyParser.json(), graphqlExpress(req => ({ schema, context: req.headers.authorization })));
+app.use('/graphql', bodyParser.json(), graphqlExpress((req, res) => {
+  const token = renewToken();
+  if (token) {
+    res.append('X-Refresh-Token', token);
+    res.append('Authorization', token);
+  }
+
+  return { schema, context: { authorization: req.headers.authorization } };
+}));
 
 const server = http.createServer(app);
 server.listen();
@@ -85,7 +95,8 @@ describe('withData', () => {
       const props = await WrapApp.getInitialProps();
       expect(props).toMatchSnapshot();
 
-      expect(resolveSpy.mock.calls).toMatchSnapshot();
+      expect(resolveSpy)
+        .toHaveBeenLastCalledWith(undefined, {}, { authorization: undefined }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
 
       const component = mount(<WrapApp {...props} />);
@@ -94,11 +105,12 @@ describe('withData', () => {
 
     it('getInitialProps with cookie', async () => {
       resolveSpy.mockReturnValueOnce(Promise.resolve({ id: '50', name: 'hello' }));
-      const WrapApp = withData({ ...apollo, authorization: ({ cookie }) => cookie })(graphql(gql`query { me { id name } }`)(App));
+      const WrapApp = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
 
-      const props = await WrapApp.getInitialProps({ cookie: 'key of token' });
+      const props = await WrapApp.getInitialProps(_.set({}, ['req', 'headers', 'cookie'], 'access_token=key of token'));
       expect(props).toMatchSnapshot();
-      expect(resolveSpy.mock.calls).toMatchSnapshot();
+      expect(resolveSpy)
+        .toHaveBeenLastCalledWith(undefined, {}, { authorization: 'Bearer key of token' }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
 
       const component = mount(<WrapApp {...props} />);
@@ -111,7 +123,8 @@ describe('withData', () => {
 
       const props = await WrapApp.getInitialProps();
       expect(props).toMatchSnapshot();
-      expect(resolveSpy.mock.calls).toMatchSnapshot();
+      expect(resolveSpy)
+        .toHaveBeenLastCalledWith(undefined, {}, { authorization: undefined }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -124,17 +137,18 @@ describe('withData', () => {
   });
 
   describe('process.browser is true', () => {
-    beforeEach(() => { process.browser = true; });
-
-    it('getInitialProps without token', async () => {
-      const WrapApp = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
-      expect(await WrapApp.getInitialProps()).toMatchSnapshot();
-      expect(resolveSpy).toHaveBeenCalledTimes(0);
+    beforeEach(() => {
+      process.browser = true;
+      initApollo.client = null;
     });
 
-    it('getInitialProps with token', async () => {
-      const WrapApp = withData({ ...apollo, token: 'key of token' })(graphql(gql`query { me { id name } }`)(App));
-      expect(await WrapApp.getInitialProps()).toMatchSnapshot();
+    it('getInitialProps', async () => {
+      const WrapApp1 = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
+      expect(await WrapApp1.getInitialProps()).toMatchSnapshot();
+
+      const WrapApp2 = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
+      expect(await WrapApp2.getInitialProps()).toMatchSnapshot();
+
       expect(resolveSpy).toHaveBeenCalledTimes(0);
     });
 
@@ -156,24 +170,72 @@ describe('withData', () => {
       expect(initApollo()).toBe(initApollo());
     });
 
-    it('subscription', async (done) => {
+    it('subscription', async () => {
+      let resolve;
+      const promise = new Promise((__) => { resolve = __; });
+      subscribeSpy.mockImplementationOnce(resolve);
+
       const client = initApollo({}, { ...apollo, authorization: 'key of token' });
       execute(client.link, { query: gql`subscription { me { id name } }` }).subscribe({});
-      setTimeout(() => {
-        expect(subscribeSpy.mock.calls).toMatchSnapshot();
-        expect(subscribeSpy).toHaveBeenCalledTimes(1);
-        done();
-      }, 100);
+
+      await promise;
+
+      expect(subscribeSpy).toHaveBeenLastCalledWith(undefined, {}, { authorization: 'key of token' }, expect.anything());
+      expect(subscribeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('query', async (done) => {
+    it('query', async () => {
+      renewToken.mockReturnValueOnce('new token');
+
+      let resolve;
+      const promise = new Promise((__) => { resolve = __; });
+      resolveSpy.mockImplementationOnce(resolve);
+
       const client = initApollo({}, { ...apollo, authorization: 'key of token' });
       execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
-      setTimeout(() => {
-        expect(resolveSpy.mock.calls).toMatchSnapshot();
-        expect(resolveSpy).toHaveBeenCalledTimes(1);
-        done();
-      }, 100);
+
+      await promise;
+
+      await new Promise(setImmediate);
+      await new Promise(setImmediate);
+
+      expect(resolveSpy).toHaveBeenLastCalledWith(undefined, {}, { authorization: 'key of token' }, expect.anything());
+      expect(resolveSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('authorization', async () => {
+      localStorage.setItem = jest.fn();
+      renewToken.mockReturnValueOnce('new token');
+
+      const client = initApollo({}, apollo);
+
+      let resolve1;
+      const promise1 = new Promise((__) => { resolve1 = __; });
+      resolveSpy.mockImplementationOnce(resolve1);
+      execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
+
+      await promise1;
+
+      await new Promise(setImmediate);
+      await new Promise(setImmediate);
+
+      let resolve2;
+      const promise2 = new Promise((__) => { resolve2 = __; });
+      resolveSpy.mockImplementationOnce(resolve2);
+      execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
+
+      await promise2;
+
+      await new Promise(setImmediate);
+      await new Promise(setImmediate);
+
+      expect(resolveSpy)
+        .toHaveBeenCalledWith(undefined, {}, { authorization: undefined }, expect.anything());
+      expect(resolveSpy)
+        .toHaveBeenCalledWith(undefined, {}, { authorization: 'Bearer new token' }, expect.anything());
+      expect(resolveSpy).toHaveBeenCalledTimes(2);
+      expect(localStorage.setItem).toHaveBeenLastCalledWith('graphql-tower-token', 'new token');
+      expect(localStorage.setItem).toHaveBeenCalledTimes(1);
     });
   });
 });
