@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-countries",
-  "version": "3.21.3",
+  "version": "3.28.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
