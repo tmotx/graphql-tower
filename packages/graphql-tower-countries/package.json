@@ -1,0 +1,22 @@
+{
+  "name": "graphql-tower-countries",
+  "version": "3.21.3",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ]
+}
