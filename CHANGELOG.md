@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.3"></a>
+## [3.28.3](https://github.com/tmotx/graphql-tower/compare/v3.28.2...v3.28.3) (2017-12-19)
+
+
+### Bug Fixes
+
+* **countries:** added xmlns ([a613a4c](https://github.com/tmotx/graphql-tower/commit/a613a4c))
+
+
+
+
 <a name="3.28.2"></a>
 ## [3.28.2](https://github.com/tmotx/graphql-tower/compare/v3.28.1...v3.28.2) (2017-12-19)
 
