@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.6"></a>
+## [3.28.6](https://github.com/tmotx/graphql-tower/compare/v3.28.5...v3.28.6) (2017-12-20)
+
+
+### Bug Fixes
+
+* **countries:** mv flags to svg ([6facd77](https://github.com/tmotx/graphql-tower/commit/6facd77))
+
+
+
+
 <a name="3.28.5"></a>
 ## [3.28.5](https://github.com/tmotx/graphql-tower/compare/v3.28.4...v3.28.5) (2017-12-20)
 
