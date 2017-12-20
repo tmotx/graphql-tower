@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.5"></a>
+## [3.28.5](https://github.com/tmotx/graphql-tower/compare/v3.28.4...v3.28.5) (2017-12-20)
+
+
+### Bug Fixes
+
+* **countries:** fix country code ([60fb314](https://github.com/tmotx/graphql-tower/commit/60fb314))
+
+
+
+
 <a name="3.28.4"></a>
 ## [3.28.4](https://github.com/tmotx/graphql-tower/compare/v3.28.3...v3.28.4) (2017-12-20)
 
