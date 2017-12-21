@@ -10,12 +10,12 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { RetryLink } from 'apollo-link-retry';
 // https://github.com/apollographql/apollo-client/issues/2591
 import { getMainDefinition } from 'apollo-utilities'; // eslint-disable-line
-import { InMemoryCache } from 'apollo-cache-inmemory'; // eslint-disable-line
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'; // eslint-disable-line
 import { thunk } from 'graphql-tower-helper';
 import localStorage from './localStorage';
 
 function create(cache, {
-  httpUri, wsUri, authorization, context, ...options
+  httpUri, wsUri, authorization, context, introspectionQueryResultData, ...options
 } = {}) {
   let client;
 
@@ -62,11 +62,13 @@ function create(cache, {
     }, wsLink, link);
   }
 
+  const fragmentMatcher = new IntrospectionFragmentMatcher({ introspectionQueryResultData });
+
   client = new ApolloClient({
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: new RetryLink().concat(link),
-    cache: new InMemoryCache().restore(cache),
+    cache: new InMemoryCache({ fragmentMatcher }).restore(cache),
   });
 
   Object.defineProperty(client, 'token', {

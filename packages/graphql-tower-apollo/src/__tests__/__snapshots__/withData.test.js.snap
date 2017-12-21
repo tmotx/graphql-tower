@@ -7,7 +7,10 @@ ApolloClient {
     "config": Object {
       "addTypename": true,
       "dataIdFromObject": [Function],
-      "fragmentMatcher": HeuristicFragmentMatcher {},
+      "fragmentMatcher": IntrospectionFragmentMatcher {
+        "isReady": false,
+        "match": [Function],
+      },
       "storeFactory": [Function],
     },
     "data": ObjectCache {
@@ -34,7 +37,10 @@ ApolloClient {
       "config": Object {
         "addTypename": true,
         "dataIdFromObject": [Function],
-        "fragmentMatcher": HeuristicFragmentMatcher {},
+        "fragmentMatcher": IntrospectionFragmentMatcher {
+          "isReady": false,
+          "match": [Function],
+        },
         "storeFactory": [Function],
       },
       "data": ObjectCache {
@@ -98,7 +104,10 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
           "config": Object {
             "addTypename": true,
             "dataIdFromObject": [Function],
-            "fragmentMatcher": HeuristicFragmentMatcher {},
+            "fragmentMatcher": IntrospectionFragmentMatcher {
+              "isReady": false,
+              "match": [Function],
+            },
             "storeFactory": [Function],
           },
           "data": ObjectCache {
@@ -216,7 +225,10 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
               "config": Object {
                 "addTypename": true,
                 "dataIdFromObject": [Function],
-                "fragmentMatcher": HeuristicFragmentMatcher {},
+                "fragmentMatcher": IntrospectionFragmentMatcher {
+                  "isReady": false,
+                  "match": [Function],
+                },
                 "storeFactory": [Function],
               },
               "data": ObjectCache {
@@ -644,7 +656,10 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
             "config": Object {
               "addTypename": true,
               "dataIdFromObject": [Function],
-              "fragmentMatcher": HeuristicFragmentMatcher {},
+              "fragmentMatcher": IntrospectionFragmentMatcher {
+                "isReady": false,
+                "match": [Function],
+              },
               "storeFactory": [Function],
             },
             "data": ObjectCache {
@@ -868,7 +883,10 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
           "config": Object {
             "addTypename": true,
             "dataIdFromObject": [Function],
-            "fragmentMatcher": HeuristicFragmentMatcher {},
+            "fragmentMatcher": IntrospectionFragmentMatcher {
+              "isReady": false,
+              "match": [Function],
+            },
             "storeFactory": [Function],
           },
           "data": ObjectCache {
@@ -986,7 +1004,10 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
               "config": Object {
                 "addTypename": true,
                 "dataIdFromObject": [Function],
-                "fragmentMatcher": HeuristicFragmentMatcher {},
+                "fragmentMatcher": IntrospectionFragmentMatcher {
+                  "isReady": false,
+                  "match": [Function],
+                },
                 "storeFactory": [Function],
               },
               "data": ObjectCache {
@@ -1414,7 +1435,10 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
             "config": Object {
               "addTypename": true,
               "dataIdFromObject": [Function],
-              "fragmentMatcher": HeuristicFragmentMatcher {},
+              "fragmentMatcher": IntrospectionFragmentMatcher {
+                "isReady": false,
+                "match": [Function],
+              },
               "storeFactory": [Function],
             },
             "data": ObjectCache {
