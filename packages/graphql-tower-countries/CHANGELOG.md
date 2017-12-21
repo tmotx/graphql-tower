@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.7"></a>
+## [3.28.7](https://github.com/tmotx/graphql-tower/compare/v3.28.6...v3.28.7) (2017-12-21)
+
+
+### Bug Fixes
+
+* **apollo:** support IntrospectionFragmentMatcher ([1843bce](https://github.com/tmotx/graphql-tower/commit/1843bce))
+
+
+
+
 <a name="3.28.6"></a>
 ## [3.28.6](https://github.com/tmotx/graphql-tower/compare/v3.28.5...v3.28.6) (2017-12-20)
 
