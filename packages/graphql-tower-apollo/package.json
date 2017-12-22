@@ -19,6 +19,9 @@
   "files": [
     "lib"
   ],
+  "bin": {
+    "graphql-tower-fragment-type": "./lib/cli.js"
+  },
   "peerDependencies": {
     "next": "^4.1.4",
     "react-apollo": "^2.0.1"
