@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.8"></a>
+## [3.28.8](https://github.com/tmotx/graphql-tower/compare/v3.28.7...v3.28.8) (2017-12-22)
+
+
+### Bug Fixes
+
+* **apollo:** added graphql-tower-fragment-type cli ([b1da207](https://github.com/tmotx/graphql-tower/commit/b1da207))
+
+
+
+
 <a name="3.28.7"></a>
 ## [3.28.7](https://github.com/tmotx/graphql-tower/compare/v3.28.6...v3.28.7) (2017-12-21)
 
