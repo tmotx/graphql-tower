@@ -2,6 +2,6 @@
 
 exports[`Columns fetch from postgres 1`] = `
 Array [
-  "select * from column where deleted_at is null and name = my name limit 1",
+  "select *, count(*) OVER() AS total_count from column where deleted_at is null and name = my name limit 1",
 ]
 `;

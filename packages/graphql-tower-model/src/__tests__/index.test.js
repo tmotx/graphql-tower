@@ -483,7 +483,10 @@ describe('model', () => {
     describe('fetchAll', () => {
       it('no cache', async () => {
         const model = new Default({ name: 'name is one' });
-        expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
+
+        const results = await model.fetchAll();
+        expect(results.totalCount).toBe(1);
+        expect(_.map(results, data => data.name)).toMatchSnapshot();
         expect(client).toMatchSnapshot();
 
         await expect((new Default({ name: 'one' })).fetchAll())
@@ -574,7 +577,10 @@ describe('model', () => {
       await (new Default({ name: 'new for search' })).save('10');
       const model = new Default();
       model.search('new');
-      expect(_.map(await model.fetchAll(), data => data.name)).toMatchSnapshot();
+
+      const results = await model.fetchAll();
+      expect(results.totalCount).toBe(2);
+      expect(_.map(results, data => data.name)).toMatchSnapshot();
       expect(client).toMatchSnapshot();
     });
   });

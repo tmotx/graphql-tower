@@ -19,7 +19,7 @@ Array [
   "select * from default_table where id in (1) and deleted_at is null",
   "select * from default_table where id in (2) and deleted_at is null",
   "update default_table set deleted_at = DATE, deleted_by = 10 where deleted_at is null and id in (1, 2)",
-  "select * from default_table where deleted_at is null limit 1000",
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null limit 1000",
 ]
 `;
 
@@ -66,7 +66,7 @@ Object {
 
 exports[`model model fetch 2`] = `
 Array [
-  "select * from default_table where deleted_at is null and name = name is one limit 1",
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is one limit 1",
 ]
 `;
 
@@ -91,7 +91,7 @@ Object {
 
 exports[`model model fetch with where 2`] = `
 Array [
-  "select * from default_table where nick_name = nick name is one and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
+  "select *, count(*) OVER() AS total_count from default_table where nick_name = nick name is one and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
 ]
 `;
 
@@ -103,14 +103,14 @@ Array [
 
 exports[`model model fetchAll no cache 2`] = `
 Array [
-  "select * from default_table where deleted_at is null and name = name is one limit 1000",
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is one limit 1000",
 ]
 `;
 
 exports[`model model fetchOrInsert 1`] = `
 Array [
-  "select * from default_table where deleted_at is null and name = name is one limit 1",
-  "select * from default_table where deleted_at is null and name = name is new limit 1",
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is one limit 1",
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is new limit 1",
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, name is new, name is new, DATE, 10) returning id",
 ]
 `;
@@ -189,7 +189,7 @@ exports[`model model search 2`] = `
 Array [
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for action, new for action, DATE, 10) returning id",
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for search, new for search, DATE, 10) returning id",
-  "select *, ts_rank(keyword, new) as rank from default_table where keyword @@ to_tsquery(new) and deleted_at is null order by rank desc limit 1000",
+  "select ts_rank(keyword, new) as rank, *, count(*) OVER() AS total_count from default_table where keyword @@ to_tsquery(new) and deleted_at is null order by rank desc limit 1000",
 ]
 `;
 

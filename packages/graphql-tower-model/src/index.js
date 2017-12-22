@@ -281,9 +281,10 @@ export default class Model {
   }
 
   async loadQuery(queryBuilder, NotFoundError) {
-    const { format } = this.constructor;
+    const { format, database } = this.constructor;
     const { cache } = this;
 
+    queryBuilder.select(database.raw('*, count(*) OVER() AS total_count'));
     const collection = _.map(await queryBuilder, format.bind(this.constructor));
 
     if (collection.length < 1) {
@@ -291,11 +292,16 @@ export default class Model {
       return [];
     }
 
-    return _.map(collection, (data) => {
+    const { totalCount } = collection[0];
+    const results = _.map(collection, (data) => {
+      _.unset(data, ['totalCount']);
       const model = this.constructor.forge(data, { cache });
       model.prime();
       return model;
     });
+
+    results.totalCount = parseInt(totalCount, 10);
+    return results;
   }
 
   clone(options) {
@@ -531,7 +537,7 @@ export default class Model {
   search(keyword) {
     const { database, keywordAttribute } = this.constructor;
     const { queryBuilder } = this;
-    queryBuilder.select(database.raw(`*, ts_rank(${keywordAttribute}, ?) as rank`, keyword));
+    queryBuilder.select(database.raw(`ts_rank(${keywordAttribute}, ?) as rank`, keyword));
     queryBuilder.where(database.raw(`${keywordAttribute} @@ to_tsquery(?)`, keyword));
     queryBuilder.orderBy('rank', 'desc');
     return this;
