@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-jwt",
-  "version": "3.27.0",
+  "version": "3.28.9",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

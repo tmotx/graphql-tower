@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.28.9"></a>
+## [3.28.9](https://github.com/tmotx/graphql-tower/compare/v3.28.8...v3.28.9) (2017-12-22)
+
+
+### Bug Fixes
+
+* **apollo:** fixed /usr/bin/env node ([8659152](https://github.com/tmotx/graphql-tower/commit/8659152))
+
+
+
+
 <a name="3.28.8"></a>
 ## [3.28.8](https://github.com/tmotx/graphql-tower/compare/v3.28.7...v3.28.8) (2017-12-22)
 
