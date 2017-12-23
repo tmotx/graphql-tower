@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-model",
-  "version": "3.26.0",
+  "version": "3.29.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -30,6 +30,6 @@
     "knex": "^0.13.0"
   },
   "devDependencies": {
-    "graphql-tower-queries": "^3.26.0"
+    "graphql-tower-queries": "^3.29.0"
   }
 }

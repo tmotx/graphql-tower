@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.29.0"></a>
+# [3.29.0](https://github.com/tmotx/graphql-tower/compare/v3.28.9...v3.29.0) (2017-12-23)
+
+
+### Features
+
+* **model:** return totalCount on fetchAll method ([ba63ed0](https://github.com/tmotx/graphql-tower/commit/ba63ed0))
+* **queries:** support totalCount on Connection ([aa9bc56](https://github.com/tmotx/graphql-tower/commit/aa9bc56))
+
+
+
+
 <a name="3.28.9"></a>
 ## [3.28.9](https://github.com/tmotx/graphql-tower/compare/v3.28.8...v3.28.9) (2017-12-22)
 
