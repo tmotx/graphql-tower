@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLString, GraphQLList } from 'graphql';
+import { GraphQLInt, GraphQLString, GraphQLList, GraphQLObjectType } from 'graphql';
 import assign from 'lodash/assign';
 import Query from './Query';
 
@@ -22,7 +22,16 @@ export default class QueryWithConnection extends Query {
       enumerable: true,
       set: (type) => {
         this._.node = type;
-        this._.type = new GraphQLList(type);
+        this._.type = new GraphQLObjectType({
+          name: `${this.name}Connection`,
+          fields: {
+            totalCount: { type: GraphQLInt },
+            nodes: {
+              type: new GraphQLList(type),
+              resolve: payload => payload,
+            },
+          },
+        });
       },
       get: () => this._.type,
     });

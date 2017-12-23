@@ -30,15 +30,21 @@ describe('QueryWithConnection', () => {
     });
 
     const reply = [faker.random.number(), faker.random.number()];
+    reply.totalCount = 2;
 
     resolve.mockReturnValueOnce(reply);
     const result = await graphql(schema, `
       query ($first: Int $offset: Int $after: String) {
-        connection (first: $first offset: $offset after: $after)
+        connection (first: $first offset: $offset after: $after) {
+          totalCount nodes
+        }
       }`, {}, {}, { first, offset, after });
 
     expect(resolve).toHaveBeenCalledWith({}, { first, offset, after }, {}, expect.anything());
     expect(resolve).toHaveBeenCalledTimes(1);
-    expect(result.data.connection).toEqual(reply);
+    expect(result.data.connection).toEqual({
+      totalCount: 2,
+      nodes: [reply[0], reply[1]],
+    });
   });
 });

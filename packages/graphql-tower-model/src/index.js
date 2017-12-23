@@ -301,6 +301,7 @@ export default class Model {
     });
 
     results.totalCount = parseInt(totalCount, 10);
+    results.offset = _.get(queryBuilder, ['_single', 'offset']);
     return results;
   }
 
@@ -559,7 +560,7 @@ _.forEach([
 });
 
 _.forEach([
-  'whereRaw', 'orderByRaw',
+  'whereRaw', 'orderByRaw', 'offset',
 ], (key) => {
   Model.prototype[key] = function queryBuilderRaw(...args) {
     this.queryBuilder[key](...args);

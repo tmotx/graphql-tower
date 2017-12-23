@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GraphQLInt, GraphQLList } from 'graphql';
+import { GraphQLInt } from 'graphql';
 import QueryWithConnection from '../QueryWithConnection';
 import { pagination } from '../';
 
@@ -15,7 +15,7 @@ describe('afterware', () => {
     };
     const query = new QueryPagination();
     expect(query).toMatchSnapshot();
-    expect(query.type).toEqual(new GraphQLList(GraphQLInt));
+    expect(query.type.toString()).toBe('QueryPaginationConnection');
 
     expect(await query.resolve({}, {})).toEqual(_.range(1, 1001));
     expect(afterware).toHaveBeenCalledTimes(1);

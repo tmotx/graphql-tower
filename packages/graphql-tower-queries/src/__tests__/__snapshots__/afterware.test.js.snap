@@ -24,7 +24,7 @@ QueryPagination {
     "parentArgs": undefined,
     "resolve": [Function],
     "subscribe": [Function],
-    "type": "[Int]",
+    "type": "QueryPaginationConnection",
   },
   "args": Object {
     "after": Object {
@@ -38,6 +38,6 @@ QueryPagination {
     },
   },
   "resolve": [Function],
-  "type": "[Int]",
+  "type": "QueryPaginationConnection",
 }
 `;
