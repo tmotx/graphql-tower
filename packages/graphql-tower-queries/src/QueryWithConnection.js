@@ -1,8 +1,16 @@
 import { GraphQLInt, GraphQLString, GraphQLList, GraphQLObjectType } from 'graphql';
 import assign from 'lodash/assign';
+import pick from 'lodash/pick';
 import Query from './Query';
 
 export default class QueryWithConnection extends Query {
+  static async resolve(...args) {
+    const results = await this._.resolve(...args);
+    return assign(await this._.afterware.reduce(async (prev, afterware) => (
+      afterware(...args, await prev)
+    ), Promise.resolve(results)), pick(results, ['offset', 'totalCount']));
+  }
+
   constructor(...args) {
     super(...args);
 

@@ -301,7 +301,7 @@ export default class Model {
     });
 
     results.totalCount = parseInt(totalCount, 10);
-    results.offset = _.get(queryBuilder, ['_single', 'offset']);
+    results.offset = _.get(queryBuilder, ['_single', 'offset'], 0);
     return results;
   }
 

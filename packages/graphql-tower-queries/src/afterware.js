@@ -9,7 +9,7 @@ export function pagination(payload, args, context, info, results) {
   const offset = _.sum([
     index > 0 ? index : 0,
     _.get(args, ['offset'], 0),
-    _.get(results, ['offset'], 0),
+    _.get(results, ['offset'], 0) * -1,
   ]);
 
   return _.take(_.drop(results, offset), first || 1000);

@@ -32,7 +32,7 @@ describe('QueryWithConnection', () => {
     const reply = [faker.random.number(), faker.random.number()];
     reply.totalCount = 2;
 
-    resolve.mockReturnValueOnce(reply);
+    resolve.mockReturnValueOnce(Promise.resolve(reply));
     const result = await graphql(schema, `
       query ($first: Int $offset: Int $after: String) {
         connection (first: $first offset: $offset after: $after) {

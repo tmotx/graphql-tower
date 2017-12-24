@@ -26,10 +26,12 @@ describe('afterware', () => {
 
     resolve.mockImplementation(() => {
       const results = _.range(1, 2000);
-      results.offset = -50;
+      results.totalCount = 3000;
+      results.offset = 50;
       return results;
     });
-    expect(await query.resolve({}, { offset: 100, first: 100 })).toEqual(_.range(51, 151));
+    expect(await query.resolve({}, { offset: 100, first: 100 }))
+      .toEqual(_.assign(_.range(51, 151), { offset: 50, totalCount: 3000 }));
 
     resolve.mockImplementation(() => _.range(1, 2000).map(id => ({ id: `${id}` })));
     expect(await query.resolve({}, { after: '10' })).toEqual(_.range(10, 1010).map(id => ({ id: `${id}` })));
