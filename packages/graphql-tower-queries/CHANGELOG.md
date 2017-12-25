@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.29.2"></a>
+## [3.29.2](https://github.com/tmotx/graphql-tower/compare/v3.29.1...v3.29.2) (2017-12-25)
+
+
+### Bug Fixes
+
+* **queries:** added resolveMask method ([970eee7](https://github.com/tmotx/graphql-tower/commit/970eee7))
+
+
+
+
 <a name="3.29.1"></a>
 ## [3.29.1](https://github.com/tmotx/graphql-tower/compare/v3.29.0...v3.29.1) (2017-12-24)
 
