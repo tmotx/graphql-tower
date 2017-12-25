@@ -6,5 +6,6 @@ export { default as QueryWithConnection } from './QueryWithConnection';
 export { default as Mutation } from './Mutation';
 export { default as Subscription } from './Subscription';
 export { default as subscribe } from './subscribe';
+export { default as resolveMask } from './resolveMask';
 export * from './afterware';
 export * from './middleware';

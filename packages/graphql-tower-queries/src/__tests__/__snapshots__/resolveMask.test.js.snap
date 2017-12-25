@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`resolveMask when return true 1`] = `
+Array [
+  Object {
+    "code": "XXX",
+    "name": "Jerry",
+  },
+  Object {},
+  undefined,
+  Object {
+    "fieldName": "name",
+    "fieldNodes": Array [
+      Object {
+        "alias": null,
+        "arguments": Array [],
+        "directives": Array [],
+        "kind": "Field",
+        "loc": Object {
+          "end": 19,
+          "start": 15,
+        },
+        "name": Object {
+          "kind": "Name",
+          "loc": Object {
+            "end": 19,
+            "start": 15,
+          },
+          "value": "name",
+        },
+        "selectionSet": null,
+      },
+    ],
+    "fragments": Object {},
+    "operation": Object {
+      "directives": Array [],
+      "kind": "OperationDefinition",
+      "loc": Object {
+        "end": 23,
+        "start": 0,
+      },
+      "name": undefined,
+      "operation": "query",
+      "selectionSet": Object {
+        "kind": "SelectionSet",
+        "loc": Object {
+          "end": 23,
+          "start": 6,
+        },
+        "selections": Array [
+          Object {
+            "alias": null,
+            "arguments": Array [],
+            "directives": Array [],
+            "kind": "Field",
+            "loc": Object {
+              "end": 21,
+              "start": 8,
+            },
+            "name": Object {
+              "kind": "Name",
+              "loc": Object {
+                "end": 12,
+                "start": 8,
+              },
+              "value": "node",
+            },
+            "selectionSet": Object {
+              "kind": "SelectionSet",
+              "loc": Object {
+                "end": 21,
+                "start": 13,
+              },
+              "selections": Array [
+                Object {
+                  "alias": null,
+                  "arguments": Array [],
+                  "directives": Array [],
+                  "kind": "Field",
+                  "loc": Object {
+                    "end": 19,
+                    "start": 15,
+                  },
+                  "name": Object {
+                    "kind": "Name",
+                    "loc": Object {
+                      "end": 19,
+                      "start": 15,
+                    },
+                    "value": "name",
+                  },
+                  "selectionSet": null,
+                },
+              ],
+            },
+          },
+        ],
+      },
+      "variableDefinitions": Array [],
+    },
+    "parentType": "Type",
+    "path": Object {
+      "key": "name",
+      "prev": Object {
+        "key": "node",
+        "prev": undefined,
+      },
+    },
+    "returnType": "String",
+    "rootValue": undefined,
+    "schema": GraphQLSchema {
+      "_directives": Array [
+        GraphQLDirective {
+          "args": Array [
+            Object {
+              "astNode": undefined,
+              "defaultValue": undefined,
+              "description": "Included when true.",
+              "name": "if",
+              "type": "Boolean!",
+            },
+          ],
+          "astNode": undefined,
+          "description": "Directs the executor to include this field or fragment only when the \`if\` argument is true.",
+          "locations": Array [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT",
+          ],
+          "name": "include",
+        },
+        GraphQLDirective {
+          "args": Array [
+            Object {
+              "astNode": undefined,
+              "defaultValue": undefined,
+              "description": "Skipped when true.",
+              "name": "if",
+              "type": "Boolean!",
+            },
+          ],
+          "astNode": undefined,
+          "description": "Directs the executor to skip this field or fragment when the \`if\` argument is true.",
+          "locations": Array [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT",
+          ],
+          "name": "skip",
+        },
+        GraphQLDirective {
+          "args": Array [
+            Object {
+              "astNode": undefined,
+              "defaultValue": "No longer supported",
+              "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
+              "name": "reason",
+              "type": "String",
+            },
+          ],
+          "astNode": undefined,
+          "description": "Marks an element of a GraphQL schema as no longer supported.",
+          "locations": Array [
+            "FIELD_DEFINITION",
+            "ENUM_VALUE",
+          ],
+          "name": "deprecated",
+        },
+      ],
+      "_implementations": Object {},
+      "_mutationType": undefined,
+      "_queryType": "Query",
+      "_subscriptionType": undefined,
+      "_typeMap": Object {
+        "Boolean": "Boolean",
+        "Query": "Query",
+        "String": "String",
+        "Type": "Type",
+        "__Directive": "__Directive",
+        "__DirectiveLocation": "__DirectiveLocation",
+        "__EnumValue": "__EnumValue",
+        "__Field": "__Field",
+        "__InputValue": "__InputValue",
+        "__Schema": "__Schema",
+        "__Type": "__Type",
+        "__TypeKind": "__TypeKind",
+      },
+      "astNode": null,
+    },
+    "variableValues": Object {},
+  },
+]
+`;
