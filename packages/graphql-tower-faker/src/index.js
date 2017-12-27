@@ -87,7 +87,7 @@ export default function (schema, options = {}) {
 
   const { port } = options;
   const listener = app.listen(port, () => {
-    console.log(`address().port
+    console.log(`
       ${chalk.green('✔')} Your GraphQL Fake API is ready to use 🚀
       Here are your links:
 
