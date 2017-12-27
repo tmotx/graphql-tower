@@ -2,8 +2,9 @@
 import _ from 'lodash';
 import faker from 'faker';
 import chalk from 'chalk';
-import opn from 'opn';
 import express from 'express';
+import cors from 'cors';
+import opn from 'opn';
 import graphqlHTTP from 'express-graphql';
 import {
   isAbstractType,
@@ -83,6 +84,7 @@ export default function (schema, options = {}) {
   });
 
   const app = express();
+  app.use(cors());
   app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
 
   const { port } = options;
