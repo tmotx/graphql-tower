@@ -1,0 +1,34 @@
+{
+  "name": "graphql-tower-faker",
+  "version": "3.3.3",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "express": "^4.16.2",
+    "express-graphql": "^0.6.11",
+    "faker": "^4.1.0",
+    "graphql-tower-global-id": "^3.3.3",
+    "lodash": "^4.17.4",
+    "opn": "^5.1.0"
+  },
+  "devDependencies": {
+    "graphql-tower-types": "^3.26.0"
+  }
+}
