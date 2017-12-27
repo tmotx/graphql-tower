@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-faker",
-  "version": "3.3.3",
+  "version": "3.30.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -29,6 +29,6 @@
     "opn": "^5.1.0"
   },
   "devDependencies": {
-    "graphql-tower-types": "^3.26.0"
+    "graphql-tower-types": "^3.30.0"
   }
 }
