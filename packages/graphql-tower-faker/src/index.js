@@ -1,12 +1,17 @@
 /* eslint-disable no-console */
 import _ from 'lodash';
+import http from 'http';
 import faker from 'faker';
 import chalk from 'chalk';
 import express from 'express';
 import cors from 'cors';
 import opn from 'opn';
 import graphqlHTTP from 'express-graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import {
+  execute,
+  subscribe,
   isAbstractType,
   GraphQLObjectType,
   GraphQLScalarType,
@@ -35,6 +40,7 @@ const defaultTypeFakers = {
 };
 
 export default function (schema, options = {}) {
+  const pubsub = new PubSub();
   const typeFakers = _.assign({}, defaultTypeFakers, options.typeFakers);
 
   function fieldResolver(type, field, obj) {
@@ -75,6 +81,7 @@ export default function (schema, options = {}) {
     if (type instanceof GraphQLObjectType && !type.name.startsWith('__')) {
       _.forEach(type.getFields(), (field) => {
         _.set(field, 'resolve', getResolver(field.type, field, type));
+        _.set(field, 'subscribe', () => pubsub.asyncIterator('subscribe'));
       });
     }
 
@@ -83,18 +90,33 @@ export default function (schema, options = {}) {
     }
   });
 
+  const subscriptionTimer = () => setTimeout(() => {
+    pubsub.publish('subscribe', {});
+    subscriptionTimer();
+  }, 1000);
+
   const app = express();
+  const server = http.createServer(app);
+
   app.use(cors());
   app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
 
+  SubscriptionServer.create(
+    { schema, execute, subscribe },
+    { server, path: '/graphql' },
+  );
+
   const { port } = options;
-  const listener = app.listen(port, () => {
+  const listener = server.listen(port, () => {
     console.log(`
       ${chalk.green('✔')} Your GraphQL Fake API is ready to use 🚀
       Here are your links:
 
       ${chalk.blue('❯')} GraphQL API:\t http://localhost:${listener.address().port}/graphql
+      ${chalk.blue('❯')} WebSocket API:\t ws://localhost:${listener.address().port}/graphql
     `);
+
+    subscriptionTimer();
 
     setTimeout(() => opn(`http://localhost:${listener.address().port}/graphql`), 500);
   });

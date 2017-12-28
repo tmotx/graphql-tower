@@ -2,8 +2,10 @@
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import opn from 'opn';
+import gql from 'graphql-tag';
 import {
   graphql,
+  subscribe,
   GraphQLNonNull,
   GraphQLList,
   GraphQLSchema,
@@ -106,12 +108,25 @@ const schema = new GraphQLSchema({
       },
     },
   }),
+  subscription: new GraphQLObjectType({
+    name: 'Subscription',
+    fields: {
+      onMessageAdd: {
+        type: GraphQLInt,
+        subscribe: () => {},
+      },
+    },
+  }),
 });
 
 describe('faker', () => {
-  it('fetch data', async () => {
-    const server = faker(schema);
+  let server;
 
+  beforeEach(() => { server = faker(schema); });
+
+  afterEach(() => server.close());
+
+  it('query', async () => {
     const { data } = await graphql(schema, `
       query {
         id, int, float, string, boolean,
@@ -162,7 +177,15 @@ describe('faker', () => {
 
     jest.runOnlyPendingTimers();
     expect(opn).toHaveBeenCalledWith(expect.stringContaining('http://localhost'));
+  });
 
-    server.close();
+  it('subscription', async () => {
+    const results = await subscribe(schema, gql`subscription { onMessageAdd }`);
+
+    await new Promise(process.nextTick);
+
+    jest.runOnlyPendingTimers();
+    expect(await results.next())
+      .toEqual({ value: { data: { onMessageAdd: expect.any(Number) } }, done: false });
   });
 });
