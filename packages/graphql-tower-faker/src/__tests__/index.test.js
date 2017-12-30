@@ -33,7 +33,7 @@ import {
   GraphQLAge,
   GraphQLInheritanceType,
 } from 'graphql-tower-types';
-import { isGlobalId } from 'graphql-tower-global-id';
+import { isGlobalId, toGlobalId } from 'graphql-tower-global-id';
 import faker from '../';
 
 jest.useFakeTimers();
@@ -96,7 +96,7 @@ const schema = new GraphQLSchema({
         type: new GraphQLObjectType({
           name: 'Inheritance',
           fields: {
-            base: { type: Base, resolve },
+            base: { type: Base, args: { id: { type: GraphQLGID } }, resolve },
             aaa: {
               type: new GraphQLInheritanceType({
                 name: 'AAA',
@@ -144,7 +144,7 @@ describe('faker', () => {
         responseStatus gid date datetime timezone
         expiration sentence mobile json email
         gender age list custom
-        inheritance { base { label } aaa { label name } bbb { label numberOfView } }
+        inheritance { base { __typename label } aaa { label name } bbb { label numberOfView } }
       }
     `);
 
@@ -180,6 +180,7 @@ describe('faker', () => {
     expect(list).toEqual(_.map(_.range(1000), () => expect.any(Number)));
     expect(custom).toBe('<Custom>');
     expect(base.label).toEqual(expect.any(String));
+    expect(['AAA', 'BBB']).toContain(_.get(base, ['__typename']));
     expect(aaa.name).toEqual(expect.any(String));
     expect(bbb.numberOfView).toEqual(expect.any(Number));
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Not Found Custom Type.'));
@@ -188,6 +189,19 @@ describe('faker', () => {
 
     jest.runOnlyPendingTimers();
     expect(opn).toHaveBeenCalledWith(expect.stringContaining('http://localhost'));
+  });
+
+  it('query node and set id', async () => {
+    const { data } = await graphql(schema, `
+      query ($id: GlobalID) {
+        inheritance { base (id: $id) { __typename label } }
+      }
+    `, {}, {}, { id: toGlobalId('BBB', 123123) });
+
+    expect(data.inheritance.base).toEqual({
+      __typename: 'BBB',
+      label: expect.any(String),
+    });
   });
 
   it('query list and set first', async () => {

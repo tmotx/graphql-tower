@@ -19,7 +19,7 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
 } from 'graphql';
-import { toGlobalId } from 'graphql-tower-global-id';
+import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 
 const defaultTypeFakers = {
   Int: () => faker.random.number(),
@@ -69,7 +69,16 @@ export default function (schema, options = {}) {
 
     if (isAbstractType(type)) {
       const possibleTypes = schema.getPossibleTypes(type);
-      return () => ({ __typename: _.sample(possibleTypes) });
+      return (payload, args) => {
+        const id = _.get(args, ['id']);
+        if (isGlobalId(id)) {
+          const { type: idType } = fromGlobalId(id);
+          if (_.map(possibleTypes, _.toString).indexOf(idType) > -1) {
+            return { __typename: idType };
+          }
+        }
+        return { __typename: _.sample(possibleTypes) };
+      };
     }
 
     return fieldResolver(type, field, obj);
