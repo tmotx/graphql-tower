@@ -12,14 +12,30 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 import {
   execute,
   subscribe,
+  isLeafType,
   isAbstractType,
   GraphQLObjectType,
-  GraphQLScalarType,
   GraphQLList,
   GraphQLNonNull,
   GraphQLEnumType,
 } from 'graphql';
-import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
+import {
+  GraphQLGID,
+  GraphQLSentence,
+  GraphQLMobile,
+  GraphQLDate,
+  GraphQLEmail,
+  GraphQLDateTime,
+  GraphQLTimeZone,
+  GraphQLExpiration,
+  GraphQLAge,
+  GraphQLJSON,
+} from 'graphql-tower-types';
+import {
+  isGlobalId,
+  toGlobalId,
+  fromGlobalId,
+} from 'graphql-tower-global-id';
 
 const defaultTypeFakers = {
   Int: () => faker.random.number(),
@@ -39,9 +55,23 @@ const defaultTypeFakers = {
   JSON: () => faker.helpers.createCard(),
 };
 
+const defaultTypes = _.mapKeys([
+  GraphQLGID,
+  GraphQLSentence,
+  GraphQLMobile,
+  GraphQLDate,
+  GraphQLEmail,
+  GraphQLDateTime,
+  GraphQLTimeZone,
+  GraphQLExpiration,
+  GraphQLAge,
+  GraphQLJSON,
+], type => type.name);
+
 export default function (schema, options = {}) {
   const pubsub = new PubSub();
   const typeFakers = _.assign({}, defaultTypeFakers, options.typeFakers);
+  const types = _.assign({}, defaultTypes, options.types);
 
   function fieldResolver(type, field, obj) {
     if (type instanceof GraphQLEnumType) {
@@ -73,9 +103,7 @@ export default function (schema, options = {}) {
         const id = _.get(args, ['id']);
         if (isGlobalId(id)) {
           const { type: idType } = fromGlobalId(id);
-          if (_.map(possibleTypes, _.toString).indexOf(idType) > -1) {
-            return { __typename: idType };
-          }
+          return { __typename: idType };
         }
         return { __typename: _.sample(possibleTypes) };
       };
@@ -85,9 +113,12 @@ export default function (schema, options = {}) {
   }
 
   _.forEach(schema.getTypeMap(), (type) => {
-    if (type instanceof GraphQLScalarType) {
-      const typeFaker = typeFakers[type.name];
-      if (!typeFaker) console.log(`    ${chalk.red(`Not Found ${type.name} Type.`)}`);
+    if (isLeafType(type) && types[type.name]) {
+      _.assign(type, types[type.name]);
+    }
+
+    if (isLeafType(type) && !typeFakers[type.name]) {
+      console.log(`    ${chalk.red(`Not Found ${type.name} Type.`)}`);
     }
 
     if (type instanceof GraphQLObjectType && !type.name.startsWith('__')) {
