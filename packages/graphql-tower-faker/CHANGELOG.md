@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.30.5"></a>
+## [3.30.5](https://github.com/tmotx/graphql-tower/compare/v3.30.4...v3.30.5) (2017-12-30)
+
+
+### Bug Fixes
+
+* **faker:** get AbstractType from id type ([fc15417](https://github.com/tmotx/graphql-tower/commit/fc15417))
+* **faker:** support custom GraphQLScalarType ([723414a](https://github.com/tmotx/graphql-tower/commit/723414a))
+
+
+
+
 <a name="3.30.4"></a>
 ## [3.30.4](https://github.com/tmotx/graphql-tower/compare/v3.30.3...v3.30.4) (2017-12-30)
 
