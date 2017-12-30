@@ -81,6 +81,17 @@ const schema = new GraphQLSchema({
       age: { type: GraphQLAge, resolve },
       list: { type: new GraphQLList(GraphQLInt), resolve },
       custom: { type: GraphQLCustom, resolve },
+      members: {
+        type: new GraphQLObjectType({
+          name: 'Member',
+          fields: {
+            totalCount: { type: GraphQLInt, resolve },
+            nodes: { type: new GraphQLList(GraphQLEmail), resolve },
+          },
+        }),
+        args: { first: { type: GraphQLInt } },
+        resolve,
+      },
       inheritance: {
         type: new GraphQLObjectType({
           name: 'Inheritance',
@@ -177,6 +188,19 @@ describe('faker', () => {
 
     jest.runOnlyPendingTimers();
     expect(opn).toHaveBeenCalledWith(expect.stringContaining('http://localhost'));
+  });
+
+  it('query list and set first', async () => {
+    const { data } = await graphql(schema, `
+      query ($first: Int) {
+        members (first: $first) {
+          totalCount
+          nodes
+        }
+      }
+    `, {}, {}, { first: 30 });
+
+    expect(data.members.nodes.length).toBe(30);
   });
 
   it('subscription', async () => {

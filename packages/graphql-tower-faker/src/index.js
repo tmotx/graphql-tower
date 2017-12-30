@@ -61,7 +61,10 @@ export default function (schema, options = {}) {
     }
 
     if (type instanceof GraphQLList) {
-      return () => _.map(_.range(1000), getResolver(type.ofType, field, obj));
+      return (payload, args, context, info) => {
+        const first = _.get(args, ['first'], _.get(info, ['variableValues', 'first']));
+        return _.map(_.range(first || 1000), getResolver(type.ofType, field, obj));
+      };
     }
 
     if (isAbstractType(type)) {
