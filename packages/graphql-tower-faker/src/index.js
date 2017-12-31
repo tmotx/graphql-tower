@@ -12,8 +12,8 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 import {
   execute,
   subscribe,
-  isLeafType,
   isAbstractType,
+  GraphQLScalarType,
   GraphQLObjectType,
   GraphQLList,
   GraphQLNonNull,
@@ -21,6 +21,7 @@ import {
 } from 'graphql';
 import {
   GraphQLGID,
+  GraphQLResponseStatus,
   GraphQLSentence,
   GraphQLMobile,
   GraphQLDate,
@@ -29,6 +30,7 @@ import {
   GraphQLTimeZone,
   GraphQLExpiration,
   GraphQLAge,
+  GraphQLGender,
   GraphQLJSON,
 } from 'graphql-tower-types';
 import {
@@ -57,6 +59,7 @@ const defaultTypeFakers = {
 
 const defaultTypes = _.mapKeys([
   GraphQLGID,
+  GraphQLResponseStatus,
   GraphQLSentence,
   GraphQLMobile,
   GraphQLDate,
@@ -65,6 +68,7 @@ const defaultTypes = _.mapKeys([
   GraphQLTimeZone,
   GraphQLExpiration,
   GraphQLAge,
+  GraphQLGender,
   GraphQLJSON,
 ], type => type.name);
 
@@ -113,12 +117,11 @@ export default function (schema, options = {}) {
   }
 
   _.forEach(schema.getTypeMap(), (type) => {
-    if (isLeafType(type) && types[type.name]) {
-      _.assign(type, types[type.name]);
-    }
-
-    if (isLeafType(type) && !typeFakers[type.name]) {
-      console.log(`    ${chalk.red(`Not Found ${type.name} Type.`)}`);
+    if (type instanceof GraphQLScalarType) {
+      if (types[type.name]) _.assign(type, types[type.name]);
+      if (!typeFakers[type.name]) {
+        console.log(`    ${chalk.red(`Not Found ${type.name} Type.`)}`);
+      }
     }
 
     if (type instanceof GraphQLObjectType && !type.name.startsWith('__')) {
