@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.30.7"></a>
+## [3.30.7](https://github.com/tmotx/graphql-tower/compare/v3.30.6...v3.30.7) (2017-12-31)
+
+
+### Bug Fixes
+
+* **faker:** fix GlobalID type error ([5ab49cb](https://github.com/tmotx/graphql-tower/commit/5ab49cb))
+
+
+
+
 <a name="3.30.6"></a>
 ## [3.30.6](https://github.com/tmotx/graphql-tower/compare/v3.30.5...v3.30.6) (2017-12-31)
 
