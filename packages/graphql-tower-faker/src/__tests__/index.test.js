@@ -33,7 +33,7 @@ import {
   GraphQLAge,
   GraphQLInheritanceType,
 } from 'graphql-tower-types';
-import { isGlobalId, toGlobalId } from 'graphql-tower-global-id';
+import { isGlobalId, fromGlobalId, toGlobalId } from 'graphql-tower-global-id';
 import faker from '../';
 
 jest.useFakeTimers();
@@ -83,10 +83,19 @@ const schema = new GraphQLSchema({
       custom: { type: GraphQLCustom, resolve },
       members: {
         type: new GraphQLObjectType({
-          name: 'Member',
+          name: 'MemberPayload',
           fields: {
             totalCount: { type: GraphQLInt, resolve },
-            nodes: { type: new GraphQLList(GraphQLEmail), resolve },
+            nodes: {
+              type: new GraphQLList(new GraphQLObjectType({
+                name: 'Member',
+                fields: {
+                  id: { type: GraphQLGID },
+                  email: { type: new GraphQLList(GraphQLEmail) },
+                },
+              })),
+              resolve,
+            },
           },
         }),
         args: { first: { type: GraphQLInt } },
@@ -209,12 +218,13 @@ describe('faker', () => {
       query ($first: Int) {
         members (first: $first) {
           totalCount
-          nodes
+          nodes { id email }
         }
       }
     `, {}, {}, { first: 30 });
 
     expect(data.members.nodes.length).toBe(30);
+    expect(fromGlobalId(data.members.nodes[0].id).type).toBe('Member');
   });
 
   it('subscription', async () => {

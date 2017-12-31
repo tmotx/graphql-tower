@@ -45,7 +45,7 @@ const defaultTypeFakers = {
   String: () => faker.lorem.sentences(),
   Boolean: () => faker.random.boolean(),
   ID: () => Buffer.from(`${faker.random.number({ max: 9999999999 })}`).toString('base64'),
-  GlobalID: (field, obj) => toGlobalId(_.toString(obj), faker.random.uuid()),
+  GlobalID: payload => toGlobalId(_.trim(payload, '<>'), faker.random.uuid()),
   Sentence: () => faker.lorem.sentence(),
   Mobile: () => faker.phone.phoneNumber('88600009########'),
   Date: () => new Date(),
@@ -77,14 +77,14 @@ export default function (schema, options = {}) {
   const typeFakers = _.assign({}, defaultTypeFakers, options.typeFakers);
   const types = _.assign({}, defaultTypes, options.types);
 
-  function fieldResolver(type, field, obj) {
+  function fieldResolver(type) {
     if (type instanceof GraphQLEnumType) {
       const values = type.getValues().map(({ value }) => value);
       return () => _.sample(values);
     }
 
     const typeFaker = typeFakers[type.name];
-    if (typeFaker) return () => typeFaker(field, obj);
+    if (typeFaker) return typeFaker;
 
     return () => `<${type.name}>`;
   }
@@ -113,7 +113,7 @@ export default function (schema, options = {}) {
       };
     }
 
-    return fieldResolver(type, field, obj);
+    return fieldResolver(type);
   }
 
   _.forEach(schema.getTypeMap(), (type) => {
