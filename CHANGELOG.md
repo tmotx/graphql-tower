@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.30.10"></a>
+## [3.30.10](https://github.com/tmotx/graphql-tower/compare/v3.30.9...v3.30.10) (2018-01-01)
+
+
+### Bug Fixes
+
+* **apollo:** support cacheResolvers config ([1739c9a](https://github.com/tmotx/graphql-tower/commit/1739c9a))
+
+
+
+
 <a name="3.30.9"></a>
 ## [3.30.9](https://github.com/tmotx/graphql-tower/compare/v3.30.8...v3.30.9) (2018-01-01)
 
