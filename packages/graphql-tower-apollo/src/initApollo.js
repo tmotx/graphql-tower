@@ -68,8 +68,7 @@ function create(cache, {
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: new RetryLink().concat(link),
-    cache: new InMemoryCache({ fragmentMatcher }).restore(cache),
-    dataIdFromObject,
+    cache: new InMemoryCache({ fragmentMatcher, dataIdFromObject }).restore(cache),
   });
 
   Object.defineProperty(client, 'token', {
