@@ -15,7 +15,10 @@ import { thunk } from 'graphql-tower-helper';
 import localStorage from './localStorage';
 
 function create(cache, {
-  httpUri, wsUri, authorization, context, introspectionQueryResultData, dataIdFromObject, ...options
+  httpUri, wsUri,
+  authorization, context,
+  cacheResolvers, dataIdFromObject, introspectionQueryResultData,
+  ...options
 } = {}) {
   let client;
 
@@ -68,7 +71,7 @@ function create(cache, {
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: new RetryLink().concat(link),
-    cache: new InMemoryCache({ fragmentMatcher, dataIdFromObject }).restore(cache),
+    cache: new InMemoryCache({ cacheResolvers, dataIdFromObject, fragmentMatcher }).restore(cache),
   });
 
   Object.defineProperty(client, 'token', {
