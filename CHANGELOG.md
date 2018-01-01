@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.30.9"></a>
+## [3.30.9](https://github.com/tmotx/graphql-tower/compare/v3.30.8...v3.30.9) (2018-01-01)
+
+
+### Bug Fixes
+
+* **apollo:** fix dataIdFromObject setup to InMemoryCache ([5f0a563](https://github.com/tmotx/graphql-tower/commit/5f0a563))
+
+
+
+
 <a name="3.30.8"></a>
 ## [3.30.8](https://github.com/tmotx/graphql-tower/compare/v3.30.7...v3.30.8) (2018-01-01)
 
