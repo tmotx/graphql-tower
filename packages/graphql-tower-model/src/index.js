@@ -535,6 +535,23 @@ export default class Model {
       _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) + value)));
   }
 
+  async decrement(...args) {
+    const { database } = this.constructor;
+    const changes = _.mapValues(
+      _.isPlainObject(args[0]) ? args[0] : _.set({}, [args[0]], args[1]),
+      _.toNumber,
+    );
+
+
+    const count = await this.query.update(_.mapValues(
+      _.mapKeys(changes, (value, column) => _.snakeCase(column)),
+      (value, column) => database.raw(`${column} - ?`, [value]),
+    ));
+
+    return assertResult(count > 0, args[2] || args[1]) && this.merge(data =>
+      _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) - value)));
+  }
+
   search(keyword) {
     const { database, keywordAttribute } = this.constructor;
     const { queryBuilder } = this;

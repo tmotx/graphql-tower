@@ -572,6 +572,30 @@ describe('model', () => {
       });
     });
 
+    describe('decrement', () => {
+      it('single', async () => {
+        const model = await Default.load(1);
+        expect(model.total).toBe(0);
+        await model.decrement('total', 10);
+
+        expect(model.total).toBe(-10);
+        expect((await Default.load(1)).total).toBe(-10);
+
+        expect(await model.where('total', 30).decrement('total', -10)).toBe(false);
+      });
+
+      it('multiple', async () => {
+        const model = await Default.load(1);
+        expect(model.total).toBe(0);
+        await model.decrement({ total: 10 });
+
+        expect(model.total).toBe(-10);
+        expect((await Default.load(1)).total).toBe(-10);
+
+        await expect(model.where('total', 30).decrement({ total: -10 }, Error)).rejects.toEqual(new Error());
+      });
+    });
+
     it('search', async () => {
       await (new Default({ name: 'new for action' })).save('10');
       await (new Default({ name: 'new for search' })).save('10');
