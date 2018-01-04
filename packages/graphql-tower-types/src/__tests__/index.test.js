@@ -15,6 +15,7 @@ import {
   GraphQLEmail,
   GraphQLGender,
   GraphQLAge,
+  GraphQLPercent,
   GraphQLInheritanceType,
   GraphQLGlobalIdField,
 } from '../index';
@@ -91,6 +92,11 @@ const schema = new GraphQLSchema({
       age: {
         type: GraphQLAge,
         args: { input: { type: GraphQLAge } },
+        resolve,
+      },
+      percent: {
+        type: GraphQLPercent,
+        args: { input: { type: GraphQLPercent } },
         resolve,
       },
       node: {
@@ -504,6 +510,41 @@ describe('type', () => {
       query: 'query($input: Age) { age (input: $input) }',
       args: { input: 'XYZ' },
       result: { errors: [new TypeError('Variable "$input" got invalid value "XYZ".\nExpected type "Age", found "XYZ": Age cannot represent non value: NaN')] },
+      calledTimes: 0,
+    }], expectGraphql, Promise.resolve());
+  });
+
+  it('GraphQLPercent', async () => {
+    const percent = 50;
+
+    await _.reduce([{
+      value: percent,
+      query: 'query { percent }',
+      result: { data: { percent } },
+    }, {
+      query: `query { percent (input: "${percent}") }`,
+      calledWith: [undefined, { input: 50 }, undefined, expect.anything()],
+    }, {
+      query: 'query { percent (input: "200") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "200".\nExpected type "Percent", found "200".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query { percent (input: "XYZ") }',
+      result: { errors: [new GraphQLError('Argument "input" has invalid value "XYZ".\nExpected type "Percent", found "XYZ".')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: Percent) { percent (input: $input) }',
+      args: { input: percent },
+      calledWith: [undefined, { input: 50 }, undefined, expect.anything()],
+    }, {
+      query: 'query($input: Percent) { percent (input: $input) }',
+      args: { input: -10 },
+      result: { errors: [new TypeError('Variable "$input" got invalid value -10.\nExpected type "Percent", found -10: Percent cannot represent non value: -10')] },
+      calledTimes: 0,
+    }, {
+      query: 'query($input: Percent) { percent (input: $input) }',
+      args: { input: 'XYZ' },
+      result: { errors: [new TypeError('Variable "$input" got invalid value "XYZ".\nExpected type "Percent", found "XYZ": Percent cannot represent non value: NaN')] },
       calledTimes: 0,
     }], expectGraphql, Promise.resolve());
   });
