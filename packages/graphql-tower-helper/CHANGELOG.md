@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.1"></a>
+## [3.31.1](https://github.com/tmotx/graphql-tower/compare/v3.31.0...v3.31.1) (2018-01-04)
+
+
+### Bug Fixes
+
+* **helper:** added coalesce function ([554a9eb](https://github.com/tmotx/graphql-tower/commit/554a9eb))
+
+
+
+
 <a name="3.25.1"></a>
 ## [3.25.1](https://github.com/tmotx/graphql-tower/compare/v3.25.0...v3.25.1) (2017-12-11)
 
