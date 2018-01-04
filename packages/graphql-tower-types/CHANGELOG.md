@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.0"></a>
+# [3.31.0](https://github.com/tmotx/graphql-tower/compare/v3.30.10...v3.31.0) (2018-01-04)
+
+
+### Features
+
+* **type:** added Percent ([387fe07](https://github.com/tmotx/graphql-tower/commit/387fe07))
+
+
+
+
 <a name="3.30.0"></a>
 # [3.30.0](https://github.com/tmotx/graphql-tower/compare/v3.29.2...v3.30.0) (2017-12-27)
 
