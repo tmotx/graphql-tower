@@ -2,6 +2,16 @@ export function thunk(handler) {
   return (...args) => (typeof handler === 'function' ? handler(...args) : handler);
 }
 
+export function coalesce(...args) {
+  for (let index = 0; index < args.length; index += 1) {
+    if (args[index] !== undefined && args[index] !== null) {
+      return args[index];
+    }
+  }
+
+  return '';
+}
+
 export function combine(handler, args) {
   // promise
   let promise;

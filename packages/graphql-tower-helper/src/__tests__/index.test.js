@@ -1,12 +1,18 @@
 import _ from 'lodash';
 import { NotFoundError } from 'graphql-tower-errors';
-import { thunk, next, combine, functional, retry, displayName, assertResult, batch } from '../';
+import { thunk, coalesce, next, combine, functional, retry, displayName, assertResult, batch } from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
     expect(thunk({ name: 'yutin' })()).toEqual({ name: 'yutin' });
     expect(thunk(args => _.defaults(args, { name: 'yutin' }))({ age: 20 })).toEqual({ name: 'yutin', age: 20 });
     expect(thunk()({ age: 20 })).toBe(undefined);
+  });
+
+  it('coalesce', async () => {
+    expect(coalesce(undefined, null, 0, 1)).toBe(0);
+    expect(coalesce(undefined, null, '', 'XYZ')).toBe('');
+    expect(coalesce(undefined, null)).toBe('');
   });
 
   describe('combine', () => {
