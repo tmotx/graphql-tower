@@ -6,7 +6,8 @@ ApolloClient {
     "addTypename": true,
     "config": Object {
       "addTypename": true,
-      "dataIdFromObject": [Function],
+      "cacheResolvers": undefined,
+      "dataIdFromObject": undefined,
       "fragmentMatcher": IntrospectionFragmentMatcher {
         "isReady": false,
         "match": [Function],
@@ -36,7 +37,8 @@ ApolloClient {
       "addTypename": true,
       "config": Object {
         "addTypename": true,
-        "dataIdFromObject": [Function],
+        "cacheResolvers": undefined,
+        "dataIdFromObject": undefined,
         "fragmentMatcher": IntrospectionFragmentMatcher {
           "isReady": false,
           "match": [Function],
@@ -59,17 +61,17 @@ ApolloClient {
 exports[`withData process.browser is false getInitialProps with cookie 1`] = `
 Object {
   "cache": Object {
-    "ROOT_QUERY": Object {
-      "me": Object {
-        "generated": false,
-        "id": "User:50",
-        "type": "id",
-      },
-    },
-    "User:50": Object {
+    "$ROOT_QUERY.me": Object {
       "__typename": "User",
       "id": "50",
       "name": "hello",
+    },
+    "ROOT_QUERY": Object {
+      "me": Object {
+        "generated": true,
+        "id": "$ROOT_QUERY.me",
+        "type": "id",
+      },
     },
   },
   "value": 99,
@@ -80,17 +82,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
 <WithData(Apollo(App))
   cache={
     Object {
-      "ROOT_QUERY": Object {
-        "me": Object {
-          "generated": false,
-          "id": "User:50",
-          "type": "id",
-        },
-      },
-      "User:50": Object {
+      "$ROOT_QUERY.me": Object {
         "__typename": "User",
         "id": "50",
         "name": "hello",
+      },
+      "ROOT_QUERY": Object {
+        "me": Object {
+          "generated": true,
+          "id": "$ROOT_QUERY.me",
+          "type": "id",
+        },
       },
     }
   }
@@ -103,7 +105,8 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
           "addTypename": true,
           "config": Object {
             "addTypename": true,
-            "dataIdFromObject": [Function],
+            "cacheResolvers": undefined,
+            "dataIdFromObject": undefined,
             "fragmentMatcher": IntrospectionFragmentMatcher {
               "isReady": false,
               "match": [Function],
@@ -112,17 +115,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
           },
           "data": ObjectCache {
             "data": Object {
-              "ROOT_QUERY": Object {
-                "me": Object {
-                  "generated": false,
-                  "id": "User:50",
-                  "type": "id",
-                },
-              },
-              "User:50": Object {
+              "$ROOT_QUERY.me": Object {
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
+              },
+              "ROOT_QUERY": Object {
+                "me": Object {
+                  "generated": true,
+                  "id": "$ROOT_QUERY.me",
+                  "type": "id",
+                },
               },
             },
           },
@@ -224,7 +227,8 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
               "addTypename": true,
               "config": Object {
                 "addTypename": true,
-                "dataIdFromObject": [Function],
+                "cacheResolvers": undefined,
+                "dataIdFromObject": undefined,
                 "fragmentMatcher": IntrospectionFragmentMatcher {
                   "isReady": false,
                   "match": [Function],
@@ -233,17 +237,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
               },
               "data": ObjectCache {
                 "data": Object {
-                  "ROOT_QUERY": Object {
-                    "me": Object {
-                      "generated": false,
-                      "id": "User:50",
-                      "type": "id",
-                    },
-                  },
-                  "User:50": Object {
+                  "$ROOT_QUERY.me": Object {
                     "__typename": "User",
                     "id": "50",
                     "name": "hello",
+                  },
+                  "ROOT_QUERY": Object {
+                    "me": Object {
+                      "generated": true,
+                      "id": "$ROOT_QUERY.me",
+                      "type": "id",
+                    },
                   },
                 },
               },
@@ -437,7 +441,7 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
                       "__typename": "User",
                       "id": "50",
                       "name": "hello",
-                      Symbol(id): "User:50",
+                      Symbol(id): "$ROOT_QUERY.me",
                     },
                     Symbol(id): "ROOT_QUERY",
                   },
@@ -655,7 +659,8 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
             "addTypename": true,
             "config": Object {
               "addTypename": true,
-              "dataIdFromObject": [Function],
+              "cacheResolvers": undefined,
+              "dataIdFromObject": undefined,
               "fragmentMatcher": IntrospectionFragmentMatcher {
                 "isReady": false,
                 "match": [Function],
@@ -664,17 +669,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
             },
             "data": ObjectCache {
               "data": Object {
-                "ROOT_QUERY": Object {
-                  "me": Object {
-                    "generated": false,
-                    "id": "User:50",
-                    "type": "id",
-                  },
-                },
-                "User:50": Object {
+                "$ROOT_QUERY.me": Object {
                   "__typename": "User",
                   "id": "50",
                   "name": "hello",
+                },
+                "ROOT_QUERY": Object {
+                  "me": Object {
+                    "generated": true,
+                    "id": "$ROOT_QUERY.me",
+                    "type": "id",
+                  },
                 },
               },
             },
@@ -772,17 +777,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
       <Apollo(App)
         cache={
           Object {
-            "ROOT_QUERY": Object {
-              "me": Object {
-                "generated": false,
-                "id": "User:50",
-                "type": "id",
-              },
-            },
-            "User:50": Object {
+            "$ROOT_QUERY.me": Object {
               "__typename": "User",
               "id": "50",
               "name": "hello",
+            },
+            "ROOT_QUERY": Object {
+              "me": Object {
+                "generated": true,
+                "id": "$ROOT_QUERY.me",
+                "type": "id",
+              },
             },
           }
         }
@@ -791,17 +796,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
         <App
           cache={
             Object {
-              "ROOT_QUERY": Object {
-                "me": Object {
-                  "generated": false,
-                  "id": "User:50",
-                  "type": "id",
-                },
-              },
-              "User:50": Object {
+              "$ROOT_QUERY.me": Object {
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
+              },
+              "ROOT_QUERY": Object {
+                "me": Object {
+                  "generated": true,
+                  "id": "$ROOT_QUERY.me",
+                  "type": "id",
+                },
               },
             }
           }
@@ -814,7 +819,7 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
-                Symbol(id): "User:50",
+                Symbol(id): "$ROOT_QUERY.me",
               },
               "networkStatus": 7,
               "refetch": [Function],
@@ -838,17 +843,17 @@ exports[`withData process.browser is false getInitialProps with cookie 2`] = `
 exports[`withData process.browser is false getInitialProps without cookie 1`] = `
 Object {
   "cache": Object {
-    "ROOT_QUERY": Object {
-      "me": Object {
-        "generated": false,
-        "id": "User:50",
-        "type": "id",
-      },
-    },
-    "User:50": Object {
+    "$ROOT_QUERY.me": Object {
       "__typename": "User",
       "id": "50",
       "name": "hello",
+    },
+    "ROOT_QUERY": Object {
+      "me": Object {
+        "generated": true,
+        "id": "$ROOT_QUERY.me",
+        "type": "id",
+      },
     },
   },
   "value": 99,
@@ -859,17 +864,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
 <WithData(Apollo(App))
   cache={
     Object {
-      "ROOT_QUERY": Object {
-        "me": Object {
-          "generated": false,
-          "id": "User:50",
-          "type": "id",
-        },
-      },
-      "User:50": Object {
+      "$ROOT_QUERY.me": Object {
         "__typename": "User",
         "id": "50",
         "name": "hello",
+      },
+      "ROOT_QUERY": Object {
+        "me": Object {
+          "generated": true,
+          "id": "$ROOT_QUERY.me",
+          "type": "id",
+        },
       },
     }
   }
@@ -882,7 +887,8 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
           "addTypename": true,
           "config": Object {
             "addTypename": true,
-            "dataIdFromObject": [Function],
+            "cacheResolvers": undefined,
+            "dataIdFromObject": undefined,
             "fragmentMatcher": IntrospectionFragmentMatcher {
               "isReady": false,
               "match": [Function],
@@ -891,17 +897,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
           },
           "data": ObjectCache {
             "data": Object {
-              "ROOT_QUERY": Object {
-                "me": Object {
-                  "generated": false,
-                  "id": "User:50",
-                  "type": "id",
-                },
-              },
-              "User:50": Object {
+              "$ROOT_QUERY.me": Object {
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
+              },
+              "ROOT_QUERY": Object {
+                "me": Object {
+                  "generated": true,
+                  "id": "$ROOT_QUERY.me",
+                  "type": "id",
+                },
               },
             },
           },
@@ -1003,7 +1009,8 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
               "addTypename": true,
               "config": Object {
                 "addTypename": true,
-                "dataIdFromObject": [Function],
+                "cacheResolvers": undefined,
+                "dataIdFromObject": undefined,
                 "fragmentMatcher": IntrospectionFragmentMatcher {
                   "isReady": false,
                   "match": [Function],
@@ -1012,17 +1019,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
               },
               "data": ObjectCache {
                 "data": Object {
-                  "ROOT_QUERY": Object {
-                    "me": Object {
-                      "generated": false,
-                      "id": "User:50",
-                      "type": "id",
-                    },
-                  },
-                  "User:50": Object {
+                  "$ROOT_QUERY.me": Object {
                     "__typename": "User",
                     "id": "50",
                     "name": "hello",
+                  },
+                  "ROOT_QUERY": Object {
+                    "me": Object {
+                      "generated": true,
+                      "id": "$ROOT_QUERY.me",
+                      "type": "id",
+                    },
                   },
                 },
               },
@@ -1216,7 +1223,7 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
                       "__typename": "User",
                       "id": "50",
                       "name": "hello",
-                      Symbol(id): "User:50",
+                      Symbol(id): "$ROOT_QUERY.me",
                     },
                     Symbol(id): "ROOT_QUERY",
                   },
@@ -1434,7 +1441,8 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
             "addTypename": true,
             "config": Object {
               "addTypename": true,
-              "dataIdFromObject": [Function],
+              "cacheResolvers": undefined,
+              "dataIdFromObject": undefined,
               "fragmentMatcher": IntrospectionFragmentMatcher {
                 "isReady": false,
                 "match": [Function],
@@ -1443,17 +1451,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
             },
             "data": ObjectCache {
               "data": Object {
-                "ROOT_QUERY": Object {
-                  "me": Object {
-                    "generated": false,
-                    "id": "User:50",
-                    "type": "id",
-                  },
-                },
-                "User:50": Object {
+                "$ROOT_QUERY.me": Object {
                   "__typename": "User",
                   "id": "50",
                   "name": "hello",
+                },
+                "ROOT_QUERY": Object {
+                  "me": Object {
+                    "generated": true,
+                    "id": "$ROOT_QUERY.me",
+                    "type": "id",
+                  },
                 },
               },
             },
@@ -1551,17 +1559,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
       <Apollo(App)
         cache={
           Object {
-            "ROOT_QUERY": Object {
-              "me": Object {
-                "generated": false,
-                "id": "User:50",
-                "type": "id",
-              },
-            },
-            "User:50": Object {
+            "$ROOT_QUERY.me": Object {
               "__typename": "User",
               "id": "50",
               "name": "hello",
+            },
+            "ROOT_QUERY": Object {
+              "me": Object {
+                "generated": true,
+                "id": "$ROOT_QUERY.me",
+                "type": "id",
+              },
             },
           }
         }
@@ -1570,17 +1578,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
         <App
           cache={
             Object {
-              "ROOT_QUERY": Object {
-                "me": Object {
-                  "generated": false,
-                  "id": "User:50",
-                  "type": "id",
-                },
-              },
-              "User:50": Object {
+              "$ROOT_QUERY.me": Object {
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
+              },
+              "ROOT_QUERY": Object {
+                "me": Object {
+                  "generated": true,
+                  "id": "$ROOT_QUERY.me",
+                  "type": "id",
+                },
               },
             }
           }
@@ -1593,7 +1601,7 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
                 "__typename": "User",
                 "id": "50",
                 "name": "hello",
-                Symbol(id): "User:50",
+                Symbol(id): "$ROOT_QUERY.me",
               },
               "networkStatus": 7,
               "refetch": [Function],
@@ -1617,17 +1625,17 @@ exports[`withData process.browser is false getInitialProps without cookie 2`] = 
 exports[`withData process.browser is false when no getInitialProps 1`] = `
 Object {
   "cache": Object {
-    "ROOT_QUERY": Object {
-      "me": Object {
-        "generated": false,
-        "id": "User:50",
-        "type": "id",
-      },
-    },
-    "User:50": Object {
+    "$ROOT_QUERY.me": Object {
       "__typename": "User",
       "id": "50",
       "name": "hello",
+    },
+    "ROOT_QUERY": Object {
+      "me": Object {
+        "generated": true,
+        "id": "$ROOT_QUERY.me",
+        "type": "id",
+      },
     },
   },
 }

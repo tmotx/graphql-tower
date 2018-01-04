@@ -27,16 +27,6 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
-base-x@^3.0.2:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.3.tgz#7870aebb757a49d38d7cf63a6c554c418287cce7"
-  dependencies:
-    safe-buffer "^5.0.1"
-
-bignumber.js@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
-
 body-parser@1.18.2:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
@@ -214,22 +204,6 @@ graphql-subscriptions@^0.5.6:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
 
-graphql-tower-global-id@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.3.3.tgz#5741ce5561dc1075264c2c905da617eca96e7884"
-  dependencies:
-    base-x "^3.0.2"
-    bignumber.js "^4.1.0"
-    lodash "^4.17.4"
-
-graphql-tower-types@^3.30.0:
-  version "3.30.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-types/-/graphql-tower-types-3.30.0.tgz#ce7c03a5e9209454dd95ec9ed22d63e3937f7847"
-  dependencies:
-    graphql-tower-global-id "^3.3.3"
-    lodash "^4.17.4"
-    moment "^2.19.1"
-
 has-flag@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-2.0.0.tgz#e8207af1cc7b30d446cc70b734b5e8be18f88d51"
@@ -309,10 +283,6 @@ mime@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
 
-moment@^2.19.1:
-  version "2.20.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
-
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -369,7 +339,7 @@ raw-body@2.3.2, raw-body@^2.1.0:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
-safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@~5.1.0:
+safe-buffer@5.1.1, safe-buffer@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
