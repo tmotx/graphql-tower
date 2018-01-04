@@ -220,6 +220,25 @@ export const GraphQLAge = new GraphQLScalarType({
   },
 });
 
+export const parsePercent = (value) => {
+  const percent = parseInt(value, 10);
+
+  if (isNaN(percent) || percent < 1 || percent > 100) {
+    throw new TypeError(`Percent cannot represent non value: ${percent}`);
+  }
+
+  return percent;
+};
+
+export const GraphQLPercent = new GraphQLScalarType({
+  name: 'Percent',
+  serialize: parsePercent,
+  parseValue: parsePercent,
+  parseLiteral: (ast) => {
+    try { return parsePercent(ast.value); } catch (e) { return null; }
+  },
+});
+
 export class GraphQLInheritanceType extends GraphQLObjectType {
   getFields() {
     if (!this._fields) {
