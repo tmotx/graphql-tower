@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.2"></a>
+## [3.31.2](https://github.com/tmotx/graphql-tower/compare/v3.31.1...v3.31.2) (2018-01-05)
+
+
+### Bug Fixes
+
+* **faker:** random between 2 and 5 when list ([7e29bfe](https://github.com/tmotx/graphql-tower/commit/7e29bfe))
+
+
+
+
 <a name="3.31.1"></a>
 ## [3.31.1](https://github.com/tmotx/graphql-tower/compare/v3.31.0...v3.31.1) (2018-01-04)
 
