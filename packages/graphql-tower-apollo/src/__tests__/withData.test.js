@@ -86,7 +86,7 @@ class App extends React.Component {
 
   render() {
     const { value, data } = this.props;
-    const me = data ? data.me : {};
+    const me = data.me || {};
 
     return (<div>{me.id}-{me.name} value: {value}</div>);
   }

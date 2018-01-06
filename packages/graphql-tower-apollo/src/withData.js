@@ -58,8 +58,6 @@ export default options => Component => class WithData extends React.Component {
   }
 
   render() {
-    if (!process.browser && options.noSSR) return null;
-
     return (
       <ApolloProvider client={this.apollo}>
         <Component {...this.props} />

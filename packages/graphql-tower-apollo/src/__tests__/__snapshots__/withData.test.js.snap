@@ -116,7 +116,11 @@ Object {
 }
 `;
 
-exports[`withData process.browser is false when NoSSR 2`] = `null`;
+exports[`withData process.browser is false when NoSSR 2`] = `
+<div>
+  - value: 99
+</div>
+`;
 
 exports[`withData process.browser is false when no getInitialProps 1`] = `
 Object {
