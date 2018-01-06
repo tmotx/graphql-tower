@@ -186,7 +186,7 @@ describe('faker', () => {
     expect(email).toEqual(expect.stringMatching(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/));
     expect(['male', 'female']).toContain(gender);
     expect(age).toEqual(expect.any(Number));
-    expect(list).toEqual(_.map(_.range(1000), () => expect.any(Number)));
+    expect(list).toEqual(expect.arrayContaining([expect.any(Number)]));
     expect(custom).toBe('<Custom>');
     expect(base.label).toEqual(expect.any(String));
     expect(['AAA', 'BBB']).toContain(_.get(base, ['__typename']));

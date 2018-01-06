@@ -3,6 +3,7 @@
  */
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import http from 'http';
 import gql from 'graphql-tag';
 import express from 'express';
@@ -11,7 +12,7 @@ import bodyParser from 'body-parser';
 import { subscribe, GraphQLID, GraphQLString, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { mount } from 'enzyme';
+import { render } from 'enzyme';
 import { graphql } from 'react-apollo';
 import { execute } from 'apollo-link';
 import { graphqlExpress } from 'apollo-server-express';
@@ -69,12 +70,25 @@ new SubscriptionServer( // eslint-disable-line
 );
 
 class App extends React.Component {
+  static propTypes = {
+    value: PropTypes.number,
+    data: PropTypes.shape(),
+  }
+
+  static defaultProps = {
+    value: 0,
+    data: {},
+  }
+
   static async getInitialProps() {
     return { value: 99 };
   }
 
   render() {
-    return (<div />);
+    const { value, data } = this.props;
+    const me = data ? data.me : {};
+
+    return (<div>{me.id}-{me.name} value: {value}</div>);
   }
 }
 
@@ -88,6 +102,17 @@ describe('withData', () => {
   describe('process.browser is false', () => {
     beforeEach(() => { process.browser = false; });
 
+    it('when NoSSR', async () => {
+      const WrapApp = withData({ ...apollo, noSSR: true })(graphql(gql`query { me { id name } }`)(App));
+
+      const props = await WrapApp.getInitialProps();
+      expect(props).toMatchSnapshot();
+      expect(resolveSpy).toHaveBeenCalledTimes(0);
+
+      const component = render(<WrapApp {...props} />);
+      expect(component).toMatchSnapshot();
+    });
+
     it('getInitialProps without cookie', async () => {
       resolveSpy.mockReturnValueOnce(Promise.resolve({ id: '50', name: 'hello' }));
       const WrapApp = withData(apollo)(graphql(gql`query { me { id name } }`)(App));
@@ -99,7 +124,7 @@ describe('withData', () => {
         .toHaveBeenLastCalledWith(undefined, {}, { authorization: undefined }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
 
-      const component = mount(<WrapApp {...props} />);
+      const component = render(<WrapApp {...props} />);
       expect(component).toMatchSnapshot();
     });
 
@@ -113,7 +138,7 @@ describe('withData', () => {
         .toHaveBeenLastCalledWith(undefined, {}, { authorization: 'Bearer key of token' }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
 
-      const component = mount(<WrapApp {...props} />);
+      const component = render(<WrapApp {...props} />);
       expect(component).toMatchSnapshot();
     });
 
