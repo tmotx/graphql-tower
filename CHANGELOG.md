@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.4"></a>
+## [3.31.4](https://github.com/tmotx/graphql-tower/compare/v3.31.3...v3.31.4) (2018-01-06)
+
+
+### Bug Fixes
+
+* **apollo:** support noSSR ([7fb58d8](https://github.com/tmotx/graphql-tower/commit/7fb58d8))
+
+
+
+
 <a name="3.31.3"></a>
 ## [3.31.3](https://github.com/tmotx/graphql-tower/compare/v3.31.2...v3.31.3) (2018-01-06)
 
