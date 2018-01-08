@@ -54,6 +54,7 @@ const defaultTypeFakers = {
   TimeZone: () => faker.random.number({ min: -24, max: 24 }),
   Expiration: () => _.sample([faker.date.future(), false]),
   Age: () => faker.random.number({ min: 1, max: 100 }),
+  Percent: () => faker.random.number({ min: 1, max: 100 }),
   JSON: () => faker.helpers.createCard(),
 };
 

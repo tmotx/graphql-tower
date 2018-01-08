@@ -31,6 +31,7 @@ import {
   GraphQLEmail,
   GraphQLGender,
   GraphQLAge,
+  GraphQLPercent,
   GraphQLInheritanceType,
 } from 'graphql-tower-types';
 import { isGlobalId, fromGlobalId, toGlobalId } from 'graphql-tower-global-id';
@@ -79,6 +80,7 @@ const schema = new GraphQLSchema({
       email: { type: GraphQLEmail, resolve },
       gender: { type: GraphQLGender, resolve },
       age: { type: GraphQLAge, resolve },
+      percent: { type: GraphQLPercent, resolve },
       list: { type: new GraphQLList(GraphQLInt), resolve },
       custom: { type: GraphQLCustom, resolve },
       members: {
@@ -152,7 +154,7 @@ describe('faker', () => {
         id, int, float, string, boolean,
         responseStatus gid date datetime timezone
         expiration sentence mobile json email
-        gender age list custom
+        gender age percent, list custom
         inheritance { base { __typename label } aaa { label name } bbb { label numberOfView } }
       }
     `);
@@ -161,7 +163,7 @@ describe('faker', () => {
       id, int, float, string, boolean,
       responseStatus, gid, date, datetime, timezone,
       expiration, sentence, mobile, json, email,
-      gender, age, list, custom,
+      gender, age, percent, list, custom,
       inheritance: { base, aaa, bbb },
     } = data;
 
@@ -186,6 +188,7 @@ describe('faker', () => {
     expect(email).toEqual(expect.stringMatching(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/));
     expect(['male', 'female']).toContain(gender);
     expect(age).toEqual(expect.any(Number));
+    expect(percent).toEqual(expect.any(Number));
     expect(list).toEqual(expect.arrayContaining([expect.any(Number)]));
     expect(custom).toBe('<Custom>');
     expect(base.label).toEqual(expect.any(String));
