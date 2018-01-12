@@ -1,7 +1,5 @@
 export const promise = jest.fn(() => Promise.resolve());
-export const pipe = jest.fn();
-
-const createReadStream = params => ({ pipe: () => pipe(params) });
+export const createReadStream = jest.fn();
 
 export default {
   S3: () => ({
@@ -21,5 +19,8 @@ export default {
       promise: () => promise({ ...params, method: 'upload' }),
       createReadStream: () => createReadStream({ ...params, method: 'upload' }),
     }),
+  }),
+  Lambda: () => ({
+    invoke: promise,
   }),
 };

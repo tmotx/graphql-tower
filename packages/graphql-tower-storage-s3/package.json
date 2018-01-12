@@ -22,6 +22,7 @@
   ],
   "dependencies": {
     "aws-sdk": "^2.148.0",
+    "file-type": "^7.4.0",
     "graphql-tower-errors": "^3.21.3",
     "graphql-tower-unique": "^3.6.2",
     "sharp": "^0.18.4"

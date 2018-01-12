@@ -1,9 +1,8 @@
-import min from 'lodash/min';
 import url from 'url';
 import crypto from 'crypto';
+import fileType from 'file-type';
 import sharp from 'sharp';
 import AWS from 'aws-sdk';
-import { NotFoundError } from 'graphql-tower-errors';
 import unique from 'graphql-tower-unique';
 
 function createHmacDigest(key, data) {
@@ -27,22 +26,28 @@ export default class StorageS3 {
       throw new TypeError('STORAGE_URL is required');
     }
 
+    if (env.CDN_ID) {
+      this.cdnId = env.CDN_ID;
+    }
+
     const uri = url.parse(env.STORAGE_URL);
 
     this.region = uri.hostname;
     this.bucket = uri.path.substr(1);
 
     const configs = { region: this.region, params: { Bucket: this.bucket } };
+    const auth = {};
 
     if (uri.auth) {
       const [accessKeyId, secretAccessKey] = uri.auth.split(':');
+      auth.accessKeyId = accessKeyId;
+      auth.secretAccessKey = secretAccessKey;
       this.accessKeyId = accessKeyId;
-      configs.accessKeyId = accessKeyId;
       this.secretAccessKey = secretAccessKey;
-      configs.secretAccessKey = secretAccessKey;
     }
 
-    this.s3 = new AWS.S3(configs);
+    this.s3 = new AWS.S3({ ...auth, ...configs });
+    this.lambda = new AWS.Lambda(auth);
 
     return this;
   }
@@ -55,10 +60,18 @@ export default class StorageS3 {
 
   async checkContentType(key) {
     try {
-      const reply = await this.s3.headObject({ Key: `uploader/${key}` }).promise();
+      const from = this.s3.getObject({ Key: `uploader/${key}` });
+      const readStream = from.createReadStream();
 
-      if (['image/png', 'image/jpeg'].indexOf(reply.ContentType) > -1) {
-        return true;
+      const chunk = await new Promise((resolve, reject) => {
+        readStream.on('readable', () => resolve(readStream.read()));
+        readStream.on('error', reject);
+      });
+      readStream.close();
+
+      const { ext, mime } = fileType(chunk);
+      if (['png', 'jpg', 'gif', 'mp4', 'mov'].indexOf(ext) > -1) {
+        return mime;
       }
 
       throw new Error();
@@ -67,15 +80,34 @@ export default class StorageS3 {
     }
   }
 
-  async confirm(key, toKey = unique()) {
-    try {
-      await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
-      await this.transform(`media/${toKey}`, `media/${toKey}_cover`);
+  async confirm(key, toKey) {
+    await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
+    await this.transform(`media/${toKey}`, `media/${toKey}_cover`);
 
-      return toKey;
-    } catch (e) {
-      throw new NotFoundError();
+    return toKey;
+  }
+
+  async confirmVideo(key, toKey, cdnPaths = []) {
+    const cdn = { cdnId: this.cdnId };
+    if (this.cdnId && cdnPaths.length) {
+      cdn.cdnPaths = cdnPaths;
     }
+
+    this.lambda.invoke({
+      FunctionName: 'media-converter_confirm-video',
+      InvocationType: 'Event',
+      Payload: JSON.stringify({
+        region: this.region,
+        bucket: this.bucket,
+        from: `uploader/${key}`,
+        target: `media/${toKey}`,
+        accessKeyId: this.accessKeyId,
+        secretAccessKey: this.secretAccessKey,
+        ...cdn,
+      }),
+    });
+
+    return toKey;
   }
 
   async fetchCover(key, width = 1920, height = null) {
@@ -90,8 +122,7 @@ export default class StorageS3 {
     return this.s3.getObject({ Key: cacheName }).createReadStream();
   }
 
-  async fetchPreCover(key, value, height = null) {
-    const width = min([value, 128]);
+  async fetchPreCover(key, width = 128, height = null) {
     const cacheName = `cache/${key}_precover_${[width, height].join('x')}`;
 
     try {

@@ -1,5 +1,5 @@
-import { promise, pipe } from 'aws-sdk';
-import { NotFoundError } from 'graphql-tower-errors';
+import fs from 'fs';
+import { promise, createReadStream } from 'aws-sdk';
 import StorageS3 from '../';
 import upload from '../upload';
 
@@ -31,118 +31,194 @@ describe('storage s3', () => {
 
   describe('checkContentType', () => {
     it('when type is jpeg', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/jpeg' }));
-      await storage.checkContentType('XYZ');
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(1);
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.jpg`));
+      expect(await storage.checkContentType('XYZ')).toBe('image/jpeg');
+      expect(createReadStream).toHaveBeenCalledWith({ Key: 'uploader/XYZ', method: 'getObject' });
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
 
     it('when type is png', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'image/png' }));
-      await storage.checkContentType('XYZ');
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(1);
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.png`));
+      expect(await storage.checkContentType('XYZ')).toBe('image/png');
+    });
+
+    it('when type is gif', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gif`));
+      expect(await storage.checkContentType('XYZ')).toBe('image/gif');
+    });
+
+    it('when type is mp4', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
+      expect(await storage.checkContentType('XYZ')).toBe('video/mp4');
+    });
+
+    it('when type is mov', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mov`));
+      expect(await storage.checkContentType('XYZ')).toBe('video/quicktime');
     });
 
     it('when unsupported file type', async () => {
-      promise.mockReturnValueOnce(Promise.resolve({ ContentType: 'application/epub+zip' }));
-      await expect(storage.checkContentType('from XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
-      expect(promise).toHaveBeenCalledTimes(1);
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gz`));
+      await expect(storage.checkContentType('XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
     });
 
     it('when not found', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample`));
       await expect(storage.checkContentType('XYZ')).rejects.toEqual(new TypeError('unsupported file type'));
-      expect(promise).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('confirm', () => {
     it('successfully confirmed', async () => {
-      pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gif`));
       await storage.confirm('XYZ', 'IMAGE_UPLOAD_UUID');
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(pipe.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/IMAGE_UPLOAD_UUID', method: 'copyObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/IMAGE_UPLOAD_UUID', method: 'getObject',
+      }));
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/IMAGE_UPLOAD_UUID_cover', method: 'upload',
+      }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(pipe).toHaveBeenCalledTimes(1);
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
+  });
 
-    it('successfully confirmed when use unique', async () => {
-      pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
-      await storage.confirm('XYZ');
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(pipe.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(2);
-      expect(pipe).toHaveBeenCalledTimes(1);
-    });
-
-    it('when not found', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-      await expect(storage.confirm('XYZ')).rejects.toEqual(new NotFoundError());
+  describe('confirmVideo', () => {
+    it('successfully confirmed', async () => {
+      await storage.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID');
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        FunctionName: 'media-converter_confirm-video',
+        Payload: JSON.stringify({
+          region: 'ap-northeast-1',
+          bucket: 'graphql-tower',
+          from: 'uploader/XYZ',
+          target: 'media/VIDEO_UPLOAD_UUID',
+          accessKeyId: 'username',
+          secretAccessKey: 'secret_key',
+        }),
+      }));
       expect(promise).toHaveBeenCalledTimes(1);
-      expect(pipe).toHaveBeenCalledTimes(0);
+    });
+
+    it('successfully confirmed with cdn', async () => {
+      const storageForCdn = new StorageS3({
+        STORAGE_URL: 's3://username:secret_key@ap-northeast-1/graphql-tower',
+        CDN_ID: 'AWS_CDN_ID',
+      });
+      await storageForCdn.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID', ['/media/MEDIA_ID']);
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        FunctionName: 'media-converter_confirm-video',
+        Payload: JSON.stringify({
+          region: 'ap-northeast-1',
+          bucket: 'graphql-tower',
+          from: 'uploader/XYZ',
+          target: 'media/VIDEO_UPLOAD_UUID',
+          accessKeyId: 'username',
+          secretAccessKey: 'secret_key',
+          cdnId: 'AWS_CDN_ID',
+          cdnPaths: ['/media/MEDIA_ID'],
+        }),
+      }));
+      expect(promise).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('fetchCover', () => {
     it('successfully fetch', async () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-      pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.jpg`));
 
-      const stream = await storage.fetchCover('IMAGE_KEY');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
+      await storage.fetchCover('IMAGE_KEY');
 
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(pipe.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/IMAGE_KEY_cover', method: 'getObject',
+      }));
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'upload',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'getObject',
+      }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(pipe).toHaveBeenCalledTimes(1);
+      expect(createReadStream).toHaveBeenCalledTimes(2);
     });
 
     it('successfully fetch use cache', async () => {
-      const stream = await storage.fetchCover('IMAGE_KEY');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
+      await storage.fetchCover('IMAGE_KEY');
 
-      expect(promise.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'getObject',
+      }));
       expect(promise).toHaveBeenCalledTimes(1);
-      expect(pipe).toHaveBeenCalledTimes(0);
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
 
     it('when input width and height', async () => {
-      const stream = await storage.fetchCover('IMAGE_KEY', '2048', '2048');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(1);
+      await storage.fetchCover('IMAGE_KEY', '2048', '2048');
+
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'getObject',
+      }));
     });
   });
 
   describe('fetchPreCover', () => {
     it('successfully fetch', async () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-      pipe.mockReturnValueOnce('IMAGE_STREAM_BODY');
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.png`));
 
-      const stream = await storage.fetchPreCover('IMAGE_KEY');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
+      await storage.fetchPreCover('IMAGE_KEY');
 
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(pipe.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_128x', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/IMAGE_KEY_cover', method: 'getObject',
+      }));
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_128x', method: 'upload',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_128x', method: 'getObject',
+      }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(pipe).toHaveBeenCalledTimes(1);
+      expect(createReadStream).toHaveBeenCalledTimes(2);
     });
 
     it('successfully fetch use cache', async () => {
-      const stream = await storage.fetchPreCover('IMAGE_KEY');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
+      await storage.fetchPreCover('IMAGE_KEY');
 
-      expect(promise.mock.calls).toMatchSnapshot();
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_128x', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_128x', method: 'getObject',
+      }));
       expect(promise).toHaveBeenCalledTimes(1);
-      expect(pipe).toHaveBeenCalledTimes(0);
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
 
     it('when input width and height', async () => {
-      const stream = await storage.fetchPreCover('IMAGE_KEY', '2048', '2048');
-      expect(stream).toEqual({ pipe: expect.any(Function) });
-      expect(promise.mock.calls).toMatchSnapshot();
-      expect(promise).toHaveBeenCalledTimes(1);
+      await storage.fetchPreCover('IMAGE_KEY', '2048', '2048');
+
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_2048x2048', method: 'headObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'cache/IMAGE_KEY_precover_2048x2048', method: 'getObject',
+      }));
     });
   });
 
