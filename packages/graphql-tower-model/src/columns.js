@@ -1,5 +1,8 @@
-import _ from 'lodash';
 import crypto from 'crypto';
+import set from 'lodash/set';
+import map from 'lodash/map';
+import isPlainObject from 'lodash/isPlainObject';
+import identity from 'lodash/identity';
 import { GoneDataError } from 'graphql-tower-errors';
 
 function isType(method) {
@@ -50,7 +53,7 @@ export class ValueColumn {
   }
 
   set(value, data) {
-    _.set(data, this._.name, this.fromModel(value));
+    set(data, this._.name, this.fromModel(value));
   }
 
   get(data, model) {
@@ -73,7 +76,7 @@ export class HashColumn extends ValueColumn {
 
 export class DateColumn extends ValueColumn {
   constructor(type, ...args) {
-    super(_.identity, ...args);
+    super(identity, ...args);
   }
 
   set(value, ...args) {
@@ -112,11 +115,11 @@ export class PrimaryKeyColumn extends ValueColumn {
 
 export class ListColumn extends ValueColumn {
   set(values, data) {
-    _.set(data, this._.name, _.map(values, this.fromModel.bind(this)));
+    set(data, this._.name, map(values, this.fromModel.bind(this)));
   }
 
   get(data, model) {
-    return _.map(data[this._.name], value => this.toModel(value, model));
+    return map(data[this._.name], value => this.toModel(value, model));
   }
 }
 
@@ -136,7 +139,7 @@ export class ArchiveColumn {
   }
 
   getArchive(data) {
-    if (!_.isPlainObject(data[this._.column])) {
+    if (!isPlainObject(data[this._.column])) {
       data[this._.column] = {}; // eslint-disable-line
     }
 
@@ -152,13 +155,30 @@ export class ArchiveColumn {
   }
 }
 
-export class ReadOnlyColumn extends ValueColumn {
-  constructor(...args) {
-    super(...args);
+export class EnumColumn extends ValueColumn {
+  constructor(items, ...args) {
+    super(Number, ...args);
+    this.items = items;
+  }
 
-    this.set = _.identity;
-    if (!isType(args[0])) {
-      this.get = args[0].bind(this);
+  set(value, data) {
+    const index = this.items.indexOf(value);
+    super.set(index < 0 ? null : index, data);
+  }
+
+  get(data, model) {
+    const index = super.get(data, model);
+    return this.items[index] || null;
+  }
+}
+
+export class ReadOnlyColumn extends ValueColumn {
+  constructor(getter, ...args) {
+    super(getter, ...args);
+
+    this.set = identity;
+    if (!isType(getter)) {
+      this.get = getter.bind(this);
     }
   }
 }

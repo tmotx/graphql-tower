@@ -10,6 +10,7 @@ import Model, {
   ListColumn,
   ArchiveColumn,
   CustomColumn,
+  EnumColumn,
   ReadOnlyColumn,
   MixedModel,
 } from '../';
@@ -62,6 +63,7 @@ class Column extends Model {
     password: new HashColumn(),
     birthday: new DateColumn(),
     checkAt: new DateTimeColumn(),
+    size: new EnumColumn(['large', 'medium', 'small']),
     itemIds: new ListColumn(User),
     archiveName: new ArchiveColumn(),
     archiveNameAlias: new ArchiveColumn(new ValueColumn(String, 'nameAliasNickname')),
@@ -96,6 +98,7 @@ describe('Columns', () => {
       table.text('password');
       table.date('birthday');
       table.datetime('check_at');
+      table.specificType('size', 'smallint');
       table.specificType('item_ids', 'integer[]');
       table.jsonb('archive');
       table.jsonb('other');
@@ -129,6 +132,7 @@ describe('Columns', () => {
     model.checkAt = null;
     model.itemIds = null;
     model.nothing = null;
+    model.size = null;
 
     expect(model.name).toBeNull();
     expect(model.nameAlias).toBeNull();
@@ -140,6 +144,7 @@ describe('Columns', () => {
     expect(model.checkAt).toBeNull();
     expect(model.itemIds).toEqual([]);
     expect(model.nothing).toBeNull();
+    expect(model.size).toBeNull();
   });
 
   it('when model not found', async () => {
@@ -163,6 +168,7 @@ describe('Columns', () => {
       birthday: new Date('2020-01-01'),
       checkAt: new Date('2020-04-01T10:00:00'),
       itemIds: [2, 3],
+      size: 'medium',
       archiveName: 'my archive name',
       archiveNameAlias: 'my archive nickname',
       archiveTotal: 2049,
@@ -196,6 +202,7 @@ describe('Columns', () => {
     expect(model.password).not.toBeNull();
     expect(model.birthday).toBe('2020-01-01');
     expect(model.checkAt).toEqual(new Date('2020-04-01T10:00:00'));
+    expect(model.size).toBe('medium');
     expect(_.map(model.itemIds, ({ nativeId }) => nativeId)).toEqual([2, 3]);
     expect(Promise.all(model.itemIds)).resolves.toEqual([
       expect.objectContaining({ id: toGlobalId('User', '2') }),
