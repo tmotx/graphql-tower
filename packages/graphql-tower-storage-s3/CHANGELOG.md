@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.7"></a>
+## [3.31.7](https://github.com/tmotx/graphql-tower/compare/v3.31.6...v3.31.7) (2018-01-12)
+
+
+### Bug Fixes
+
+* **storage-s3:** use magic number to check file type ([dc9fcf7](https://github.com/tmotx/graphql-tower/commit/dc9fcf7))
+
+
+
+
 <a name="3.21.3"></a>
 ## [3.21.3](https://github.com/tmotx/graphql-tower/compare/v3.21.2...v3.21.3) (2017-12-05)
 
