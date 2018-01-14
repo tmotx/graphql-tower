@@ -2,9 +2,9 @@
   "name": "graphql-tower-helper",
   "version": "3.31.1",
   "description": "",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
-    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
+    "build": "rm -rf ./*.js && babel src --ignore __tests__ --out-dir ./"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
   "files": [
-    "lib"
+    "lib",
+    "*.js"
   ],
   "devDependencies": {
     "graphql-tower-errors": "^3.21.3"
