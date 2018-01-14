@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.31.9"></a>
+## [3.31.9](https://github.com/tmotx/graphql-tower/compare/v3.31.8...v3.31.9) (2018-01-14)
+
+
+
+
+**Note:** Version bump only for package graphql-tower-apollo
+
 <a name="3.31.5"></a>
 ## [3.31.5](https://github.com/tmotx/graphql-tower/compare/v3.31.4...v3.31.5) (2018-01-06)
 

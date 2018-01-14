@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-helper",
-  "version": "3.31.1",
+  "version": "3.31.9",
   "description": "",
   "main": "index.js",
   "scripts": {
