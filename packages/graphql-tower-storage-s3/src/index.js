@@ -67,7 +67,6 @@ export default class StorageS3 {
         readStream.on('readable', () => resolve(readStream.read()));
         readStream.on('error', reject);
       });
-      readStream.close();
 
       const { ext, mime } = fileType(chunk);
       if (['png', 'jpg', 'gif', 'mp4', 'mov'].indexOf(ext) > -1) {
