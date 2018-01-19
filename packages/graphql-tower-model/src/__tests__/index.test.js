@@ -450,27 +450,29 @@ describe('model', () => {
       });
     });
 
-    it('fetch', async () => {
-      const model = new Default({ name: 'name is one', data: { xyz: 1 } });
-      await model.fetch();
-      expect(model.valueOf()).toMatchSnapshot();
-      expect(client).toMatchSnapshot();
+    describe('fetch', () => {
+      it('fetch one', async () => {
+        const model = new Default({ name: 'name is one', data: { xyz: 1 } });
+        await model.fetch();
+        expect(model.valueOf()).toMatchSnapshot();
+        expect(client).toMatchSnapshot();
 
-      await expect((new Default({ name: 'one' })).fetch())
-        .resolves.toEqual(null);
-      await expect((new Default({ name: 'one' })).fetch(NotFoundError))
-        .rejects.toEqual(new NotFoundError());
-    });
+        await expect((new Default({ name: 'one' })).fetch())
+          .resolves.toEqual(null);
+        await expect((new Default({ name: 'one' })).fetch(NotFoundError))
+          .rejects.toEqual(new NotFoundError());
+      });
 
-    it('fetch with where', async () => {
-      const model = new Default();
-      model.where({ nickName: 'nick name is one' });
-      model.where(function where() { return this.where('name', 'name is one'); });
-      model.orderBy('createdAt');
-      model.whereRaw('data IS NULL');
-      await model.fetch();
-      expect(model.valueOf()).toMatchSnapshot();
-      expect(client).toMatchSnapshot();
+      it('with where', async () => {
+        const model = new Default();
+        model.where({ nickName: 'nick name is one' });
+        model.where(function where() { return this.where('name', 'name is one'); });
+        model.orderBy('createdAt');
+        model.whereRaw('data IS NULL');
+        await model.fetch();
+        expect(model.valueOf()).toMatchSnapshot();
+        expect(client).toMatchSnapshot();
+      });
     });
 
     it('fetchOrInsert', async () => {
@@ -500,6 +502,19 @@ describe('model', () => {
         model.cache = { prime: jest.fn() };
         await model.fetchAll();
         expect(model.cache.prime).toHaveBeenCalledWith(toGlobalId('Default', 1), expect.anything());
+      });
+    });
+
+    describe('fetchCount', () => {
+      it('fetch 1', async () => {
+        const model = new Default({ name: 'name is one' });
+        expect(await model.fetchCount()).toBe(1);
+      });
+
+      it('fetch 0', async () => {
+        const model = new Default({ name: 'name is XYZ' });
+        await expect(model.fetchCount(NotFoundError))
+          .rejects.toEqual(new NotFoundError());
       });
     });
 

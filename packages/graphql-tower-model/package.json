@@ -27,7 +27,7 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "knex": "^0.13.0"
+    "knex": "^0.14.2"
   },
   "devDependencies": {
     "graphql-tower-queries": "^3.29.2"

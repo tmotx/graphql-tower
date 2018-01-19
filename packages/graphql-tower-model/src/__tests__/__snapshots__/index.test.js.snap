@@ -45,7 +45,7 @@ Array [
 ]
 `;
 
-exports[`model model fetch 1`] = `
+exports[`model model fetch fetch one 1`] = `
 Object {
   "createdAt": null,
   "createdBy": null,
@@ -64,9 +64,9 @@ Object {
 }
 `;
 
-exports[`model model fetch 2`] = `
+exports[`model model fetch fetch one 2`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is one limit 1",
+  "select * from default_table where deleted_at is null and name = name is one limit 1",
 ]
 `;
 
@@ -91,7 +91,7 @@ Object {
 
 exports[`model model fetch with where 2`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from default_table where nick_name = nick name is one and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
+  "select * from default_table where nick_name = nick name is one and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
 ]
 `;
 
@@ -109,8 +109,8 @@ Array [
 
 exports[`model model fetchOrInsert 1`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is one limit 1",
-  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null and name = name is new limit 1",
+  "select * from default_table where deleted_at is null and name = name is one limit 1",
+  "select * from default_table where deleted_at is null and name = name is new limit 1",
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, name is new, name is new, DATE, 10) returning id",
 ]
 `;
@@ -196,15 +196,15 @@ Array [
 exports[`model model update of save has operator 1`] = `
 Array [
   "select * from default_table where id in (1) and deleted_at is null",
-  "update default_table set keyword = name is update, name = name is update, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 1",
-  "update default_table set keyword = name is action, name = name is action, updated_at = DATE, updated_by = 20 where deleted_at is null and id = 1",
+  "update default_table set updated_by = 20, updated_at = DATE, keyword = name is update, name = name is update where deleted_at is null and id = 1",
+  "update default_table set updated_by = 20, updated_at = DATE, keyword = name is action, name = name is action where deleted_at is null and id = 1",
 ]
 `;
 
 exports[`model model update of save no operator 1`] = `
 Array [
   "select * from default_table where id in (1) and deleted_at is null",
-  "update default_table set keyword = null, name = name is no operator update, updated_at = null, updated_by = null where deleted_at is null and id = 1",
+  "update default_table set updated_by = null, updated_at = null, keyword = null, name = name is no operator update where deleted_at is null and id = 1",
 ]
 `;
 

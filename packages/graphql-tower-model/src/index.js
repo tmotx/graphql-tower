@@ -284,7 +284,9 @@ export default class Model {
     const { format, database } = this.constructor;
     const { cache } = this;
 
-    queryBuilder.select(database.raw('*, count(*) OVER() AS total_count'));
+    if (_.get(queryBuilder, ['_single', 'limit']) !== 1) {
+      queryBuilder.select(database.raw('*, count(*) OVER() AS total_count'));
+    }
     const collection = _.map(await queryBuilder, format.bind(this.constructor));
 
     if (collection.length < 1) {
@@ -381,6 +383,13 @@ export default class Model {
     );
 
     return data;
+  }
+
+  async fetchCount(NotFoundError) {
+    const results = await this.query.count('*');
+    const count = parseInt(results[0].count, 10);
+    assertResult(count, NotFoundError);
+    return count;
   }
 
   async insert(operator, tmpData) {
