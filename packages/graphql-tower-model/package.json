@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-model",
-  "version": "3.31.9",
+  "version": "3.32.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
