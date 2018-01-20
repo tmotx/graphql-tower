@@ -3,6 +3,8 @@ import assign from 'lodash/assign';
 import pick from 'lodash/pick';
 import Query from './Query';
 
+const connectionTypes = new Map();
+
 export default class QueryWithConnection extends Query {
   static async resolve(...args) {
     const results = await this._.resolve(...args);
@@ -30,18 +32,23 @@ export default class QueryWithConnection extends Query {
       enumerable: true,
       set: (type) => {
         this._.node = type;
-        this._.type = new GraphQLObjectType({
-          name: `${this.name}Connection`,
-          fields: {
-            totalCount: { type: GraphQLInt },
-            nodes: {
-              type: new GraphQLList(type),
-              resolve: payload => payload,
-            },
-          },
-        });
       },
-      get: () => this._.type,
+      get: () => {
+        if (!connectionTypes.has(this.name) && this._.node) {
+          connectionTypes.set(this.name, new GraphQLObjectType({
+            name: `${this.name}Connection`,
+            fields: {
+              totalCount: { type: GraphQLInt },
+              nodes: {
+                type: new GraphQLList(this._.node),
+                resolve: payload => payload,
+              },
+            },
+          }));
+        }
+
+        return connectionTypes.get(this.name);
+      },
     });
   }
 }

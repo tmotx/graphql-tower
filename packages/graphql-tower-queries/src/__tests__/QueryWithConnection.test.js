@@ -25,7 +25,10 @@ describe('QueryWithConnection', () => {
     const schema = new GraphQLSchema({
       query: new GraphQLObjectType({
         name: 'Query',
-        fields: { connection: query },
+        fields: {
+          connection: query,
+          multiQuery: new QueryConnection(),
+        },
       }),
     });
 

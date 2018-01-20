@@ -24,7 +24,6 @@ QueryPagination {
     "parentArgs": undefined,
     "resolve": [Function],
     "subscribe": [Function],
-    "type": "QueryPaginationConnection",
   },
   "args": Object {
     "after": Object {
