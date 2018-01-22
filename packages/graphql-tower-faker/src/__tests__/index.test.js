@@ -35,7 +35,7 @@ import {
   GraphQLInheritanceType,
 } from 'graphql-tower-types';
 import { isGlobalId, fromGlobalId, toGlobalId } from 'graphql-tower-global-id';
-import faker from '../';
+import faker, { fakerSchema } from '../';
 
 jest.useFakeTimers();
 jest.mock('opn', () => jest.fn());
@@ -240,14 +240,7 @@ describe('faker', () => {
       .toEqual({ value: { data: { onMessageAdd: expect.any(Number) } }, done: false });
   });
 
-  it('run on testing', async () => {
-    faker(schema, { test: true });
-    expect(console.log).toHaveBeenCalledTimes(2);
-
-    await new Promise(process.nextTick);
-    expect(console.log).toHaveBeenCalledTimes(3);
-
-    jest.runOnlyPendingTimers();
-    expect(opn).toHaveBeenCalledTimes(1);
+  it('fakerSchema', async () => {
+    await fakerSchema(schema);
   });
 });

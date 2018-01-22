@@ -73,7 +73,7 @@ const defaultTypes = _.mapKeys([
   GraphQLJSON,
 ], type => type.name);
 
-export default function (schema, options = {}) {
+export function fakerSchema(schema, options = {}) {
   const pubsub = new PubSub();
   const typeFakers = _.assign({}, defaultTypeFakers, options.typeFakers);
   const types = _.assign({}, defaultTypes, options.types);
@@ -142,11 +142,17 @@ export default function (schema, options = {}) {
     subscriptionTimer();
   }, 1000);
 
+  subscriptionTimer();
+
+  return schema;
+}
+
+export default function fakeServer(schema, options = {}) {
   const app = express();
   const server = http.createServer(app);
 
   app.use(cors());
-  app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
+  app.use('/graphql', graphqlHTTP({ schema: fakerSchema(schema, options), graphiql: true }));
 
   SubscriptionServer.create(
     { schema, execute, subscribe },
@@ -155,12 +161,6 @@ export default function (schema, options = {}) {
 
   const { port } = options;
   const listener = server.listen(port, () => {
-    listener.port = listener.address().port;
-
-    subscriptionTimer();
-
-    if (options.test) return;
-
     console.log(`
       ${chalk.green('✔')} Your GraphQL Fake API is ready to use 🚀
       Here are your links:
