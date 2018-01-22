@@ -239,4 +239,15 @@ describe('faker', () => {
     expect(await results.next())
       .toEqual({ value: { data: { onMessageAdd: expect.any(Number) } }, done: false });
   });
+
+  it('run on testing', async () => {
+    faker(schema, { test: true });
+    expect(console.log).toHaveBeenCalledTimes(2);
+
+    await new Promise(process.nextTick);
+    expect(console.log).toHaveBeenCalledTimes(3);
+
+    jest.runOnlyPendingTimers();
+    expect(opn).toHaveBeenCalledTimes(1);
+  });
 });

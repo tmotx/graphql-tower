@@ -155,6 +155,12 @@ export default function (schema, options = {}) {
 
   const { port } = options;
   const listener = server.listen(port, () => {
+    listener.port = listener.address().port;
+
+    subscriptionTimer();
+
+    if (options.test) return;
+
     console.log(`
       ${chalk.green('✔')} Your GraphQL Fake API is ready to use 🚀
       Here are your links:
@@ -162,8 +168,6 @@ export default function (schema, options = {}) {
       ${chalk.blue('❯')} GraphQL API:\t http://localhost:${listener.address().port}/graphql
       ${chalk.blue('❯')} WebSocket API:\t ws://localhost:${listener.address().port}/graphql
     `);
-
-    subscriptionTimer();
 
     setTimeout(() => opn(`http://localhost:${listener.address().port}/graphql`), 500);
   });
