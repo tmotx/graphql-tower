@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.32.4"></a>
+## [3.32.4](https://github.com/tmotx/graphql-tower/compare/v3.32.3...v3.32.4) (2018-01-26)
+
+
+### Bug Fixes
+
+* **model:** added limit method ([4d64363](https://github.com/tmotx/graphql-tower/commit/4d64363))
+
+
+
+
 <a name="3.32.3"></a>
 ## [3.32.3](https://github.com/tmotx/graphql-tower/compare/v3.32.2...v3.32.3) (2018-01-22)
 
