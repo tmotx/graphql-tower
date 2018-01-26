@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.32.5"></a>
+## [3.32.5](https://github.com/tmotx/graphql-tower/compare/v3.32.4...v3.32.5) (2018-01-26)
+
+
+### Bug Fixes
+
+* **model:** support limit on fetchAll ([e4637ab](https://github.com/tmotx/graphql-tower/commit/e4637ab))
+
+
+
+
 <a name="3.32.4"></a>
 ## [3.32.4](https://github.com/tmotx/graphql-tower/compare/v3.32.3...v3.32.4) (2018-01-26)
 
