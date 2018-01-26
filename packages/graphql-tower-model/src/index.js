@@ -377,10 +377,11 @@ export default class Model {
   }
 
   async fetchAll(NotFoundError) {
-    const data = await this.loadQuery(
-      this.query.limit(1000),
-      NotFoundError,
-    );
+    if (_.get(this.queryBuilder, ['_single', 'limit']) === undefined) {
+      this.limit(1000);
+    }
+
+    const data = await this.loadQuery(this.query, NotFoundError);
 
     return data;
   }
