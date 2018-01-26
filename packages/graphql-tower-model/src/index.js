@@ -569,7 +569,7 @@ _.forEach([
 });
 
 _.forEach([
-  'whereRaw', 'orderByRaw', 'offset',
+  'whereRaw', 'orderByRaw', 'offset', 'limit',
 ], (key) => {
   Model.prototype[key] = function queryBuilderRaw(...args) {
     this.queryBuilder[key](...args);
