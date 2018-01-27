@@ -280,14 +280,14 @@ export default class Model {
     return this.valueOf(idAttribute);
   }
 
-  async loadQuery(queryBuilder, NotFoundError) {
+  async loadQuery(query, NotFoundError) {
     const { format, database } = this.constructor;
     const { cache } = this;
 
-    if (_.get(queryBuilder, ['_single', 'limit']) !== 1) {
-      queryBuilder.select(database.raw('*, count(*) OVER() AS total_count'));
+    if (_.get(query, ['_single', 'limit']) !== 1) {
+      query.select(database.raw('*, count(*) OVER() AS total_count'));
     }
-    const collection = _.map(await queryBuilder, format.bind(this.constructor));
+    const collection = _.map(await query, format.bind(this.constructor));
 
     if (collection.length < 1) {
       if (NotFoundError) throw new NotFoundError();
@@ -303,7 +303,7 @@ export default class Model {
     });
 
     results.totalCount = parseInt(totalCount, 10);
-    results.offset = _.get(queryBuilder, ['_single', 'offset'], 0);
+    results.offset = _.get(query, ['_single', 'offset'], 0);
     return results;
   }
 
@@ -377,13 +377,20 @@ export default class Model {
   }
 
   async fetchAll(NotFoundError) {
-    if (_.get(this.queryBuilder, ['_single', 'limit']) === undefined) {
-      this.limit(1000);
+    const { query } = this;
+    if (_.get(query, ['_single', 'limit']) === undefined) {
+      query.limit(1000);
     }
 
-    const data = await this.loadQuery(this.query, NotFoundError);
+    const data = await this.loadQuery(query, NotFoundError);
 
     return data;
+  }
+
+  async fetchPage({ offset, first } = {}, NotFoundError) {
+    if (offset) this.offset(offset);
+    if (first) this.limit(first);
+    return this.fetchAll(NotFoundError);
   }
 
   async fetchCount(NotFoundError) {

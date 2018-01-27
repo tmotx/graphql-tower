@@ -505,6 +505,24 @@ describe('model', () => {
       });
     });
 
+    describe('fetchPage', () => {
+      it('offset and first', async () => {
+        const model = new Default();
+        const results = await model.fetchPage({ offset: 1, first: 2 });
+        expect(results.totalCount).toBe(2);
+        expect(_.map(results, data => data.name)).toMatchSnapshot();
+        expect(client).toMatchSnapshot();
+      });
+
+      it('not set', async () => {
+        const model = new Default();
+        const results = await model.fetchPage();
+        expect(results.totalCount).toBe(2);
+        expect(_.map(results, data => data.name)).toMatchSnapshot();
+        expect(client).toMatchSnapshot();
+      });
+    });
+
     describe('fetchCount', () => {
       it('fetch 1', async () => {
         const model = new Default({ name: 'name is one' });

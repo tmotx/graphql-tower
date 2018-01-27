@@ -115,6 +115,31 @@ Array [
 ]
 `;
 
+exports[`model model fetchPage not set 1`] = `
+Array [
+  "name is one",
+  "name is two",
+]
+`;
+
+exports[`model model fetchPage not set 2`] = `
+Array [
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null limit 1000",
+]
+`;
+
+exports[`model model fetchPage offset and first 1`] = `
+Array [
+  "name is two",
+]
+`;
+
+exports[`model model fetchPage offset and first 2`] = `
+Array [
+  "select *, count(*) OVER() AS total_count from default_table where deleted_at is null limit 2 offset 1",
+]
+`;
+
 exports[`model model insert of save has operator 1`] = `
 Array [
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new is insert, new is insert, DATE, 10) returning id",

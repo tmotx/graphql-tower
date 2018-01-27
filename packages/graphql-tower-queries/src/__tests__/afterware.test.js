@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { GraphQLInt } from 'graphql';
 import QueryWithConnection from '../QueryWithConnection';
-import { pagination } from '../';
+import { pagination, collections } from '../';
 
 describe('afterware', () => {
   it('pagination', async () => {
@@ -40,5 +40,19 @@ describe('afterware', () => {
     resolve.mockImplementation(() => _.range(1, 2000).map(cursor => ({ cursor: `${cursor}` })));
     expect(await query.resolve({}, { after: '120', first: 100 })).toEqual(_.range(120, 220).map(cursor => ({ cursor: `${cursor}` })));
     expect(await query.resolve({}, { after: '3000', first: 200 })).toEqual(_.range(1, 201).map(cursor => ({ cursor: `${cursor}` })));
+  });
+
+  it('collections', async () => {
+    const fetchPage = jest.fn(() => _.range(1, 100));
+
+    const QueryCollections = class extends QueryWithConnection {
+      type = GraphQLInt;
+      resolve = async () => ({ fetchPage });
+      afterware = [collections];
+    };
+    const query = new QueryCollections();
+
+    expect(await query.resolve({}, { offset: 100, first: 100 })).toEqual(_.range(1, 100));
+    expect(fetchPage).toHaveBeenCalledWith({ offset: 100, first: 100 });
   });
 });

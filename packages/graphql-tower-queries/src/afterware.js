@@ -1,10 +1,11 @@
 import _ from 'lodash';
+import pick from 'lodash/pick';
 
 export function pagination(payload, args, context, info, results) {
   const { first, after } = args;
 
-  const index = after &&
-    _.findIndex(results, ({ id, cursor }) => (id === after || cursor === after));
+  const index = after && _.findIndex(results, ({ id, cursor }) =>
+    (id === after || cursor === after));
 
   const offset = _.sum([
     index > 0 ? index : 0,
@@ -15,4 +16,6 @@ export function pagination(payload, args, context, info, results) {
   return _.take(_.drop(results, offset), first || 1000);
 }
 
-export { pagination as default };
+export function collections(payload, args, context, info, results) {
+  return results.fetchPage(pick(args, ['after', 'offset', 'first']));
+}
