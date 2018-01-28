@@ -113,9 +113,27 @@ export default class Model {
     return model.forge(attributes);
   }
 
-  static batchInsert(rows, chunkSize) {
+  static async batchInsert(data, operator) {
+    const { hasTimestamps, hasOperator } = this;
+
+    let rows = data;
+
+    if (hasOperator && !operator) {
+      throw new Error('operator is required');
+    }
+
+    if (hasOperator) {
+      const by = Model.fromModel(operator);
+      rows = _.map(rows, row => ({ ...row, created_by: by, updated_by: by }));
+    }
+
+    if (hasTimestamps) {
+      const at = new Date();
+      rows = _.map(rows, row => ({ ...row, created_at: at, updated_at: at }));
+    }
+
     return this.database
-      .batchInsert(this.tableName, rows, chunkSize)
+      .batchInsert(this.tableName, rows)
       .returning(_.snakeCase(this.idAttribute));
   }
 

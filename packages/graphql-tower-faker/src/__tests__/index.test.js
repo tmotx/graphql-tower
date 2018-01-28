@@ -186,7 +186,7 @@ describe('faker', () => {
     expect(mobile).toEqual(expect.stringMatching(/^8860{4}[0-9]{9}$/));
     expect(json).toEqual(expect.any(Object));
     expect(email).toEqual(expect.stringMatching(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/));
-    expect(['male', 'female']).toContain(gender);
+    expect(['male', 'female', 'other']).toContain(gender);
     expect(age).toEqual(expect.any(Number));
     expect(percent).toEqual(expect.any(Number));
     expect(list).toEqual(expect.arrayContaining([expect.any(Number)]));

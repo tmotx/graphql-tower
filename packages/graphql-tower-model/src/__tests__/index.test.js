@@ -92,6 +92,20 @@ class DirectDelete extends NoOperator {
 class BatchInsert extends Model {
   static database = database;
 
+  static hasOperator = true;
+
+  static tableName = 'batch_insert';
+
+  static columns = {
+    name: new ValueColumn(),
+  }
+}
+
+class NoBatchInsert extends Model {
+  static database = database;
+
+  static hasTimestamps = false;
+
   static tableName = 'batch_insert';
 
   static columns = {
@@ -125,6 +139,10 @@ describe('model', () => {
     await database.schema.createTable('batch_insert', (table) => {
       table.uuid('id').primary().defaultTo(database.raw('uuid_generate_v1mc()'));
       table.string('name');
+      table.integer('created_by');
+      table.integer('updated_by');
+      table.timestamp('created_at');
+      table.timestamp('updated_at');
     });
   });
 
@@ -176,9 +194,22 @@ describe('model', () => {
       expect(Default.raw('name = ?', [10]).toString()).toBe('name = 10');
     });
 
-    it('batchInsert', async () => {
-      const results = await BatchInsert.batchInsert(_.map(_.range(1, 10000), idx => ({ name: `x${idx}` })));
-      expect(results.length).toBe(9999);
+    describe('batchInsert', () => {
+      it('successfully insert', async () => {
+        const results = await BatchInsert.batchInsert(_.map(_.range(1, 10000), idx => ({ name: `x${idx}` })), '99');
+        expect(results.length).toBe(9999);
+      });
+
+      it('operator is required', async () => {
+        await expect(BatchInsert.batchInsert(
+          _.map(_.range(1, 100), idx => ({ name: `x${idx}` })),
+        )).rejects.toEqual(new Error('operator is required'));
+      });
+
+      it('successfully insert when no operator', async () => {
+        const results = await NoBatchInsert.batchInsert(_.map(_.range(1, 100), idx => ({ name: `x${idx}` })));
+        expect(results.length).toBe(99);
+      });
     });
 
     describe('toGlobalId & fromGlobalId', () => {
