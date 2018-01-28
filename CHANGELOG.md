@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.32.7"></a>
+## [3.32.7](https://github.com/tmotx/graphql-tower/compare/v3.32.6...v3.32.7) (2018-01-28)
+
+
+### Bug Fixes
+
+* **model:** added timestamps and operator ([a6454c8](https://github.com/tmotx/graphql-tower/commit/a6454c8))
+
+
+
+
 <a name="3.32.6"></a>
 ## [3.32.6](https://github.com/tmotx/graphql-tower/compare/v3.32.5...v3.32.6) (2018-01-27)
 
