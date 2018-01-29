@@ -3,6 +3,10 @@ import GraphQLParserType from './GraphQLParserType';
 
 export default new GraphQLParserType({
   name: 'JSON',
+  serialize(value) {
+    if (isObject(value)) return JSON.stringify(value);
+    return value;
+  },
   parseValue(value) {
     if (isObject(value)) return value;
     try {

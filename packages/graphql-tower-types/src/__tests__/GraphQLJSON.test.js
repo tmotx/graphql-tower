@@ -11,11 +11,11 @@ describe('GraphQLJSON', () => {
     await _.reduce([{
       value,
       query: 'query { value }',
-      result: { data: { value } },
+      result: { data: { value: JSON.stringify(value) } },
     }, {
       value: JSON.stringify(value),
       query: 'query { value }',
-      result: { data: { value } },
+      result: { data: { value: JSON.stringify(value) } },
     }, {
       query: `query { value (input: "${JSON.stringify(value).replace(/"/g, '\\"')}") }`,
       calledWith: [undefined, { input: value }, undefined, expect.anything()],
