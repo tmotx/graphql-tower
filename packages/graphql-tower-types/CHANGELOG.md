@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.32.10"></a>
+## [3.32.10](https://github.com/tmotx/graphql-tower/compare/v3.32.9...v3.32.10) (2018-01-29)
+
+
+### Bug Fixes
+
+* **types:** fix JSON type ([60df51f](https://github.com/tmotx/graphql-tower/commit/60df51f))
+
+
+
+
 <a name="3.32.9"></a>
 ## [3.32.9](https://github.com/tmotx/graphql-tower/compare/v3.32.8...v3.32.9) (2018-01-29)
 
