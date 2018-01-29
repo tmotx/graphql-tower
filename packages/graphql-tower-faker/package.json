@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-faker",
-  "version": "3.32.7",
+  "version": "3.32.9",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "faker": "^4.1.0",
     "graphql-subscriptions": "^0.5.6",
     "graphql-tower-global-id": "^3.3.3",
-    "graphql-tower-types": "^3.32.6",
+    "graphql-tower-types": "^3.32.9",
     "lodash": "^4.17.4",
     "opn": "^5.1.0",
     "subscriptions-transport-ws": "^0.9.4"
