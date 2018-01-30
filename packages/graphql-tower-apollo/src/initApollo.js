@@ -75,13 +75,19 @@ function create(cache, {
   });
 
   Object.defineProperty(client, 'token', {
-    get: function GET() {
+    get() {
       if (client._token) return client._token;
       return localStorage.getItem('graphql-tower-token');
     },
-    set: function SET(token) {
+    set(token) {
       client._token = token;
       localStorage.setItem('graphql-tower-token', token);
+    },
+  });
+
+  Object.defineProperty(client, 'authorized', {
+    get() {
+      return Boolean(thunkAuthorization(context));
     },
   });
 

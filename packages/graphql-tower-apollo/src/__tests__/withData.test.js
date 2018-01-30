@@ -193,6 +193,7 @@ describe('withData', () => {
     it('init', async () => {
       expect(initApollo()).toMatchSnapshot();
       expect(initApollo()).toBe(initApollo());
+      expect(initApollo().authorized).toBe(false);
     });
 
     it('subscription', async () => {
@@ -207,6 +208,7 @@ describe('withData', () => {
 
       expect(subscribeSpy).toHaveBeenLastCalledWith(undefined, {}, { authorization: 'key of token' }, expect.anything());
       expect(subscribeSpy).toHaveBeenCalledTimes(1);
+      expect(client.authorized).toBe(true);
     });
 
     it('query', async () => {

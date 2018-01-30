@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pay2go successfully generate credentials 1`] = `
+Object {
+  "amount": 1000,
+  "checkValue": "980953c28ec39168b89790f3a42edfc2ceac23e5bcb0130fe30bdea13eafbc50",
+  "merchantId": "MS33234675",
+  "merchantOrderNo": "XXX",
+  "timeStamp": 1517249431575,
+  "version": "1.2",
+}
+`;

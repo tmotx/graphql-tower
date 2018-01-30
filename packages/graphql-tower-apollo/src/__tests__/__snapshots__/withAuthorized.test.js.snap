@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withAuthorized authorized 1`] = `
+<Component
+  client={
+    Object {
+      "authorized": true,
+    }
+  }
+/>
+`;
+
+exports[`withAuthorized no authorization 1`] = `""`;

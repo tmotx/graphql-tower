@@ -143,6 +143,8 @@ describe('helper', () => {
     expect(() => assertResult(false, Error)).toThrowError();
     expect(() => assertResult(undefined, Error)).toThrowError();
     expect(() => assertResult(null, Error)).toThrowError();
+    expect(() => assertResult(null, new Error())).toThrowError();
+    expect(() => assertResult(null, new TypeError())).toThrowError();
     expect(() => assertResult(null, NotFoundError)).toThrowError();
 
     expect(() => assertResult(1, Error)).not.toThrowError();
