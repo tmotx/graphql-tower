@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-payment",
-  "version": "3.21.3",
+  "version": "3.33.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -20,6 +20,6 @@
     "lib"
   ],
   "dependencies": {
-    "graphql-tower-helper": "^3.31.9"
+    "graphql-tower-helper": "^3.33.0"
   }
 }
