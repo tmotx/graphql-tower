@@ -10,7 +10,7 @@ window = {};
 describe('withAuthorized', () => {
   it('no authorization', async () => {
     const App = fp.compose(
-      withAuthorized('/login'),
+      withAuthorized({ redirect: '/login' }),
     )(() => <div />);
 
     window.location = '';
@@ -21,9 +21,22 @@ describe('withAuthorized', () => {
     expect(window.location).toBe('/login');
   });
 
+  it('disabled', async () => {
+    const App = fp.compose(
+      withAuthorized({ redirect: '/login', disabled: true }),
+    )(() => <div />);
+
+    window.location = '';
+
+    const app = shallow(<App />, { context: { client: {} } });
+
+    expect(app.diveTo('WithAuthorized(Component)')).toMatchSnapshot();
+    expect(window.location).toBe('');
+  });
+
   it('authorized', async () => {
     const App = fp.compose(
-      withAuthorized('/login'),
+      withAuthorized({ redirect: '/login' }),
     )(() => (<div />));
 
     window.location = '';

@@ -5,8 +5,8 @@ import thunk from 'graphql-tower-helper/thunk';
 import assertResult from 'graphql-tower-helper/assertResult';
 import { withApollo } from 'react-apollo';
 
-export default (redirection) => {
-  const thunkRedirection = thunk(redirection);
+export default (options) => {
+  const thunkOption = thunk(options || {});
   return Component => withApollo(class WithAuthorized extends React.Component {
     static displayName = wrapDisplayName(Component, 'WithAuthorized');
 
@@ -28,21 +28,26 @@ export default (redirection) => {
 
     onCheckAuthorized() {
       const { client } = this.props;
-      if (client.authorized) {
+      const { redirect, disabled } = thunkOption(this.props);
+
+      if (client.authorized || disabled) {
         this.setState({ authorized: true });
         return;
       }
 
-      const redirect = thunkRedirection(this.props);
       assertResult(redirect, new TypeError('redirect is required'));
       window.location = redirect;
     }
 
     render() {
+      const { disabled } = thunkOption(this.props);
       const { authorized } = this.state;
-      if (!authorized) return null;
 
-      return React.createElement(Component, this.props);
+      if (authorized || disabled) {
+        return React.createElement(Component, this.props);
+      }
+
+      return null;
     }
   });
 };

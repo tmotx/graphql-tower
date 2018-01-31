@@ -10,4 +10,10 @@ exports[`withAuthorized authorized 1`] = `
 />
 `;
 
+exports[`withAuthorized disabled 1`] = `
+<Component
+  client={Object {}}
+/>
+`;
+
 exports[`withAuthorized no authorization 1`] = `""`;
