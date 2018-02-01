@@ -2,6 +2,6 @@
 # yarn lockfile v1
 
 
-graphql-tower-helper@^3.31.9:
-  version "3.31.9"
-  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.31.9.tgz#37c22a37882140e64eb398b7454ac48601f72539"
+graphql-tower-helper@^3.33.0:
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.33.0.tgz#cd11765914452431fdda3eeaa3743d6deefe4290"

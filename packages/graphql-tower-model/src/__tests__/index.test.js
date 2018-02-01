@@ -498,7 +498,7 @@ describe('model', () => {
         const model = new Default();
         model.where({ nickName: 'nick name is one' });
         model.where(function where() { return this.where('name', 'name is one'); });
-        model.orderBy('createdAt');
+        model.orderBy(['createdAt']);
         model.whereRaw('data IS NULL');
         await model.fetch();
         expect(model.valueOf()).toMatchSnapshot();

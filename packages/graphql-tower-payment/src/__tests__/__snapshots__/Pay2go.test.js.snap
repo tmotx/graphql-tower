@@ -3,10 +3,41 @@
 exports[`pay2go successfully generate credentials 1`] = `
 Object {
   "amount": 1000,
-  "checkValue": "980953c28ec39168b89790f3a42edfc2ceac23e5bcb0130fe30bdea13eafbc50",
-  "merchantId": "MS33234675",
+  "checkValue": "B9F8E182BF41CF799B9DA464AC7FB8E063565FEA23E25C5D917B65D69BA81D3D",
+  "host": "https://ccore.spgateway.com/MPG/mpg_gateway",
+  "merchantId": "MS33224646",
   "merchantOrderNo": "XXX",
-  "timeStamp": 1517249431575,
-  "version": "1.2",
+  "timeStamp": 1517249431,
+  "version": "1.1",
+}
+`;
+
+exports[`pay2go verify callback successfully verify 1`] = `
+Object {
+  "amount": 2000,
+  "cardNumber": "400022******1111",
+  "escrowBank": "HNCB",
+  "ip": "59.120.140.103",
+  "merchantId": "MS33234675",
+  "merchantOrderNo": "ORDER1517492273987",
+  "paymentType": "CREDIT",
+  "status": true,
+  "tokenLife": "2022-04-30",
+  "tokenUseStatus": "1",
+  "tokenValue": "f6e1079b40f6409d456100d6d262f3b03f201b78e41c6e740e14cca7ffb8f201",
+  "tradeNo": "18020121400311277",
+}
+`;
+
+exports[`pay2go verify callback when transaction failed 1`] = `
+Object {
+  "amount": 2000,
+  "cardNumber": "400022******1111",
+  "ip": "59.120.140.103",
+  "merchantId": "MS33234675",
+  "merchantOrderNo": "ORDER1517492438108",
+  "paymentType": "CREDIT",
+  "status": false,
+  "tradeNo": "18020121410105996",
 }
 `;

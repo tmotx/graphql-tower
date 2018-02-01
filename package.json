@@ -4,6 +4,7 @@
   "description": "A package to easy use graphql for server",
   "main": "lib/index.js",
   "scripts": {
+    "dev-payment": "nodemon ./packages/graphql-tower-payment/src/__develop__/server.js --exec babel-node --ignore pages/*",
     "bootstrap": "rm -rf ./packages/*/node_modules/; yarn install && lerna bootstrap",
     "postbootstrap": "npm run build",
     "build": "lerna run -- build",
@@ -48,6 +49,7 @@
     "lerna": "^2.5.1",
     "luxon": "^0.2.10",
     "next": "^4.2.0",
+    "nodemon": "^1.14.11",
     "pg": "^7.4.1",
     "raf": "^3.4.0",
     "react": "^16.2.0",
@@ -73,6 +75,7 @@
     ]
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.0.0"
   }
 }
