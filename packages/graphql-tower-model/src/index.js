@@ -103,7 +103,10 @@ export default class Model {
   }
 
   static signifyBuilder(column) {
-    if (_.isPlainObject(column)) return this.signify(column);
+    if (_.isPlainObject(column)) {
+      return _.mapKeys(column, (value, key) => _.snakeCase(key));
+    }
+    if (_.isArray(column)) return _.map(column, _.snakeCase);
     if (_.isString(column)) return _.snakeCase(column);
     return column;
   }
