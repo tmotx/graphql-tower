@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.33.2"></a>
+## [3.33.2](https://github.com/tmotx/graphql-tower/compare/v3.33.1...v3.33.2) (2018-02-01)
+
+
+### Bug Fixes
+
+* **model:** fix signifyBuilder when column is array ([e137102](https://github.com/tmotx/graphql-tower/commit/e137102))
+
+
+
+
 <a name="3.33.0"></a>
 # [3.33.0](https://github.com/tmotx/graphql-tower/compare/v3.32.10...v3.33.0) (2018-01-30)
 
