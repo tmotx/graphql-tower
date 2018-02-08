@@ -1,14 +1,14 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_dataloader", "_columns", "__columns"] }] */
 
 import _ from 'lodash';
+import fp from 'lodash/fp';
 import DataLoader from 'dataloader';
 import crypto from 'crypto';
 import { thunk, combine, assertResult, batch } from 'graphql-tower-helper';
 import { isGlobalId, toGlobalId, fromGlobalId } from 'graphql-tower-global-id';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 
-_.unionKeys = collections => _.union(..._.map(collections, _.keys));
-_.cloneAndMerge = collections => _.assign(..._.map(collections, _.cloneDeep));
+const unionKeys = fp.compose(fp.flatten, fp.map(fp.keys));
 
 export * from './columns';
 export { default as MixedModel } from './MixedModel';
@@ -423,8 +423,8 @@ export default class Model {
 
   async insert(operator, tmpData) {
     const {
-      idAttribute,
       signify,
+      format,
       keywordAttribute,
       toKeyword,
       hasOperator,
@@ -435,7 +435,7 @@ export default class Model {
       throw new Error('operator is required');
     }
 
-    const values = _.cloneAndMerge([this.valueOf(), tmpData]);
+    const values = { ...this.valueOf(), ...tmpData };
 
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
 
@@ -448,13 +448,9 @@ export default class Model {
       values.updatedAt = values.createdAt;
     }
 
-    const [id] = await this.constructor.query
-      .insert(signify(values))
-      .returning(_.snakeCase(idAttribute));
+    const [row] = await this.constructor.query.insert(signify(values), '*');
 
-    values[idAttribute] = id;
-
-    this.forge(values);
+    this.forge(format(row));
     this.prime();
 
     return this;
@@ -463,6 +459,7 @@ export default class Model {
   async update(operator, tmpData) {
     const {
       signify,
+      format,
       keywordAttribute,
       toKeyword,
       hasOperator,
@@ -473,9 +470,9 @@ export default class Model {
       throw new Error('operator is required');
     }
 
-    const values = _.cloneAndMerge([this.valueOf(), tmpData]);
+    const values = { ...this.valueOf(), ...tmpData };
 
-    const keys = _.unionKeys([this.changes, tmpData]);
+    const keys = unionKeys([this.changes, tmpData]);
     if (_.size(keys) < 1) return this;
 
     if (toKeyword) values[keywordAttribute] = toKeyword(values);
@@ -483,9 +480,9 @@ export default class Model {
     if (hasTimestamps) values.updatedAt = new Date();
 
     const changes = _.pick(values, _.concat(['updatedBy', 'updatedAt', keywordAttribute], keys));
-    await this.query.update(signify(changes));
+    const [row] = await this.query.update(signify(changes)).returning('*');
 
-    this.merge(changes);
+    this.merge(format(row));
 
     return this;
   }

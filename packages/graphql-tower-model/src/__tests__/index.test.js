@@ -401,8 +401,10 @@ describe('model', () => {
 
     describe('insert of save', () => {
       it('has operator', async () => {
-        await (new Default({ name: 'new is insert' })).save(10);
-        await (new Default()).save(10, { name: 'new is action' });
+        expect(await (new Default({ name: 'new is insert' })).save(10))
+          .toEqual(expect.objectContaining({ createdAt: expect.anything(Date) }));
+        expect(await (new Default()).save(10, { name: 'new is action', nickName: database.raw("'yutin'") }))
+          .toEqual(expect.objectContaining({ id: Default.toGlobalId(4) }));
         expect(client).toMatchSnapshot();
 
         await expect((new Default()).save(null, { name: 'new is insert again' }))
