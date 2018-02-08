@@ -2,7 +2,7 @@ import url from 'url';
 import crypto from 'crypto';
 import assertResult from 'graphql-tower-helper/assertResult';
 
-export default class Pay2goPayment {
+export default class SpgatewayPayment {
   static hash(value) {
     return crypto.createHash('sha256').update(value, 'utf8').digest('hex').toUpperCase();
   }
@@ -45,7 +45,7 @@ export default class Pay2goPayment {
         `HashKey=${this.hashKey}`,
       ].join('&');
 
-      if (result.CheckCode !== Pay2goPayment.hash(checkCode)) throw new Error();
+      if (result.CheckCode !== SpgatewayPayment.hash(checkCode)) throw new Error();
 
       if (payload.Status !== 'SUCCESS') {
         return {
@@ -98,7 +98,7 @@ export default class Pay2goPayment {
       amount,
       host: this.host,
       version: this.version,
-      checkValue: Pay2goPayment.hash(checkValue),
+      checkValue: SpgatewayPayment.hash(checkValue),
     };
   }
 }

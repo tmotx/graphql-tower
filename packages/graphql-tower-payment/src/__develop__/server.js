@@ -3,9 +3,9 @@
 import express from 'express';
 import next from 'next';
 import bodyParser from 'body-parser';
-import Pay2go from '../Pay2go';
+import Spgateway from '../Spgateway';
 
-const pay2go = new Pay2go({
+const spgateway = new Spgateway({
   PAY2GO_URL: 'https://nApJ6NPsN95qN2cU:fuJsiQOHDJwpcUuffGFSJpY9fYrNII2U@ccore.spgateway.com/MPG/mpg_gateway?id=MS33234675',
 });
 
@@ -17,12 +17,12 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
-  server.get('/credentials/pay2go', (req, res) => {
-    res.json(pay2go.generateTemporaryCredentials(`ORDER${Date.now()}`, 2000));
+  server.get('/credentials/spgateway', (req, res) => {
+    res.json(spgateway.generateTemporaryCredentials(`ORDER${Date.now()}`, 2000));
   });
 
-  server.post('/notify/pay2go', bodyParser.urlencoded({ extended: false }), (req, res) => {
-    console.log(pay2go.verifyCallback(req.body.JSONData));
+  server.post('/notify/spgateway', bodyParser.urlencoded({ extended: false }), (req, res) => {
+    console.log(spgateway.verifyCallback(req.body.JSONData));
     res.status(200).end();
   });
 

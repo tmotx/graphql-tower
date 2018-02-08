@@ -17,8 +17,8 @@ export default class Index extends React.PureComponent {
   }
 
   onFetchCredentials = async () => {
-    const pay2go = await (await fetch('./credentials/pay2go')).json();
-    this.setState(pay2go);
+    const spgateway = await (await fetch('./credentials/spgateway')).json();
+    this.setState(spgateway);
   }
 
   render() {
@@ -39,7 +39,7 @@ export default class Index extends React.PureComponent {
           <div>ItemDesc: <input name="ItemDesc" value="One thing by one code" /></div>
           <div>LoginType: <input name="LoginType" value="0" /></div>
           <div>CREDITAGREEMENT: <input name="CREDITAGREEMENT" value="1" /></div>
-          <div>NotifyURL: <input name="NotifyURL" value="https://2bb0d870.ngrok.io/notify/pay2go" /></div>
+          <div>NotifyURL: <input name="NotifyURL" value="https://2bb0d870.ngrok.io/notify/spgateway" /></div>
           <div>TokenTerm: <input name="TokenTerm" value="XYZ" /></div>
           <div>TradeLimit: <input name="TradeLimit" value={10 * 60} /></div>
           <button type="submit">Payment</button>
