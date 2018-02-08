@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.34.0"></a>
+# [3.34.0](https://github.com/tmotx/graphql-tower/compare/v3.33.2...v3.34.0) (2018-02-08)
+
+
+### Features
+
+* **countries:** country language codes ([18c855f](https://github.com/tmotx/graphql-tower/commit/18c855f))
+* **payment:** pay2go rename to spgateway ([ad5eed4](https://github.com/tmotx/graphql-tower/commit/ad5eed4))
+
+
+
+
 <a name="3.28.7"></a>
 ## [3.28.7](https://github.com/tmotx/graphql-tower/compare/v3.28.6...v3.28.7) (2017-12-21)
 
