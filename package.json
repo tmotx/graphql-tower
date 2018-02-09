@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "dev-payment": "nodemon ./packages/graphql-tower-payment/src/__develop__/server.js --exec babel-node --ignore pages/*",
+    "dev-storage-s3": "nodemon ./packages/graphql-tower-storage-s3/src/__develop__/server.js --exec babel-node --ignore pages/*",
     "bootstrap": "rm -rf ./packages/*/node_modules/; yarn install && lerna bootstrap",
     "postbootstrap": "npm run build",
     "build": "lerna run -- build",

@@ -47,7 +47,7 @@ export default class StorageS3 {
     }
 
     this.s3 = new AWS.S3({ ...auth, ...configs });
-    this.lambda = new AWS.Lambda(auth);
+    this.lambda = new AWS.Lambda({ ...auth, region: this.region });
 
     return this;
   }
@@ -81,9 +81,7 @@ export default class StorageS3 {
 
   async confirm(key, toKey) {
     await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
-    await this.transform(`media/${toKey}`, `media/${toKey}_cover`);
-
-    return toKey;
+    return this.transform(`media/${toKey}`, `media/${toKey}_cover`);
   }
 
   async confirmVideo(key, toKey, cdnPaths = []) {
@@ -92,9 +90,9 @@ export default class StorageS3 {
       cdn.cdnPaths = cdnPaths;
     }
 
-    this.lambda.invoke({
+    return this.lambda.invoke({
       FunctionName: 'media-converter_confirm-video',
-      InvocationType: 'Event',
+      InvocationType: 'RequestResponse',
       Payload: JSON.stringify({
         region: this.region,
         bucket: this.bucket,
@@ -104,9 +102,7 @@ export default class StorageS3 {
         secretAccessKey: this.secretAccessKey,
         ...cdn,
       }),
-    });
-
-    return toKey;
+    }).promise();
   }
 
   async fetchCover(key, width = 1920, height = null) {
