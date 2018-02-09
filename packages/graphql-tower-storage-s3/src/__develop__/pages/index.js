@@ -10,7 +10,16 @@ export default class Index extends React.PureComponent {
 
   onDrop = async (files) => {
     const credentials = await (await fetch('./credentials')).json();
-    await upload(credentials, files[0], value => this.setState({ progress: value * 100 }));
+    const key = await upload(credentials, files[0], value =>
+      this.setState({ progress: value * 100 }));
+
+    console.log('key', key);
+
+    await fetch('./upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key }),
+    });
   }
 
   render() {

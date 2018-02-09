@@ -21,6 +21,8 @@ export default {
     }),
   }),
   Lambda: () => ({
-    invoke: promise,
+    invoke: params => ({
+      promise: () => promise({ ...params, method: 'invoke' }),
+    }),
   }),
 };
