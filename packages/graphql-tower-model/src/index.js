@@ -450,7 +450,7 @@ export default class Model {
 
     const [row] = await this.constructor.query.insert(signify(values), '*');
 
-    this.forge(format(row));
+    this.merge(format(row));
     this.prime();
 
     return this;
