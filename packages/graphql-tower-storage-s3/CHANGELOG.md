@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.34.3"></a>
+## [3.34.3](https://github.com/tmotx/graphql-tower/compare/v3.34.2...v3.34.3) (2018-02-12)
+
+
+### Bug Fixes
+
+* **s3:** added fetch and fetchMp4 and fetch Webm ([bb76dfa](https://github.com/tmotx/graphql-tower/commit/bb76dfa))
+
+
+
+
 <a name="3.34.2"></a>
 ## [3.34.2](https://github.com/tmotx/graphql-tower/compare/v3.34.1...v3.34.2) (2018-02-09)
 
