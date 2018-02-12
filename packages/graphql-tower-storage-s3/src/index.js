@@ -69,7 +69,7 @@ export default class StorageS3 {
       });
 
       const { ext, mime } = fileType(chunk);
-      if (['png', 'jpg', 'gif', 'mp4', 'mov'].indexOf(ext) > -1) {
+      if (['png', 'jpg', 'gif', 'mp4', 'webm', 'mov'].indexOf(ext) > -1) {
         return mime;
       }
 
@@ -80,11 +80,17 @@ export default class StorageS3 {
   }
 
   async confirm(key, toKey) {
-    await this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
+    return this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
+  }
+
+  async confirmImage(key, toKey) {
+    await this.confirm(key, toKey);
     return this.transform(`media/${toKey}`, `media/${toKey}_cover`);
   }
 
   async confirmVideo(key, toKey, cdnPaths = []) {
+    await this.confirm(key, toKey);
+
     const cdn = { cdnId: this.cdnId };
     if (this.cdnId && cdnPaths.length) {
       cdn.cdnPaths = cdnPaths;
@@ -103,6 +109,18 @@ export default class StorageS3 {
         ...cdn,
       }),
     }).promise();
+  }
+
+  async fetch(key) {
+    return this.s3.getObject({ Key: `media/${key}` }).createReadStream();
+  }
+
+  async fetchMp4(key) {
+    return this.s3.getObject({ Key: `media/${key}_mp4` }).createReadStream();
+  }
+
+  async fetchWebm(key) {
+    return this.s3.getObject({ Key: `media/${key}_webm` }).createReadStream();
   }
 
   async fetchCover(key, width = 1920, height = null) {

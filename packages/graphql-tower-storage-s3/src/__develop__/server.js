@@ -20,12 +20,10 @@ app.prepare().then(() => {
   });
 
   server.post('/upload', bodyParser.json(), async (req, res) => {
-    const type = await storageS3.checkContentType(req.body.key);
-    console.log('type', type);
+    await storageS3.checkContentType(req.body.key);
     res.json({ status: 'ok' });
 
-    const reply = await storageS3.confirmVideo(req.body.key, 'develop-20180209');
-    console.log(reply);
+    await storageS3.confirmVideo(req.body.key, 'develop-20180209');
   });
 
   server.get('*', (req, res) => handle(req, res));
