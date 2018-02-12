@@ -13,8 +13,6 @@ export default class Index extends React.PureComponent {
     const key = await upload(credentials, files[0], value =>
       this.setState({ progress: value * 100 }));
 
-    console.log('key', key);
-
     await fetch('./upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -52,6 +52,11 @@ describe('storage s3', () => {
       expect(await storage.checkContentType('XYZ')).toBe('video/mp4');
     });
 
+    it('when type is mp4', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.webm`));
+      expect(await storage.checkContentType('XYZ')).toBe('video/webm');
+    });
+
     it('when type is mov', async () => {
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mov`));
       expect(await storage.checkContentType('XYZ')).toBe('video/quicktime');
@@ -68,10 +73,10 @@ describe('storage s3', () => {
     });
   });
 
-  describe('confirm', () => {
+  describe('confirmImage', () => {
     it('successfully confirmed', async () => {
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gif`));
-      await storage.confirm('XYZ', 'IMAGE_UPLOAD_UUID');
+      await storage.confirmImage('XYZ', 'IMAGE_UPLOAD_UUID');
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/IMAGE_UPLOAD_UUID', method: 'copyObject',
       }));
@@ -90,6 +95,9 @@ describe('storage s3', () => {
     it('successfully confirmed', async () => {
       await storage.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID');
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
+        CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/VIDEO_UPLOAD_UUID', method: 'copyObject',
+      }));
+      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         FunctionName: 'media-converter_confirm-video',
         Payload: JSON.stringify({
           region: 'ap-northeast-1',
@@ -100,7 +108,7 @@ describe('storage s3', () => {
           secretAccessKey: 'secret_key',
         }),
       }));
-      expect(promise).toHaveBeenCalledTimes(1);
+      expect(promise).toHaveBeenCalledTimes(2);
     });
 
     it('successfully confirmed with cdn', async () => {
@@ -122,7 +130,46 @@ describe('storage s3', () => {
           cdnPaths: ['/media/MEDIA_ID'],
         }),
       }));
-      expect(promise).toHaveBeenCalledTimes(1);
+      expect(promise).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('fetch', () => {
+    it('successfully fetch', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
+
+      await storage.fetch('VIDEO_KEY');
+
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/VIDEO_KEY', method: 'getObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('fetchMp4', () => {
+    it('successfully fetch', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
+
+      await storage.fetchMp4('VIDEO_KEY');
+
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/VIDEO_KEY_mp4', method: 'getObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('fetchWebm', () => {
+    it('successfully fetch', async () => {
+      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.webm`));
+
+      await storage.fetchWebm('VIDEO_KEY');
+
+      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+        Key: 'media/VIDEO_KEY_webm', method: 'getObject',
+      }));
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
   });
 
