@@ -76,7 +76,7 @@ describe('storage s3', () => {
   describe('confirmImage', () => {
     it('successfully confirmed', async () => {
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gif`));
-      await storage.confirmImage('XYZ', 'IMAGE_UPLOAD_UUID');
+      await storage.confirmImage('XYZ', 'IMAGE_UPLOAD_UUID', 'gif');
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/IMAGE_UPLOAD_UUID', method: 'copyObject',
       }));
@@ -178,7 +178,7 @@ describe('storage s3', () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.jpg`));
 
-      await storage.fetchCover('IMAGE_KEY');
+      await storage.fetchCover('IMAGE_KEY', 'jpg');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
@@ -197,7 +197,7 @@ describe('storage s3', () => {
     });
 
     it('successfully fetch use cache', async () => {
-      await storage.fetchCover('IMAGE_KEY');
+      await storage.fetchCover('IMAGE_KEY', 'jpg');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
@@ -210,7 +210,7 @@ describe('storage s3', () => {
     });
 
     it('when input width and height', async () => {
-      await storage.fetchCover('IMAGE_KEY', '2048', '2048');
+      await storage.fetchCover('IMAGE_KEY', 'jpg', '2048', '2048');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'headObject',
@@ -226,7 +226,7 @@ describe('storage s3', () => {
       promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.png`));
 
-      await storage.fetchPreCover('IMAGE_KEY');
+      await storage.fetchPreCover('IMAGE_KEY', 'png');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_precover_128x', method: 'headObject',
@@ -245,7 +245,7 @@ describe('storage s3', () => {
     });
 
     it('successfully fetch use cache', async () => {
-      await storage.fetchPreCover('IMAGE_KEY');
+      await storage.fetchPreCover('IMAGE_KEY', 'png');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_precover_128x', method: 'headObject',
@@ -258,7 +258,7 @@ describe('storage s3', () => {
     });
 
     it('when input width and height', async () => {
-      await storage.fetchPreCover('IMAGE_KEY', '2048', '2048');
+      await storage.fetchPreCover('IMAGE_KEY', 'png', '2048', '2048');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_precover_2048x2048', method: 'headObject',

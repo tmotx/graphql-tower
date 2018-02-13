@@ -16,6 +16,10 @@ function createDate() {
   return date.substr(0, 4) + date.substr(5, 2) + date.substr(8, 2);
 }
 
+function toFormat(transform, format) {
+  return format === 'png' ? transform.png() : transform.jpeg();
+}
+
 export default class StorageS3 {
   accessKeyId = '';
 
@@ -83,9 +87,9 @@ export default class StorageS3 {
     return this.s3.copyObject({ CopySource: `${this.bucket}/uploader/${key}`, Key: `media/${toKey}` }).promise();
   }
 
-  async confirmImage(key, toKey) {
+  async confirmImage(key, toKey, format) {
     await this.confirm(key, toKey);
-    return this.transform(`media/${toKey}`, `media/${toKey}_cover`);
+    return this.transform(`media/${toKey}`, `media/${toKey}_cover`, toFormat(sharp(), format));
   }
 
   async confirmVideo(key, toKey, cdnPaths = []) {
@@ -123,25 +127,25 @@ export default class StorageS3 {
     return this.s3.getObject({ Key: `media/${key}_webm` }).createReadStream();
   }
 
-  async fetchCover(key, width = 1920, height = null) {
+  async fetchCover(key, format, width = 1920, height = null) {
     const cacheName = `cache/${key}_cover_${[width, height].join('x')}`;
 
     try {
       await this.s3.headObject({ Key: cacheName }).promise();
     } catch (e) {
-      await this.transform(`media/${key}_cover`, cacheName, sharp().resize(width, height).jpeg());
+      await this.transform(`media/${key}_cover`, cacheName, toFormat(sharp().resize(width, height), format));
     }
 
     return this.s3.getObject({ Key: cacheName }).createReadStream();
   }
 
-  async fetchPreCover(key, width = 128, height = null) {
+  async fetchPreCover(key, format, width = 128, height = null) {
     const cacheName = `cache/${key}_precover_${[width, height].join('x')}`;
 
     try {
       await this.s3.headObject({ Key: cacheName }).promise();
     } catch (e) {
-      await this.transform(`media/${key}_cover`, cacheName, sharp().resize(width, height).blur(9).jpeg());
+      await this.transform(`media/${key}_cover`, cacheName, toFormat(sharp().resize(width, height).blur(9), format));
     }
 
     return this.s3.getObject({ Key: cacheName }).createReadStream();
