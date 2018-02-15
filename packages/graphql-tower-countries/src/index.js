@@ -2,8 +2,8 @@
 
 module.exports = [
   ['UN', 'International', []],
-  ['AF', ' (‫افغانستان‬‎)', []],
-  ['AX', 'AfghanistanÅland Islands', []],
+  ['AF', 'Afghanistan (‫افغانستان‬‎)', []],
+  ['AX', 'Åland Islands', []],
   ['AL', 'Albania (Shqipëri)', ['sq-AL']],
   ['DZ', 'Algeria (‫الجزائر‬‎)', ['ar-DZ']],
   ['AS', 'American Samoa (Amerika Sāmoa)', []],
