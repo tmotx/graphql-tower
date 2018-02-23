@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.34.4"></a>
+## [3.34.4](https://github.com/tmotx/graphql-tower/compare/v3.34.1...v3.34.4) (2018-02-23)
+
+
+### Bug Fixes
+
+* **countries:** the labels of AF and AX ([51f7b2b](https://github.com/tmotx/graphql-tower/commit/51f7b2b))
+* **model:** fix insert return value ([1d211bc](https://github.com/tmotx/graphql-tower/commit/1d211bc))
+* **s3:** added fetch and fetchMp4 and fetch Webm ([8030162](https://github.com/tmotx/graphql-tower/commit/8030162))
+* **storage-s3:** fix lambda config ([2bc43a6](https://github.com/tmotx/graphql-tower/commit/2bc43a6))
+
+
+
+
 <a name="3.34.3"></a>
 ## [3.34.3](https://github.com/tmotx/graphql-tower/compare/v3.34.2...v3.34.3) (2018-02-12)
 
