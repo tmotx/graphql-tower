@@ -555,19 +555,18 @@ export default class Model {
   }
 
   async increment(...args) {
-    const { database } = this.constructor;
+    const { database, format } = this.constructor;
     const changes = _.mapValues(
       _.isPlainObject(args[0]) ? args[0] : _.set({}, [args[0]], args[1]),
       _.toNumber,
     );
 
-    const count = await this.query.update(_.mapValues(
+    const row = await this.query.update(_.mapValues(
       _.mapKeys(changes, (value, column) => _.snakeCase(column)),
       (value, column) => database.raw(`${column} + ?`, [value]),
-    ));
+    )).returning('*');
 
-    return assertResult(count > 0, args[2] || args[1]) && this.merge(data =>
-      _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) + value)));
+    return assertResult(row.length > 0, args[2] || args[1]) && this.merge(format(row[0]));
   }
 
   search(keyword) {

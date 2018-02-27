@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 import express from 'express';
 import next from 'next';
 import bodyParser from 'body-parser';
