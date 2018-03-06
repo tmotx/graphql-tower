@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.34.5"></a>
+## [3.34.5](https://github.com/tmotx/graphql-tower/compare/v3.34.4...v3.34.5) (2018-03-06)
+
+
+### Bug Fixes
+
+* **model:** use return all on increment method ([aec860f](https://github.com/tmotx/graphql-tower/commit/aec860f))
+
+
+
+
 <a name="3.34.4"></a>
 ## [3.34.4](https://github.com/tmotx/graphql-tower/compare/v3.34.1...v3.34.4) (2018-02-23)
 
