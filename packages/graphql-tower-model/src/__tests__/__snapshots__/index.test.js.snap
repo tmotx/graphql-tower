@@ -3,14 +3,14 @@
 exports[`model model addKeyValue 1`] = `
 Array [
   "select * from default_table where id in (1) and deleted_at is null",
-  "update default_table set data = coalesce(data, '{}') || {\\"10\\":\\"xyz\\"} where deleted_at is null and id = 1",
+  "update default_table set data = coalesce(data, '{}') || {\\"10\\":\\"xyz\\"} where deleted_at is null and id = 1 returning *",
 ]
 `;
 
 exports[`model model delKeyValue 1`] = `
 Array [
   "select * from default_table where id in (2) and deleted_at is null",
-  "update default_table set data = coalesce(data, '{}') - 10 where deleted_at is null and id = 2",
+  "update default_table set data = coalesce(data, '{}') - 10 where deleted_at is null and id = 2 returning *",
 ]
 `;
 
@@ -91,7 +91,7 @@ Object {
 
 exports[`model model fetch with where 2`] = `
 Array [
-  "select * from default_table where nick_name = nick name is one and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
+  "select * from default_table where nick_name = nick name is one and total = 0 and (name = name is one) and data IS NULL and deleted_at is null order by created_at asc limit 1",
 ]
 `;
 

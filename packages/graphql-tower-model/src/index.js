@@ -351,9 +351,10 @@ export default class Model {
     return this._.current;
   }
 
-  merge(values) {
-    const handler = _.isPlainObject(values) ? data => _.assign(data, values) : values;
-    _.forEach([this._.current, this._.previous], handler);
+  merge(row) {
+    const { format } = this.constructor;
+    const values = format(row);
+    _.forEach([this._.current, this._.previous], data => _.assign(data, values));
 
     return this;
   }
@@ -424,7 +425,6 @@ export default class Model {
   async insert(operator, tmpData) {
     const {
       signify,
-      format,
       keywordAttribute,
       toKeyword,
       hasOperator,
@@ -450,16 +450,21 @@ export default class Model {
 
     const [row] = await this.constructor.query.insert(signify(values), '*');
 
-    this.merge(format(row));
+    this.merge(row);
     this.prime();
 
     return this;
   }
 
+  async updateWithMerge(changes) {
+    const { signify } = this.constructor;
+    const [row] = await this.query.update(signify(changes)).returning('*');
+    this.merge(row);
+    return this;
+  }
+
   async update(operator, tmpData) {
     const {
-      signify,
-      format,
       keywordAttribute,
       toKeyword,
       hasOperator,
@@ -480,11 +485,8 @@ export default class Model {
     if (hasTimestamps) values.updatedAt = new Date();
 
     const changes = _.pick(values, _.concat(['updatedBy', 'updatedAt', keywordAttribute], keys));
-    const [row] = await this.query.update(signify(changes)).returning('*');
 
-    this.merge(format(row));
-
-    return this;
+    return this.updateWithMerge(changes);
   }
 
   async save(operator, tmpData) {
@@ -516,58 +518,43 @@ export default class Model {
 
     const snake = _.snakeCase(column);
     const item = _.set({}, key, value);
-    const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
-    await this.query.update(setValue);
-
-    return this.merge(data => _.setWith(data, [column, key], value, Object));
+    const changes = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
+    return this.updateWithMerge(changes);
   }
 
   async delKeyValue(column, key) {
     const { database } = this.constructor;
 
     const snake = _.snakeCase(column);
-    const setValue = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
-    await this.query.update(setValue);
-
-    return this.merge(data => _.unset(data, [column, key]));
+    const changes = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
+    return this.updateWithMerge(changes);
   }
 
   async appendValue(column, value) {
     const { database } = this.constructor;
 
     const snake = _.snakeCase(column);
-    const setValue = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
-    await this.query.update(setValue);
-
-    const original = this._.previous[column] || [];
-    return this.merge(_.set({}, column, _.concat(_.pull(original, value), value)));
+    const changes = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
+    return this.updateWithMerge(changes);
   }
 
   async removeValue(column, value) {
     const { database } = this.constructor;
 
     const snake = _.snakeCase(column);
-    const setValue = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
-    await this.query.update(setValue);
-
-    const original = this._.previous[column] || [];
-    return this.merge(_.set({}, column, _.pull(original, value)));
+    const changes = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
+    return this.updateWithMerge(changes);
   }
 
-  async increment(...args) {
+  async increment(key, difference) {
     const { database } = this.constructor;
-    const changes = _.mapValues(
-      _.isPlainObject(args[0]) ? args[0] : _.set({}, [args[0]], args[1]),
+    const values = _.mapValues(
+      _.isPlainObject(key) ? key : _.set({}, [key], difference),
       _.toNumber,
     );
 
-    const count = await this.query.update(_.mapValues(
-      _.mapKeys(changes, (value, column) => _.snakeCase(column)),
-      (value, column) => database.raw(`${column} + ?`, [value]),
-    ));
-
-    return assertResult(count > 0, args[2] || args[1]) && this.merge(data =>
-      _.forEach(changes, (value, column) => _.set(data, [column], (data[column] || 0) + value)));
+    const changes = _.mapValues(values, (value, column) => database.raw(`${column} + ?`, [value]));
+    return this.updateWithMerge(changes);
   }
 
   search(keyword) {

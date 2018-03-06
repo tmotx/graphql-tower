@@ -499,6 +499,7 @@ describe('model', () => {
       it('with where', async () => {
         const model = new Default();
         model.where({ nickName: 'nick name is one' });
+        model.where('total', 0);
         model.where(function where() { return this.where('name', 'name is one'); });
         model.orderBy(['createdAt']);
         model.whereRaw('data IS NULL');
@@ -618,23 +619,26 @@ describe('model', () => {
       it('single', async () => {
         const model = await Default.load(1);
         expect(model.total).toBe(0);
-        await model.increment('total', 10);
 
+        await model.increment('total', 10);
         expect(model.total).toBe(10);
         expect((await Default.load(1)).total).toBe(10);
 
-        expect(await model.where('total', 30).increment('total', 10)).toBe(false);
+        await model.increment('total', 10);
+        expect(model.total).toBe(20);
       });
 
       it('multiple', async () => {
         const model = await Default.load(1);
         expect(model.total).toBe(0);
+
         await model.increment({ total: 10 });
-
         expect(model.total).toBe(10);
-        expect((await Default.load(1)).total).toBe(10);
 
-        await expect(model.where('total', 30).increment({ total: 10 }, Error)).rejects.toEqual(new Error());
+        expect((await Default.load(1)).total).toBe(10);
+        await model.increment('total', 10);
+
+        expect(model.total).toBe(20);
       });
     });
 
