@@ -1,7 +1,6 @@
 import url from 'url';
 import crypto from 'crypto';
 import fileType from 'file-type';
-import sharp from 'sharp';
 import AWS from 'aws-sdk';
 import unique from 'graphql-tower-unique';
 
@@ -25,6 +24,11 @@ export default class StorageS3 {
     if (!env.STORAGE_URL) {
       throw new TypeError('STORAGE_URL is required');
     }
+    if (!env.STORAGE_PREFIX) {
+      throw new TypeError('STORAGE_PREFIX is required');
+    }
+
+    this.storagePrefix = env.STORAGE_PREFIX;
 
     if (env.CDN_ID) {
       this.cdnId = env.CDN_ID;
@@ -52,10 +56,27 @@ export default class StorageS3 {
     return this;
   }
 
-  async transform(fromKey, toKey, transform = sharp().jpeg()) {
-    const from = this.s3.getObject({ Key: fromKey });
-    const readStream = from.createReadStream();
-    return this.s3.upload({ Key: toKey, Body: readStream.pipe(transform) }).promise();
+  invokeLambda(functionName, payload) {
+    const {
+      region, bucket, accessKeyId, secretAccessKey, storagePrefix,
+    } = this;
+
+    return this.lambda.invoke({
+      FunctionName: `${storagePrefix}_${functionName}`,
+      InvocationType: 'RequestResponse',
+      Payload: JSON.stringify({
+        region,
+        bucket,
+        accessKeyId,
+        secretAccessKey,
+        ...payload,
+      }),
+    }).promise()
+      .then((res) => {
+        if (JSON.parse(res.Payload).status !== 'ok') {
+          throw new Error('Something crashed on aws-lambda, check out https://aws.amazon.com/tw/cloudwatch/ for more information.');
+        }
+      });
   }
 
   async checkContentType(key) {
@@ -85,7 +106,9 @@ export default class StorageS3 {
 
   async confirmImage(key, toKey) {
     await this.confirm(key, toKey);
-    return this.transform(`media/${toKey}`, `media/${toKey}_cover`);
+    return this.invokeLambda('confirm-image', {
+      target: `media/${toKey}`,
+    });
   }
 
   async confirmVideo(key, toKey, cdnPaths = []) {
@@ -96,19 +119,11 @@ export default class StorageS3 {
       cdn.cdnPaths = cdnPaths;
     }
 
-    return this.lambda.invoke({
-      FunctionName: 'media-converter_confirm-video',
-      InvocationType: 'RequestResponse',
-      Payload: JSON.stringify({
-        region: this.region,
-        bucket: this.bucket,
-        from: `uploader/${key}`,
-        target: `media/${toKey}`,
-        accessKeyId: this.accessKeyId,
-        secretAccessKey: this.secretAccessKey,
-        ...cdn,
-      }),
-    }).promise();
+    return this.invokeLambda('confirm-video', {
+      from: `uploader/${key}`,
+      target: `media/${toKey}`,
+      ...cdn,
+    });
   }
 
   async fetch(key) {
@@ -129,7 +144,12 @@ export default class StorageS3 {
     try {
       await this.s3.headObject({ Key: cacheName }).promise();
     } catch (e) {
-      await this.transform(`media/${key}_cover`, cacheName, sharp().resize(width, height).jpeg());
+      await this.invokeLambda('resize-image', {
+        source: `media/${key}_cover`,
+        target: cacheName,
+        width,
+        height,
+      });
     }
 
     return this.s3.getObject({ Key: cacheName }).createReadStream();
@@ -141,7 +161,13 @@ export default class StorageS3 {
     try {
       await this.s3.headObject({ Key: cacheName }).promise();
     } catch (e) {
-      await this.transform(`media/${key}_cover`, cacheName, sharp().resize(width, height).blur(9).jpeg());
+      await this.invokeLambda('resize-image', {
+        source: `media/${key}_cover`,
+        target: cacheName,
+        width,
+        height,
+        blur: 9,
+      });
     }
 
     return this.s3.getObject({ Key: cacheName }).createReadStream();
