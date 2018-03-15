@@ -21,12 +21,16 @@ global.XMLHttpRequest = () => {
   return obj;
 };
 
+const STORAGE_URL = 's3://username:secret_key@ap-northeast-1/graphql-tower';
+const STORAGE_PREFIX = 'media-converter';
+
 describe('storage s3', () => {
-  const storage = new StorageS3({ STORAGE_URL: 's3://username:secret_key@ap-northeast-1/graphql-tower' });
+  const storage = new StorageS3({ STORAGE_URL, STORAGE_PREFIX });
 
   it('is required', () => {
     expect(() => new StorageS3()).toThrowError(new TypeError('STORAGE_URL is required'));
-    expect(() => new StorageS3({ STORAGE_URL: 's3://ap-northeast-1/graphql-tower' })).not.toThrowError();
+    expect(() => new StorageS3({ STORAGE_URL })).toThrowError(new TypeError('STORAGE_PREFIX is required'));
+    expect(() => new StorageS3({ STORAGE_URL, STORAGE_PREFIX })).not.toThrowError();
   });
 
   describe('checkContentType', () => {
@@ -75,24 +79,32 @@ describe('storage s3', () => {
 
   describe('confirmImage', () => {
     it('successfully confirmed', async () => {
-      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.gif`));
+      promise
+        .mockReturnValueOnce()
+        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
       await storage.confirmImage('XYZ', 'IMAGE_UPLOAD_UUID');
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/IMAGE_UPLOAD_UUID', method: 'copyObject',
       }));
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'media/IMAGE_UPLOAD_UUID', method: 'getObject',
-      }));
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'media/IMAGE_UPLOAD_UUID_cover', method: 'upload',
+        FunctionName: 'media-converter_confirm-image',
+        Payload: JSON.stringify({
+          region: 'ap-northeast-1',
+          bucket: 'graphql-tower',
+          accessKeyId: 'username',
+          secretAccessKey: 'secret_key',
+          target: 'media/IMAGE_UPLOAD_UUID',
+        }),
       }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('confirmVideo', () => {
     it('successfully confirmed', async () => {
+      promise
+        .mockReturnValueOnce()
+        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
       await storage.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID');
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         CopySource: 'graphql-tower/uploader/XYZ', Key: 'media/VIDEO_UPLOAD_UUID', method: 'copyObject',
@@ -102,18 +114,22 @@ describe('storage s3', () => {
         Payload: JSON.stringify({
           region: 'ap-northeast-1',
           bucket: 'graphql-tower',
-          from: 'uploader/XYZ',
-          target: 'media/VIDEO_UPLOAD_UUID',
           accessKeyId: 'username',
           secretAccessKey: 'secret_key',
+          from: 'uploader/XYZ',
+          target: 'media/VIDEO_UPLOAD_UUID',
         }),
       }));
       expect(promise).toHaveBeenCalledTimes(2);
     });
 
     it('successfully confirmed with cdn', async () => {
+      promise
+        .mockReturnValueOnce()
+        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
       const storageForCdn = new StorageS3({
-        STORAGE_URL: 's3://username:secret_key@ap-northeast-1/graphql-tower',
+        STORAGE_URL,
+        STORAGE_PREFIX,
         CDN_ID: 'AWS_CDN_ID',
       });
       await storageForCdn.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID', ['/media/MEDIA_ID']);
@@ -122,10 +138,10 @@ describe('storage s3', () => {
         Payload: JSON.stringify({
           region: 'ap-northeast-1',
           bucket: 'graphql-tower',
-          from: 'uploader/XYZ',
-          target: 'media/VIDEO_UPLOAD_UUID',
           accessKeyId: 'username',
           secretAccessKey: 'secret_key',
+          from: 'uploader/XYZ',
+          target: 'media/VIDEO_UPLOAD_UUID',
           cdnId: 'AWS_CDN_ID',
           cdnPaths: ['/media/MEDIA_ID'],
         }),
@@ -175,7 +191,9 @@ describe('storage s3', () => {
 
   describe('fetchCover', () => {
     it('successfully fetch', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+      promise
+        .mockReturnValueOnce(Promise.reject(new Error('not found')))
+        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.jpg`));
 
       await storage.fetchCover('IMAGE_KEY');
@@ -183,17 +201,25 @@ describe('storage s3', () => {
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
       }));
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'media/IMAGE_KEY_cover', method: 'getObject',
-      }));
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'cache/IMAGE_KEY_cover_1920x', method: 'upload',
+        FunctionName: 'media-converter_resize-image',
+        Payload: JSON.stringify({
+          region: 'ap-northeast-1',
+          bucket: 'graphql-tower',
+          accessKeyId: 'username',
+          secretAccessKey: 'secret_key',
+          source: 'media/IMAGE_KEY_cover',
+          target: 'cache/IMAGE_KEY_cover_1920x',
+          width: 1920,
+          height: null,
+        }),
       }));
+
       expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'getObject',
       }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(createReadStream).toHaveBeenCalledTimes(2);
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
 
     it('successfully fetch use cache', async () => {
@@ -223,7 +249,9 @@ describe('storage s3', () => {
 
   describe('fetchPreCover', () => {
     it('successfully fetch', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+      promise
+        .mockReturnValueOnce(Promise.reject(new Error('not found')))
+        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.png`));
 
       await storage.fetchPreCover('IMAGE_KEY');
@@ -231,17 +259,26 @@ describe('storage s3', () => {
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_precover_128x', method: 'headObject',
       }));
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'media/IMAGE_KEY_cover', method: 'getObject',
-      }));
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'cache/IMAGE_KEY_precover_128x', method: 'upload',
+        FunctionName: 'media-converter_resize-image',
+        Payload: JSON.stringify({
+          region: 'ap-northeast-1',
+          bucket: 'graphql-tower',
+          accessKeyId: 'username',
+          secretAccessKey: 'secret_key',
+          source: 'media/IMAGE_KEY_cover',
+          target: 'cache/IMAGE_KEY_precover_128x',
+          width: 128,
+          height: null,
+          blur: 9,
+        }),
       }));
+
       expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_precover_128x', method: 'getObject',
       }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(createReadStream).toHaveBeenCalledTimes(2);
+      expect(createReadStream).toHaveBeenCalledTimes(1);
     });
 
     it('successfully fetch use cache', async () => {
