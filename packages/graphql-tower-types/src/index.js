@@ -21,3 +21,4 @@ export { default as GraphQLAge } from './GraphQLAge';
 export { default as GraphQLJSON } from './GraphQLJSON';
 export { default as GraphQLSentence } from './GraphQLSentence';
 export { default as GraphQLBase62 } from './GraphQLBase62';
+export { default as GraphQLGeolocation } from './GraphQLGeolocation';
