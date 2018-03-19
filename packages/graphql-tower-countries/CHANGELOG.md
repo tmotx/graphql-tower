@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.35.0"></a>
+# [3.35.0](https://github.com/tmotx/graphql-tower/compare/v3.34.5...v3.35.0) (2018-03-19)
+
+
+### Features
+
+* **countries:** clear local name ([9178f68](https://github.com/tmotx/graphql-tower/commit/9178f68))
+
+
+
+
 <a name="3.34.4"></a>
 ## [3.34.4](https://github.com/tmotx/graphql-tower/compare/v3.34.1...v3.34.4) (2018-02-23)
 
