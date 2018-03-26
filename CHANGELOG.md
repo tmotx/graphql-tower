@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.36.0"></a>
+# [3.36.0](https://github.com/tmotx/graphql-tower/compare/v3.35.0...v3.36.0) (2018-03-26)
+
+
+### Bug Fixes
+
+* **storage-s3:** update storage-s3 configs ([975475a](https://github.com/tmotx/graphql-tower/commit/975475a))
+
+
+### Features
+
+* **s3:** modify *-image to use lambda ([3c599ad](https://github.com/tmotx/graphql-tower/commit/3c599ad))
+* **types:** new type Geolocation ([6637d53](https://github.com/tmotx/graphql-tower/commit/6637d53))
+
+
+
+
 <a name="3.35.0"></a>
 # [3.35.0](https://github.com/tmotx/graphql-tower/compare/v3.34.5...v3.35.0) (2018-03-19)
 

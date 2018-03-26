@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.36.0"></a>
+# [3.36.0](https://github.com/tmotx/graphql-tower/compare/v3.35.0...v3.36.0) (2018-03-26)
+
+
+### Features
+
+* **types:** new type Geolocation ([6637d53](https://github.com/tmotx/graphql-tower/commit/6637d53))
+
+
+
+
 <a name="3.32.10"></a>
 ## [3.32.10](https://github.com/tmotx/graphql-tower/compare/v3.32.9...v3.32.10) (2018-01-29)
 
