@@ -56,7 +56,6 @@
     "react": "^16.2.0",
     "react-apollo": "^2.0.1",
     "react-dom": "^16.2.0",
-    "react-dropzone": "^4.2.3",
     "subscriptions-transport-ws": "^0.9.4",
     "superinstance": "^0.2.0",
     "ws": "^3.3.2"
@@ -77,6 +76,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "bootstrap": "^4.0.0"
+    "bootstrap": "^4.0.0",
+    "react-dropzone": "^4.2.9"
   }
 }

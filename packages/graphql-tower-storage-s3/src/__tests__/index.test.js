@@ -21,16 +21,20 @@ global.XMLHttpRequest = () => {
   return obj;
 };
 
-const STORAGE_URL = 's3://username:secret_key@ap-northeast-1/graphql-tower';
-const STORAGE_PREFIX = 'media-converter';
+const AWS_ACCESS = 'username:secret_key';
+const STORAGE_URL = 's3://ap-northeast-1/graphql-tower';
+const LAMBDA_PREFIX = 'media-converter';
+const CDN_ID = 'cdn';
 
 describe('storage s3', () => {
-  const storage = new StorageS3({ STORAGE_URL, STORAGE_PREFIX });
+  const storage = new StorageS3({
+    AWS_ACCESS, STORAGE_URL, LAMBDA_PREFIX, CDN_ID,
+  });
 
   it('is required', () => {
-    expect(() => new StorageS3()).toThrowError(new TypeError('STORAGE_URL is required'));
-    expect(() => new StorageS3({ STORAGE_URL })).toThrowError(new TypeError('STORAGE_PREFIX is required'));
-    expect(() => new StorageS3({ STORAGE_URL, STORAGE_PREFIX })).not.toThrowError();
+    expect(() => new StorageS3()).toThrowError(new TypeError('AWS_ACCESS is required'));
+    expect(() => new StorageS3({ AWS_ACCESS })).toThrowError(new TypeError('STORAGE_URL is required'));
+    expect(() => new StorageS3({ AWS_ACCESS, STORAGE_URL })).toThrowError(new TypeError('LAMBDA_PREFIX is required'));
   });
 
   describe('checkContentType', () => {
@@ -118,32 +122,8 @@ describe('storage s3', () => {
           secretAccessKey: 'secret_key',
           from: 'uploader/XYZ',
           target: 'media/VIDEO_UPLOAD_UUID',
-        }),
-      }));
-      expect(promise).toHaveBeenCalledTimes(2);
-    });
-
-    it('successfully confirmed with cdn', async () => {
-      promise
-        .mockReturnValueOnce()
-        .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
-      const storageForCdn = new StorageS3({
-        STORAGE_URL,
-        STORAGE_PREFIX,
-        CDN_ID: 'AWS_CDN_ID',
-      });
-      await storageForCdn.confirmVideo('XYZ', 'VIDEO_UPLOAD_UUID', ['/media/MEDIA_ID']);
-      expect(promise).toHaveBeenCalledWith(expect.objectContaining({
-        FunctionName: 'media-converter_confirm-video',
-        Payload: JSON.stringify({
-          region: 'ap-northeast-1',
-          bucket: 'graphql-tower',
-          accessKeyId: 'username',
-          secretAccessKey: 'secret_key',
-          from: 'uploader/XYZ',
-          target: 'media/VIDEO_UPLOAD_UUID',
-          cdnId: 'AWS_CDN_ID',
-          cdnPaths: ['/media/MEDIA_ID'],
+          cdnId: 'cdn',
+          cdnPaths: [],
         }),
       }));
       expect(promise).toHaveBeenCalledTimes(2);

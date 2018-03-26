@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import fileType from 'file-type';
 import AWS from 'aws-sdk';
 import unique from 'graphql-tower-unique';
+import assertResult from 'graphql-tower-helper/assertResult';
 
 function createHmacDigest(key, data) {
   const hmac = crypto.createHmac('sha256', key);
@@ -21,48 +22,41 @@ export default class StorageS3 {
   secretAccessKey = '';
 
   constructor(env: Object = {}) {
-    if (!env.STORAGE_URL) {
-      throw new TypeError('STORAGE_URL is required');
-    }
-    if (!env.STORAGE_PREFIX) {
-      throw new TypeError('STORAGE_PREFIX is required');
-    }
+    assertResult(env.AWS_ACCESS, new TypeError('AWS_ACCESS is required'));
+    assertResult(env.STORAGE_URL, new TypeError('STORAGE_URL is required'));
+    assertResult(env.LAMBDA_PREFIX, new TypeError('LAMBDA_PREFIX is required'));
 
-    this.storagePrefix = env.STORAGE_PREFIX;
-
-    if (env.CDN_ID) {
-      this.cdnId = env.CDN_ID;
-    }
+    const [accessKeyId, secretAccessKey] = (env.AWS_ACCESS || '').split(':');
+    this.accessKeyId = accessKeyId;
+    this.secretAccessKey = secretAccessKey;
 
     const uri = url.parse(env.STORAGE_URL);
-
     this.region = uri.hostname;
     this.bucket = uri.path.substr(1);
 
-    const configs = { region: this.region, params: { Bucket: this.bucket } };
-    const auth = {};
+    this.lambdaPrefix = env.LAMBDA_PREFIX;
+    this.cdnId = env.CDN_ID;
 
-    if (uri.auth) {
-      const [accessKeyId, secretAccessKey] = uri.auth.split(':');
-      auth.accessKeyId = accessKeyId;
-      auth.secretAccessKey = secretAccessKey;
-      this.accessKeyId = accessKeyId;
-      this.secretAccessKey = secretAccessKey;
-    }
+    const configs = {
+      accessKeyId,
+      secretAccessKey,
+      region: this.region,
+      params: { Bucket: this.bucket },
+    };
 
-    this.s3 = new AWS.S3({ ...auth, ...configs });
-    this.lambda = new AWS.Lambda({ ...auth, region: this.region });
+    this.s3 = new AWS.S3(configs);
+    this.lambda = new AWS.Lambda(configs);
 
     return this;
   }
 
   invokeLambda(functionName, payload) {
     const {
-      region, bucket, accessKeyId, secretAccessKey, storagePrefix,
+      region, bucket, accessKeyId, secretAccessKey, lambdaPrefix,
     } = this;
 
     return this.lambda.invoke({
-      FunctionName: `${storagePrefix}_${functionName}`,
+      FunctionName: `${lambdaPrefix}_${functionName}`,
       InvocationType: 'RequestResponse',
       Payload: JSON.stringify({
         region,
@@ -76,6 +70,7 @@ export default class StorageS3 {
         if (JSON.parse(res.Payload).status !== 'ok') {
           throw new Error('Something crashed on aws-lambda, check out https://aws.amazon.com/tw/cloudwatch/ for more information.');
         }
+        return res;
       });
   }
 
@@ -114,15 +109,11 @@ export default class StorageS3 {
   async confirmVideo(key, toKey, cdnPaths = []) {
     await this.confirm(key, toKey);
 
-    const cdn = { cdnId: this.cdnId };
-    if (this.cdnId && cdnPaths.length) {
-      cdn.cdnPaths = cdnPaths;
-    }
-
     return this.invokeLambda('confirm-video', {
       from: `uploader/${key}`,
       target: `media/${toKey}`,
-      ...cdn,
+      cdnId: this.cdnId,
+      cdnPaths,
     });
   }
 
@@ -195,7 +186,7 @@ export default class StorageS3 {
         { key: path },
         { acl },
         { success_action_status: successActionStatus },
-        ['content-length-range', 1, 10 * 1024 * 1024],
+        ['content-length-range', 1, 30 * 1024 * 1024],
         { 'x-amz-algorithm': algorithm },
         { 'x-amz-credential': credential },
         { 'x-amz-date': `${date}T000000Z` },
