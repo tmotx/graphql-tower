@@ -98,11 +98,7 @@ export default class Model {
     return _.mapKeys(data, (value, key) => _.camelCase(key));
   }
 
-  static signify(data) {
-    return _.mapKeys(data, (value, key) => _.snakeCase(key));
-  }
-
-  static signifyBuilder(column) {
+  static signify(column) {
     if (_.isPlainObject(column)) {
       return _.mapKeys(column, (value, key) => _.snakeCase(key));
     }
@@ -547,11 +543,11 @@ export default class Model {
   }
 
   async increment(key, difference) {
-    const { database } = this.constructor;
-    const values = _.mapValues(
+    const { database, signify } = this.constructor;
+    const values = signify(_.mapValues(
       _.isPlainObject(key) ? key : _.set({}, [key], difference),
       _.toNumber,
-    );
+    ));
 
     const changes = _.mapValues(values, (value, column) => database.raw(`${column} + ?`, [value]));
     return this.updateWithMerge(changes);
@@ -576,7 +572,7 @@ _.forEach([
   'orderBy',
 ], (key) => {
   Model.prototype[key] = function queryBuilder(column, ...args) {
-    this.queryBuilder[key](this.constructor.signifyBuilder(column), ...args);
+    this.queryBuilder[key](this.constructor.signify(column), ...args);
     return this;
   };
 });
