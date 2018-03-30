@@ -626,6 +626,10 @@ describe('model', () => {
 
         await model.increment('total', 10);
         expect(model.total).toBe(20);
+
+        expect(
+          model.where({ name: 'XYZ' }).increment('total', 10, Error),
+        ).rejects.toEqual(new Error());
       });
 
       it('multiple', async () => {
@@ -636,9 +640,13 @@ describe('model', () => {
         expect(model.total).toBe(10);
 
         expect((await Default.load(1)).total).toBe(10);
-        await model.increment('total', 10);
+        await model.increment({ total: 10 });
 
         expect(model.total).toBe(20);
+
+        expect(
+          model.where({ name: 'XYZ' }).increment({ total: 10 }, Error),
+        ).rejects.toEqual(new Error());
       });
     });
 

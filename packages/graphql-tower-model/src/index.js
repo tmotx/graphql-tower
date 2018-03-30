@@ -452,9 +452,11 @@ export default class Model {
     return this;
   }
 
-  async updateWithMerge(changes) {
+  async updateWithMerge(changes, error) {
     const { signify } = this.constructor;
     const [row] = await this.query.update(signify(changes)).returning('*');
+    if (!row) return assertResult(false, error);
+
     this.merge(row);
     return this;
   }
@@ -542,7 +544,7 @@ export default class Model {
     return this.updateWithMerge(changes);
   }
 
-  async increment(key, difference) {
+  async increment(key, difference, error) {
     const { database, signify } = this.constructor;
     const values = signify(_.mapValues(
       _.isPlainObject(key) ? key : _.set({}, [key], difference),
@@ -550,7 +552,7 @@ export default class Model {
     ));
 
     const changes = _.mapValues(values, (value, column) => database.raw(`${column} + ?`, [value]));
-    return this.updateWithMerge(changes);
+    return this.updateWithMerge(changes, error || difference);
   }
 
   search(keyword) {
