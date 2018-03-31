@@ -192,7 +192,7 @@ export default class StorageS3 {
         { key: path },
         { acl },
         { success_action_status: successActionStatus },
-        ['content-length-range', 1, 30 * 1024 * 1024],
+        ['content-length-range', 1, 150 * 1024 * 1024],
         { 'x-amz-algorithm': algorithm },
         { 'x-amz-credential': credential },
         { 'x-amz-date': `${date}T000000Z` },
