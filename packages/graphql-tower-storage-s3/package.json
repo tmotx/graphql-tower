@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-storage-s3",
-  "version": "3.36.6",
+  "version": "3.36.7",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -29,6 +29,6 @@
     "lodash": "^4.17.5"
   },
   "devDependencies": {
-    "graphql-tower-storage-s3": "^3.36.6"
+    "graphql-tower-storage-s3": "^3.36.7"
   }
 }

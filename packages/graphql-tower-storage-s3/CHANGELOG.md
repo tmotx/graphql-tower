@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.36.7"></a>
+## [3.36.7](https://github.com/tmotx/graphql-tower/compare/v3.36.6...v3.36.7) (2018-03-31)
+
+
+### Bug Fixes
+
+* **storage-s3:** fix content-range ([89460f4](https://github.com/tmotx/graphql-tower/commit/89460f4))
+
+
+
+
 <a name="3.36.6"></a>
 ## [3.36.6](https://github.com/tmotx/graphql-tower/compare/v3.36.5...v3.36.6) (2018-03-31)
 
