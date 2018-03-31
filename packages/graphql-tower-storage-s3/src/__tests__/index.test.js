@@ -238,7 +238,7 @@ describe('storage s3', () => {
     });
 
     it('when input width and height', async () => {
-      await storage.fetchCover('IMAGE_KEY', '2048', '2048');
+      await storage.fetchCover('IMAGE_KEY', undefined, '2048', '2048');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'headObject',

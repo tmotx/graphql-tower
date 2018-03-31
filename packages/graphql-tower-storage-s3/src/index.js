@@ -117,25 +117,25 @@ export default class StorageS3 {
     });
   }
 
-  async fetch(key) {
+  async fetch(key, range) {
     const Key = `media/${key}`;
     await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key }).createReadStream();
+    return this.s3.getObject({ Key, Range: range }).createReadStream();
   }
 
-  async fetchMp4(key) {
+  async fetchMp4(key, range) {
     const Key = `media/${key}_mp4`;
     await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key }).createReadStream();
+    return this.s3.getObject({ Key, Range: range }).createReadStream();
   }
 
-  async fetchWebm(key) {
+  async fetchWebm(key, range) {
     const Key = `media/${key}_webm`;
     await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key }).createReadStream();
+    return this.s3.getObject({ Key, Range: range }).createReadStream();
   }
 
-  async fetchCover(key, width = 1920, height = null) {
+  async fetchCover(key, range, width = 1920, height = null) {
     const cacheName = `cache/${key}_cover_${[width, height].join('x')}`;
 
     try {
@@ -149,7 +149,7 @@ export default class StorageS3 {
       });
     }
 
-    return this.s3.getObject({ Key: cacheName }).createReadStream();
+    return this.s3.getObject({ Key: cacheName, Range: range }).createReadStream();
   }
 
   async fetchPreCover(key, width = 128, height = null) {
