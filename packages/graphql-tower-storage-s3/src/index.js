@@ -81,19 +81,25 @@ export default class StorageS3 {
     return this.s3
       .getObject({ Key: key, Range: range })
       .on('httpHeaders', function httpHeaders(statusCode, headers) {
-        if (statusCode !== 200 && statusCode !== 206) {
+        try {
+          if (statusCode !== 200 && statusCode !== 206) {
+            throw Error();
+          }
+
+          if (headers['content-range']) {
+            res.setHeader('Content-Range', headers['content-range']);
+          }
+
+          res.writeHead(statusCode, {
+            'Accept-Ranges': headers['accept-ranges'],
+            'Content-Length': headers['content-length'],
+          });
+
+          const stream = this.response.httpResponse.createUnbufferedStream();
+          stream.pipe(res);
+        } catch (e) {
           res.status(404).send('404 Not Found');
-          return;
         }
-
-        res.writeHead(statusCode, {
-          'Content-Range': headers['content-range'],
-          'Accept-Ranges': headers['accept-ranges'],
-          'Content-Length': headers['content-length'],
-        });
-
-        const stream = this.response.httpResponse.createUnbufferedStream();
-        stream.pipe(res);
       }).send();
   }
 
