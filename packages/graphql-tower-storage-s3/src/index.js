@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import url from 'url';
 import crypto from 'crypto';
 import fileType from 'file-type';
@@ -74,6 +75,28 @@ export default class StorageS3 {
       });
   }
 
+  invokeReadStream(key, req, res) {
+    const range = _.get(req, ['headers', 'range']);
+
+    return this.s3
+      .getObject({ Key: key, Range: range })
+      .on('httpHeaders', function httpHeaders(statusCode, headers) {
+        if (statusCode !== 200 && statusCode !== 206) {
+          res.status(404).send('404 Not Found');
+          return;
+        }
+
+        res.writeHead(statusCode, {
+          'Content-Range': headers['content-range'],
+          'Accept-Ranges': headers['accept-ranges'],
+          'Content-Length': headers['content-length'],
+        });
+
+        const stream = this.response.httpResponse.createUnbufferedStream();
+        stream.pipe(res);
+      }).send();
+  }
+
   async checkContentType(key) {
     try {
       const from = this.s3.getObject({ Key: `uploader/${key}` });
@@ -117,39 +140,33 @@ export default class StorageS3 {
     });
   }
 
-  async fetch(key, range) {
-    const Key = `media/${key}`;
-    await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key, Range: range }).createReadStream();
+  async fetch(key, req, res) {
+    return this.invokeReadStream(`media/${key}`, req, res);
   }
 
-  async fetchMp4(key, range) {
-    const Key = `media/${key}_mp4`;
-    await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key, Range: range }).createReadStream();
+  async fetchMp4(key, req, res) {
+    return this.invokeReadStream(`media/${key}_mp4`, req, res);
   }
 
-  async fetchWebm(key, range) {
-    const Key = `media/${key}_webm`;
-    await this.s3.headObject({ Key }).promise();
-    return this.s3.getObject({ Key, Range: range }).createReadStream();
+  async fetchWebm(key, req, res) {
+    return this.invokeReadStream(`media/${key}_webm`, req, res);
   }
 
-  async fetchCover(key, range, width = 1920, height = null) {
-    const cacheName = `cache/${key}_cover_${[width, height].join('x')}`;
+  async fetchCover(key, req, res, width = 1920, height = null) {
+    const Key = `cache/${key}_cover_${[width, height].join('x')}`;
 
     try {
-      await this.s3.headObject({ Key: cacheName }).promise();
+      await this.s3.headObject({ Key }).promise();
     } catch (e) {
       await this.invokeLambda('resize-image', {
         source: `media/${key}_cover`,
-        target: cacheName,
+        target: Key,
         width,
         height,
       });
     }
 
-    return this.s3.getObject({ Key: cacheName, Range: range }).createReadStream();
+    return this.invokeReadStream(Key, req, res);
   }
 
   async fetchPreCover(key, width = 128, height = null) {

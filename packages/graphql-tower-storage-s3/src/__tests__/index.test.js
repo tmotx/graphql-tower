@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { promise, createReadStream } from 'aws-sdk';
+import { promise, createReadStream, send } from 'aws-sdk';
 import StorageS3 from '../';
 import upload from '../upload';
 
@@ -132,62 +132,34 @@ describe('storage s3', () => {
 
   describe('fetch', () => {
     it('successfully fetch', async () => {
-      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
-
       await storage.fetch('MEDIA_KEY');
 
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'media/MEDIA_KEY', method: 'getObject',
       }));
-      expect(createReadStream).toHaveBeenCalledTimes(1);
-    });
-
-    it('not found', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-
-      expect(storage.fetch('MEDIA_KEY')).rejects.toEqual(new Error('not found'));
-      expect(createReadStream).toHaveBeenCalledTimes(0);
+      expect(send).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('fetchMp4', () => {
     it('successfully fetch', async () => {
-      promise.mockReturnValueOnce();
-      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
-
       await storage.fetchMp4('VIDEO_KEY');
 
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'media/VIDEO_KEY_mp4', method: 'getObject',
       }));
-      expect(createReadStream).toHaveBeenCalledTimes(1);
-    });
-
-    it('not found', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-
-      expect(storage.fetchMp4('VIDEO_KEY')).rejects.toEqual(new Error('not found'));
-      expect(createReadStream).toHaveBeenCalledTimes(0);
+      expect(send).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('fetchWebm', () => {
     it('successfully fetch', async () => {
-      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.webm`));
-
       await storage.fetchWebm('VIDEO_KEY');
 
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'media/VIDEO_KEY_webm', method: 'getObject',
       }));
-      expect(createReadStream).toHaveBeenCalledTimes(1);
-    });
-
-    it('not found', async () => {
-      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
-
-      expect(storage.fetchWebm('VIDEO_KEY')).rejects.toEqual(new Error('not found'));
-      expect(createReadStream).toHaveBeenCalledTimes(0);
+      expect(send).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -196,7 +168,6 @@ describe('storage s3', () => {
       promise
         .mockReturnValueOnce(Promise.reject(new Error('not found')))
         .mockReturnValueOnce(Promise.resolve({ StatusCode: 200, Payload: '{"status":"ok"}' }));
-      createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.jpg`));
 
       await storage.fetchCover('IMAGE_KEY');
 
@@ -217,11 +188,11 @@ describe('storage s3', () => {
         }),
       }));
 
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'getObject',
       }));
       expect(promise).toHaveBeenCalledTimes(2);
-      expect(createReadStream).toHaveBeenCalledTimes(1);
+      expect(send).toHaveBeenCalledTimes(1);
     });
 
     it('successfully fetch use cache', async () => {
@@ -230,20 +201,20 @@ describe('storage s3', () => {
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'headObject',
       }));
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_1920x', method: 'getObject',
       }));
       expect(promise).toHaveBeenCalledTimes(1);
-      expect(createReadStream).toHaveBeenCalledTimes(1);
+      expect(send).toHaveBeenCalledTimes(1);
     });
 
     it('when input width and height', async () => {
-      await storage.fetchCover('IMAGE_KEY', undefined, '2048', '2048');
+      await storage.fetchCover('IMAGE_KEY', undefined, undefined, '2048', '2048');
 
       expect(promise).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'headObject',
       }));
-      expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
+      expect(send).toHaveBeenCalledWith(expect.objectContaining({
         Key: 'cache/IMAGE_KEY_cover_2048x2048', method: 'getObject',
       }));
     });
