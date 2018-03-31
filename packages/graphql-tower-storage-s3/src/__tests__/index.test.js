@@ -134,17 +134,25 @@ describe('storage s3', () => {
     it('successfully fetch', async () => {
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
 
-      await storage.fetch('VIDEO_KEY');
+      await storage.fetch('MEDIA_KEY');
 
       expect(createReadStream).toHaveBeenCalledWith(expect.objectContaining({
-        Key: 'media/VIDEO_KEY', method: 'getObject',
+        Key: 'media/MEDIA_KEY', method: 'getObject',
       }));
       expect(createReadStream).toHaveBeenCalledTimes(1);
+    });
+
+    it('not found', async () => {
+      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+
+      expect(storage.fetch('MEDIA_KEY')).rejects.toEqual(new Error('not found'));
+      expect(createReadStream).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('fetchMp4', () => {
     it('successfully fetch', async () => {
+      promise.mockReturnValueOnce();
       createReadStream.mockReturnValueOnce(fs.createReadStream(`${__dirname}/sample.mp4`));
 
       await storage.fetchMp4('VIDEO_KEY');
@@ -153,6 +161,13 @@ describe('storage s3', () => {
         Key: 'media/VIDEO_KEY_mp4', method: 'getObject',
       }));
       expect(createReadStream).toHaveBeenCalledTimes(1);
+    });
+
+    it('not found', async () => {
+      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+
+      expect(storage.fetchMp4('VIDEO_KEY')).rejects.toEqual(new Error('not found'));
+      expect(createReadStream).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -166,6 +181,13 @@ describe('storage s3', () => {
         Key: 'media/VIDEO_KEY_webm', method: 'getObject',
       }));
       expect(createReadStream).toHaveBeenCalledTimes(1);
+    });
+
+    it('not found', async () => {
+      promise.mockReturnValueOnce(Promise.reject(new Error('not found')));
+
+      expect(storage.fetchWebm('VIDEO_KEY')).rejects.toEqual(new Error('not found'));
+      expect(createReadStream).toHaveBeenCalledTimes(0);
     });
   });
 

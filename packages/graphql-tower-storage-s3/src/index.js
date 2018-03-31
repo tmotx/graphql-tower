@@ -118,15 +118,21 @@ export default class StorageS3 {
   }
 
   async fetch(key) {
-    return this.s3.getObject({ Key: `media/${key}` }).createReadStream();
+    const Key = `media/${key}`;
+    await this.s3.headObject({ Key }).promise();
+    return this.s3.getObject({ Key }).createReadStream();
   }
 
   async fetchMp4(key) {
-    return this.s3.getObject({ Key: `media/${key}_mp4` }).createReadStream();
+    const Key = `media/${key}_mp4`;
+    await this.s3.headObject({ Key }).promise();
+    return this.s3.getObject({ Key }).createReadStream();
   }
 
   async fetchWebm(key) {
-    return this.s3.getObject({ Key: `media/${key}_webm` }).createReadStream();
+    const Key = `media/${key}_webm`;
+    await this.s3.headObject({ Key }).promise();
+    return this.s3.getObject({ Key }).createReadStream();
   }
 
   async fetchCover(key, width = 1920, height = null) {
