@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ip-investigator IPInvestigator 1`] = `
+IPInvestigator {
+  "aws": null,
+  "countryCode": "TW",
+  "countryName": "Taiwan",
+  "ip": "27.242.94.11",
+  "ipaddr": IPv4 {
+    "octets": Array [
+      27,
+      242,
+      94,
+      11,
+    ],
+  },
+  "ipv6Addr": IPv6 {
+    "parts": Array [
+      0,
+      0,
+      0,
+      0,
+      0,
+      65535,
+      7154,
+      24075,
+    ],
+  },
+  "isAWS": false,
+  "isReserved": false,
+  "registeredCountryCode": "TW",
+  "registeredCountryName": "Taiwan",
+}
+`;
+
+exports[`ip-investigator isAWS 1`] = `
+Object {
+  "region": "GLOBAL",
+  "service": "AMAZON",
+}
+`;

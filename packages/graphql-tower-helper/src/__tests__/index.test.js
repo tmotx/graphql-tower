@@ -1,6 +1,18 @@
 import _ from 'lodash';
 import { NotFoundError } from 'graphql-tower-errors';
-import { thunk, coalesce, next, combine, functional, retry, displayName, assertResult, batch } from '../';
+import {
+  thunk,
+  coalesce,
+  next,
+  combine,
+  functional,
+  retry,
+  displayName,
+  assertResult,
+  batch,
+  bufferToUuid,
+  uuidToBuffer,
+} from '../';
 
 describe('helper', () => {
   it('thunk', async () => {
@@ -184,5 +196,39 @@ describe('helper', () => {
     await tasker('a');
     await tasker('b');
     expect(handler).toHaveBeenCalledTimes(2);
+  });
+
+  describe('bufferToUuid', () => {
+    it('successful conversion', () => {
+      expect(bufferToUuid(Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72])))
+        .toBe('00000000-0000-0000-0000-627566666572');
+      expect(bufferToUuid(Buffer.from([
+        0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0x62, 0x75,
+        0x66, 0x66, 0x65, 0x72, 0x66, 0x66, 0x65, 0x72,
+      ]))).toBe('62756666-6572-6275-6666-657266666572');
+    });
+
+    it('is not buffer', () => {
+      expect(bufferToUuid('xyz')).toBe(null);
+      expect(bufferToUuid(1)).toBe(null);
+    });
+  });
+
+  describe('uuidToBuffer', () => {
+    it('successful conversion', () => {
+      expect(uuidToBuffer('00000000-0000-0000-0000-627566666572')).toEqual(Buffer.from([
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0x62, 0x75, 0x66, 0x66, 0x65, 0x72,
+      ]));
+      expect(uuidToBuffer('62756666-6572-6275-6666-657266666572')).toEqual(Buffer.from([
+        0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0x62, 0x75,
+        0x66, 0x66, 0x65, 0x72, 0x66, 0x66, 0x65, 0x72,
+      ]));
+    });
+
+    it('is not buffer', () => {
+      expect(uuidToBuffer('xyz')).toBe(null);
+      expect(uuidToBuffer(1)).toBe(null);
+    });
   });
 });

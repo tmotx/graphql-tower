@@ -1,0 +1,29 @@
+{
+  "name": "graphql-tower-ip-investigator",
+  "version": "3.36.2",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib && cp -R src/db lib/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmotx/graphql-tower.git"
+  },
+  "author": "tmotx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmotx/graphql-tower/issues"
+  },
+  "homepage": "https://github.com/tmotx/graphql-tower#readme",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "graphql-tower-helper": "^3.33.0",
+    "ipaddr.js": "^1.6.0",
+    "ipip-datx": "^0.2.1",
+    "lodash": "^4.17.5",
+    "maxmind": "^2.5.0"
+  }
+}

@@ -7,3 +7,5 @@ export { default as retry } from './retry';
 export { default as displayName } from './displayName';
 export { default as assertResult } from './assertResult';
 export { default as batch } from './batch';
+export { default as bufferToUuid } from './bufferToUuid';
+export { default as uuidToBuffer } from './uuidToBuffer';

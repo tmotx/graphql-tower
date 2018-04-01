@@ -75,6 +75,7 @@
     ]
   },
   "dependencies": {
+    "babel-plugin-lodash": "^3.3.2",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.0.0",
     "react-dropzone": "^4.2.9"
