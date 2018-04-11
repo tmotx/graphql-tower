@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.0"></a>
+# [3.38.0](https://github.com/tmotx/graphql-tower/compare/v3.37.0...v3.38.0) (2018-04-11)
+
+
+### Features
+
+* **faker:** support fake on GraphQLScalarType ([a0da768](https://github.com/tmotx/graphql-tower/commit/a0da768))
+
+
+
+
 <a name="3.36.0"></a>
 # [3.36.0](https://github.com/tmotx/graphql-tower/compare/v3.35.0...v3.36.0) (2018-03-26)
 
