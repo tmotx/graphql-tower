@@ -12,4 +12,5 @@ export default new GraphQLParserType({
 
     return new Date(Date.UTC(new Date(Date.now()).getUTCFullYear() - age, 0, 1, 0, 0, 0));
   },
+  fake: 18,
 });

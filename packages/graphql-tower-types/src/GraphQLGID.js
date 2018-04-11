@@ -15,6 +15,7 @@ const GraphQLGID = new GraphQLParserType({
 
     return id;
   },
+  fake: 'iNajVKI0O6ZDtu6xiZnMvb',
 });
 
 export class GraphQLGlobalIdField {

@@ -13,4 +13,5 @@ export default new GraphQLParserType({
 
     return date;
   },
+  fake: '2018-04-10T12:00:00.000Z',
 });

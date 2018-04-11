@@ -11,4 +11,5 @@ export default new GraphQLParserType({
       throw new TypeError(`JSON cannot represent non value: ${value}`);
     }
   },
+  fake: { key: 'value' },
 });

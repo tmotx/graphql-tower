@@ -1,4 +1,5 @@
 import { GraphQLScalarType } from 'graphql';
+import assertResult from 'graphql-tower-helper/assertResult';
 
 export default class extends GraphQLScalarType {
   constructor(config) {
@@ -9,5 +10,7 @@ export default class extends GraphQLScalarType {
       },
       ...config,
     });
+
+    this.fake = assertResult(config.fake, new TypeError('fake is required'));
   }
 }

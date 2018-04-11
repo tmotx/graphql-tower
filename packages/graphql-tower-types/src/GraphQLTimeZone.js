@@ -8,6 +8,7 @@ function pad(value) {
 }
 
 const timezoneRegex = /^[+-](?:2[0-3]|[01][0-9]):[0-5][0-9]$/;
+
 export default new GraphQLParserType({
   name: 'TimeZone',
   description: 'from -24 to 24 or -24:00 to +24:00',
@@ -25,4 +26,5 @@ export default new GraphQLParserType({
     const abs = Math.abs(zone);
     return `${zone >= 0 ? '+' : '-'}${pad(toInteger(abs / 60) % 24)}:${pad(abs % 60)}`;
   },
+  fake: '+08:30',
 });

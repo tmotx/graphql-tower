@@ -1,24 +1,23 @@
-import toNumber from 'lodash/toNumber';
+import _ from 'lodash';
 import GraphQLParserType from './GraphQLParserType';
 
 export default class extends GraphQLParserType {
   constructor(config) {
-    super({
-      serialize: toNumber,
-      parseValue(value) {
-        const number = toNumber(value);
+    const max = _.isUndefined(config.max) ? 1000 : config.max;
+    const min = _.isUndefined(config.min) ? -100 : config.min;
 
-        if (
-          Number.isNaN(number) ||
-          (config.min !== undefined && number < config.min) ||
-          (config.max !== undefined && number > config.max)
-        ) {
+    super({
+      serialize: _.toNumber,
+      parseValue(value) {
+        const number = _.toNumber(value);
+
+        if (Number.isNaN(number) || !_.inRange(number, config.min, config.max)) {
           throw new TypeError(`${config.name} cannot represent non value: ${value}`);
         }
 
         return number;
       },
-      ...config,
+      ..._.defaults(config, { fake: ((max - min) / 2) + 0.5 }),
     });
   }
 }

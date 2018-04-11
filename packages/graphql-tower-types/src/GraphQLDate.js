@@ -12,4 +12,5 @@ export default new GraphQLParserType({
 
     return date.toISOString().substr(0, 10);
   },
+  fake: '2018-04-10',
 });

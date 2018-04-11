@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import _ from 'lodash';
-import { DateTime } from 'luxon';
 import opn from 'opn';
 import gql from 'graphql-tag';
 import {
@@ -167,35 +166,31 @@ describe('faker', () => {
       inheritance: { base, aaa, bbb },
     } = data;
 
-    expect(id).toEqual(expect.stringMatching(/^[\w=]+$/));
-    expect(int).toEqual(expect.any(Number));
-    expect(float).toEqual(expect.any(Number));
-    expect(string).toEqual(expect.any(String));
-    expect(boolean).toEqual(expect.any(Boolean));
-    expect(['ok', 'failed']).toContain(responseStatus);
+    expect(id).toBe('ID');
+    expect(int).toBe(99);
+    expect(float).toBe(9.99);
+    expect(string).toBe('String');
+    expect(boolean).toBe(true);
+    expect(responseStatus).toBe('failed');
     expect(isGlobalId(gid)).toBe(true);
-    expect(date).toBe(new Date().toISOString().substr(0, 10));
-    expect(datetime).toEqual(expect.stringContaining(new Date().toISOString().substr(0, 19)));
-    expect(timezone).toEqual(expect.stringMatching(/^[+-](?:2[0-3]|[01][0-9]):[0-5][0-9]$/));
-    try {
-      expect(expiration).toBe(false);
-    } catch (e) {
-      expect(DateTime.fromISO(expiration) > DateTime.local()).toBe(true);
-    }
-    expect(sentence).toEqual(expect.any(String));
-    expect(mobile).toEqual(expect.stringMatching(/^8860{4}[0-9]{9}$/));
-    expect(json).toEqual(expect.any(Object));
-    expect(email).toEqual(expect.stringMatching(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/));
-    expect(['male', 'female', 'other']).toContain(gender);
-    expect(age).toEqual(expect.any(Number));
-    expect(percent).toEqual(expect.any(Number));
-    expect(list).toEqual(expect.arrayContaining([expect.any(Number)]));
-    expect(custom).toBe('<Custom>');
-    expect(base.label).toEqual(expect.any(String));
+    expect(date).toBe('2018-04-10');
+    expect(datetime).toBe('2018-04-10T12:00:00.000Z');
+    expect(timezone).toBe('+08:30');
+    expect(expiration).toBe('2018-04-10T12:00:00.000Z');
+    expect(sentence).toBe('Sentence');
+    expect(mobile).toBe('8860000963066131');
+    expect(json).toEqual({ key: 'value' });
+    expect(email).toBe('yutin@tmotx.com');
+    expect(gender).toBe('male');
+    expect(age).toBe(18);
+    expect(percent).toBe(49.5);
+    expect(list).toEqual([99, 99, 99]);
+    expect(custom).toBe('NULL');
+    expect(base.label).toBe('String');
     expect(['AAA', 'BBB']).toContain(_.get(base, ['__typename']));
-    expect(aaa.name).toEqual(expect.any(String));
-    expect(bbb.numberOfView).toEqual(expect.any(Number));
-    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Not Found Custom Type.'));
+    expect(aaa.name).toBe('Sentence');
+    expect(bbb.numberOfView).toBe(99);
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Not Found Fake of Custom Type.'));
 
     await new Promise(process.nextTick);
 

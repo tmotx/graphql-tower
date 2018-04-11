@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "graphql-tower-global-id": "^3.3.3",
+    "graphql-tower-helper": "^3.37.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.1"
   },

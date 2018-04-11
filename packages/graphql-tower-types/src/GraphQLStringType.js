@@ -1,12 +1,12 @@
-import toString from 'lodash/toString';
+import _ from 'lodash';
 import GraphQLParserType from './GraphQLParserType';
 
 export default class extends GraphQLParserType {
   constructor(config) {
     super({
-      serialize: toString,
+      serialize: _.toString,
       parseValue(value) {
-        const string = toString(value);
+        const string = _.toString(value);
 
         if (config.maxLength !== undefined && string.length > config.maxLength) {
           throw new TypeError(`${config.name} length more than the maximum length of ${config.maxLength}`);
@@ -18,7 +18,7 @@ export default class extends GraphQLParserType {
 
         return string;
       },
-      ...config,
+      ..._.defaults(config, { fake: config.name }),
     });
   }
 }

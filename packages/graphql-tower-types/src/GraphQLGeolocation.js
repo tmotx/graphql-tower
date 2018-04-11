@@ -34,4 +34,5 @@ export default new GraphQLParserType({
 
     return result;
   },
+  fake: { accuracy: 60, latitude: 35.175217, longitude: -121.553512 },
 });
