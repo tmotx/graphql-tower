@@ -13,10 +13,12 @@ export default (option) => {
 
     static propTypes = {
       cache: PropTypes.shape(),
+      url: PropTypes.shape(),
     };
 
     static defaultProps = {
       cache: {},
+      url: {},
     }
 
     static getInitialProps(context) {
@@ -59,7 +61,7 @@ export default (option) => {
     }
 
     componentWillMount() {
-      const options = optionThunk(this.props);
+      const options = optionThunk({ ...this.props, ...this.props.url });
       this.apollo = initApollo(this.props.cache, options);
     }
 
