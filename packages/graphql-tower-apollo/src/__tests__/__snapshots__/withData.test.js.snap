@@ -138,6 +138,8 @@ Object {
       },
     },
   },
+  "context": undefined,
+  "url": Object {},
 }
 `;
 

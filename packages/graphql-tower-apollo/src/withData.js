@@ -24,18 +24,19 @@ export default (option) => {
 
     static getInitialProps(context) {
       const url = _.pick(context, ['query', 'pathname', 'asPath']);
-      const options = optionThunk({ context, url });
+      const initialProps = { context, url };
+      const options = optionThunk(initialProps);
 
-      const apollo = initApollo({}, { context, ...options });
+      const apollo = initApollo({}, { ...initialProps, ...options });
 
       return Promise.resolve()
         .then(() => {
           // Evaluate the composed component's getInitialProps()
           if (Component.getInitialProps) {
-            return Component.getInitialProps(context, apollo);
+            return Component.getInitialProps(initialProps, apollo);
           }
 
-          return {};
+          return initialProps;
         })
         .then((props) => {
           // Run all GraphQL queries in the component tree
