@@ -36,7 +36,7 @@ export default (option) => {
             return Component.getInitialProps(initialProps, apollo);
           }
 
-          return initialProps;
+          return { url };
         })
         .then((props) => {
           // Run all GraphQL queries in the component tree
