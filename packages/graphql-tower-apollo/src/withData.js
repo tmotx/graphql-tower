@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import wrapDisplayName from 'recompose/wrapDisplayName';
@@ -22,7 +23,8 @@ export default (option) => {
     }
 
     static getInitialProps(context) {
-      const options = optionThunk(context);
+      const url = _.pick(context, ['query', 'pathname', 'asPath']);
+      const options = optionThunk({ context, url });
 
       const apollo = initApollo({}, { context, ...options });
 
@@ -61,7 +63,7 @@ export default (option) => {
     }
 
     componentWillMount() {
-      const options = optionThunk({ ...this.props, ...this.props.url });
+      const options = optionThunk(this.props);
       this.apollo = initApollo(this.props.cache, options);
     }
 
