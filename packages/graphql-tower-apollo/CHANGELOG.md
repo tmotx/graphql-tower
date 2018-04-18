@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.2"></a>
+## [3.38.2](https://github.com/tmotx/graphql-tower/compare/v3.38.1...v3.38.2) (2018-04-18)
+
+
+### Bug Fixes
+
+* **apollo:** pass url to optionThunk ([f7efb0f](https://github.com/tmotx/graphql-tower/commit/f7efb0f))
+
+
+
+
 <a name="3.38.1"></a>
 ## [3.38.1](https://github.com/tmotx/graphql-tower/compare/v3.38.0...v3.38.1) (2018-04-16)
 
