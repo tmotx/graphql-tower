@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.3"></a>
+## [3.38.3](https://github.com/tmotx/graphql-tower/compare/v3.38.2...v3.38.3) (2018-04-18)
+
+
+### Bug Fixes
+
+* **apollo:** wrap context and url to initialProps ([3a37150](https://github.com/tmotx/graphql-tower/commit/3a37150))
+
+
+
+
 <a name="3.38.2"></a>
 ## [3.38.2](https://github.com/tmotx/graphql-tower/compare/v3.38.1...v3.38.2) (2018-04-18)
 
