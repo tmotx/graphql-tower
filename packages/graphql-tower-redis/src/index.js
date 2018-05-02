@@ -4,7 +4,9 @@ import commands from 'redis-commands';
 
 export default class Redis {
   constructor(env = '') {
-    this.client = redis.createClient(env.REDIS_URL || env);
+    const url = env.REDIS_URL || env;
+    if (!url) return;
+    this.client = redis.createClient();
   }
 
   multi(items) {
