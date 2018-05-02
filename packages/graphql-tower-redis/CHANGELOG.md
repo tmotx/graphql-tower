@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.6"></a>
+## [3.38.6](https://github.com/tmotx/graphql-tower/compare/v3.38.5...v3.38.6) (2018-05-02)
+
+
+### Bug Fixes
+
+* **redis:** REDIS_URL is required ([c6989d0](https://github.com/tmotx/graphql-tower/commit/c6989d0))
+
+
+
+
 <a name="3.24.3"></a>
 ## [3.24.3](https://github.com/tmotx/graphql-tower/compare/v3.24.2...v3.24.3) (2017-12-11)
 

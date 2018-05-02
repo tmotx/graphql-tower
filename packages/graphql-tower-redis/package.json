@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-redis",
-  "version": "3.24.3",
+  "version": "3.38.6",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
