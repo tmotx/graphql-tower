@@ -1,7 +1,7 @@
 import Redis from '../';
 
-const redis = new Redis('redis://127.0.0.1:6379/');
-const pub = new Redis('redis://127.0.0.1:6379/');
+const redis = new Redis({ REDIS_URL: 'redis://127.0.0.1:6379/' });
+const pub = new Redis({ REDIS_URL: 'redis://127.0.0.1:6379/' });
 
 describe('redis', () => {
   it('get / set', async () => {

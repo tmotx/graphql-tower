@@ -4,7 +4,7 @@ jest.useFakeTimers();
 
 describe('redis pubsub', () => {
   it('publish / subscribe', async () => {
-    const redis = new RedisPubSub();
+    const redis = new RedisPubSub({ PUBSUB_URL: 'redis://127.0.0.1:6379/' });
 
     let resolve;
     const promise = new Promise((_) => { resolve = _; });
@@ -16,7 +16,7 @@ describe('redis pubsub', () => {
   });
 
   it('format / stringify', async () => {
-    const redis = new RedisPubSub({}, {
+    const redis = new RedisPubSub({ PUBSUB_URL: 'redis://127.0.0.1:6379/' }, {
       format: value => parseInt(value, 10) + 1,
       stringify: value => parseInt(value, 10) + 1,
     });
@@ -32,7 +32,7 @@ describe('redis pubsub', () => {
 
   it('onMessage', async () => {
     const onMessage = jest.fn(() => ({ name: 'yutin' }));
-    const redis = new RedisPubSub({}, { onMessage });
+    const redis = new RedisPubSub({ REDIS_URL: 'redis://127.0.0.1:6379/' }, { onMessage });
 
     let resolve;
     const promise = new Promise((_) => { resolve = _; });
@@ -46,7 +46,7 @@ describe('redis pubsub', () => {
 
   it('onInterval', async () => {
     const listener = jest.fn();
-    const redis = new RedisPubSub({ PUBSUB_INTERVAL: 1 });
+    const redis = new RedisPubSub({ REDIS_URL: 'redis://127.0.0.1:6379/', PUBSUB_INTERVAL: 1 });
     redis.subscribe('onInterval', listener);
 
     let resolve;

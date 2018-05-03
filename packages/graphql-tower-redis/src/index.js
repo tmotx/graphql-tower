@@ -4,15 +4,18 @@ import commands from 'redis-commands';
 
 export default class Redis {
   constructor(env = '') {
-    const url = env.REDIS_URL || env;
-    if (!url) return;
-    this.client = redis.createClient();
+    if (!env.REDIS_URL) return;
+    this.io = redis.createClient(env.REDIS_URL);
   }
 
   multi(items) {
-    if (!items) return this.client.multi();
+    if (!this.io) {
+      throw new Error('REDIS_URL is required');
+    }
+
+    if (!items) return this.io.multi();
     return new Promise((resolve, rejects) => {
-      this.client.multi(items).exec((err, replies) => {
+      this.io.multi(items).exec((err, replies) => {
         if (err) {
           rejects(err);
           return;
@@ -34,7 +37,13 @@ forEach(commands.list, (key) => {
         }
         resolve(reply);
       });
-      this.client[key](...args);
+
+      if (!this.io) {
+        rejects(new Error('REDIS_URL is required'));
+        return;
+      }
+
+      this.io[key](...args);
     });
   };
 });
@@ -42,6 +51,7 @@ forEach(commands.list, (key) => {
 
 forEach(['on', 'once', 'addListener', 'removeListener'], (key) => {
   Redis.prototype[key] = function Command(...args) {
-    this.client[key](...args);
+    if (!this.io) return;
+    this.io[key](...args);
   };
 });

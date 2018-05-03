@@ -1,12 +1,13 @@
-import floor from 'lodash/floor';
+import _ from 'lodash';
 import Redis from 'graphql-tower-redis';
 import { PubSub } from 'graphql-subscriptions';
 
 export default class RedisPubSub extends PubSub {
   constructor(env = {}, options = {}) {
     super();
-    this.pub = new Redis(env.PUBSUB_URL);
-    this.sub = new Redis(env.PUBSUB_URL);
+    const config = _.defaults({}, { REDIS_URL: env.PUBSUB_URL }, env);
+    this.pub = new Redis(config);
+    this.sub = new Redis(config);
     this.sub.on('connect', () => this.sub.psubscribe('TOWER_PUBSUB::*'));
     this.sub.on('pmessage', async (pattern, patternChannel, message) => {
       const channel = patternChannel.replace(/^TOWER_PUBSUB::/, '');
@@ -31,7 +32,7 @@ export default class RedisPubSub extends PubSub {
   }
 
   async setInterval() {
-    const message = JSON.stringify({ timestamp: floor(Date.now(), -4) });
+    const message = JSON.stringify({ timestamp: _.floor(Date.now(), -4) });
     const contextValue = await this.onMessage(message, 'onInterval');
     const data = await this.format(message, 'onInterval', contextValue);
     super.publish('onInterval', { data, contextValue });
