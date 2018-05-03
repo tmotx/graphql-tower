@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-redis-subscriptions",
-  "version": "3.38.6",
+  "version": "3.38.7",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "graphql-subscriptions": "^0.5.5",
-    "graphql-tower-redis": "^3.38.6",
+    "graphql-tower-redis": "^3.38.7",
     "lodash": "^4.17.4"
   }
 }
