@@ -1,7 +1,7 @@
-import GraphQLIntegerType from './GraphQLIntegerType';
+import GraphQLNumberType from './GraphQLNumberType';
 
-export default new GraphQLIntegerType({
+export default new GraphQLNumberType({
   name: 'Percent',
-  min: 1,
-  max: 101,
+  min: 0,
+  max: 100,
 });

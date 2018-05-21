@@ -3,15 +3,15 @@ import GraphQLParserType from './GraphQLParserType';
 
 export default class extends GraphQLParserType {
   constructor(config) {
+    const min = _.isUndefined(config.min) ? -1000 : config.min;
     const max = _.isUndefined(config.max) ? 1000 : config.max;
-    const min = _.isUndefined(config.min) ? -100 : config.min;
 
     super({
       serialize: _.parseInt,
       parseValue(value) {
         const integer = _.parseInt(value);
 
-        if (Number.isNaN(integer) || !_.inRange(integer, config.min, config.max)) {
+        if (Number.isNaN(integer) || integer < config.min || integer > config.max) {
           throw new TypeError(`${config.name} cannot represent non value: ${value}`);
         }
 

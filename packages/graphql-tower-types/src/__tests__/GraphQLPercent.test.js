@@ -5,7 +5,7 @@ import expectGraphql from './index';
 
 describe('GraphQLPercent', () => {
   it('successfully query', async () => {
-    const value = 50;
+    const value = 100;
 
     await _.reduce([{
       value,
@@ -13,7 +13,7 @@ describe('GraphQLPercent', () => {
       result: { data: { value } },
     }, {
       query: `query { value (input: "${value}") }`,
-      calledWith: [undefined, { input: 50 }, undefined, expect.anything()],
+      calledWith: [undefined, { input: 100 }, undefined, expect.anything()],
     }, {
       query: 'query { value (input: "200") }',
       result: { errors: [new GraphQLError('Argument "input" has invalid value "200".\nExpected type "Percent", found "200".')] },
@@ -25,7 +25,7 @@ describe('GraphQLPercent', () => {
     }, {
       query: 'query($input: Percent) { value (input: $input) }',
       args: { input: value },
-      calledWith: [undefined, { input: 50 }, undefined, expect.anything()],
+      calledWith: [undefined, { input: 100 }, undefined, expect.anything()],
     }, {
       query: 'query($input: Percent) { value (input: $input) }',
       args: { input: -10 },
