@@ -1,4 +1,4 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_token"] }] */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_token", "_ownerId"] }] */
 
 import 'isomorphic-unfetch';
 import cookie from 'cookie';
@@ -36,12 +36,15 @@ function create(cache, {
 
   // Create an http link:
   link = new ApolloLink((operation, forward) => {
-    operation.setContext(({ headers }) =>
-      ({ headers: { ...headers, authorization: thunkAuthorization(context) } }));
+    operation.setContext(({ headers }) => ({
+      headers: { ...headers, authorization: thunkAuthorization(context) },
+    }));
     return forward(operation).map((response) => {
       const { response: { headers } } = operation.getContext();
       const refreshToken = headers.get('x-refresh-token');
+      const ownerId = headers.get('x-tmot-owner-id');
       if (refreshToken) client.token = refreshToken;
+      if (ownerId) client.ownerId = ownerId;
       return response;
     });
   }).concat(new HttpLink({ ...options, uri: httpUri, credentials: 'same-origin' }));
@@ -88,6 +91,17 @@ function create(cache, {
   Object.defineProperty(client, 'authorized', {
     get() {
       return Boolean(thunkAuthorization(context));
+    },
+  });
+
+  Object.defineProperty(client, 'ownerId', {
+    get() {
+      if (client._ownerId) return client._ownerId;
+      return localStorage.getItem('x-tmot-owner-id');
+    },
+    set(id) {
+      client._ownerId = id;
+      localStorage.setItem('x-tmot-owner-id', id);
     },
   });
 
