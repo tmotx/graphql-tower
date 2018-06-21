@@ -183,7 +183,7 @@ describe('faker', () => {
     expect(email).toBe('yutin@tmotx.com');
     expect(gender).toBe('male');
     expect(age).toBe(18);
-    expect(percent).toBe(50);
+    expect(percent).toBe(50.5);
     expect(list).toEqual([99, 99, 99]);
     expect(custom).toBe('NULL');
     expect(base.label).toBe('String');

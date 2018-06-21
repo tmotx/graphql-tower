@@ -55,7 +55,11 @@ app.use('/graphql', bodyParser.json(), graphqlExpress((req, res) => {
     res.append('Authorization', token);
   }
 
-  return { schema, context: { authorization: req.headers.authorization } };
+  const context = {};
+  if (req.headers['x-hackers']) context['x-hackers'] = req.headers['x-hackers'];
+  if (req.headers.authorization) context.authorization = req.headers.authorization;
+
+  return { schema, context };
 }));
 
 const server = http.createServer(app);
@@ -214,19 +218,28 @@ describe('withData', () => {
     it('query', async () => {
       renewToken.mockReturnValueOnce('new token');
 
-      let resolve;
-      const promise = new Promise((__) => { resolve = __; });
-      resolveSpy.mockImplementationOnce(resolve);
-
       const client = initApollo({}, { ...apollo, authorization: 'key of token' });
       execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
 
+      let resolve;
+      const promise = new Promise((__) => { resolve = __; });
+      resolveSpy.mockImplementationOnce(resolve);
       await promise;
 
-      await new Promise(setImmediate);
-      await new Promise(setImmediate);
-
       expect(resolveSpy).toHaveBeenLastCalledWith(undefined, {}, { authorization: 'key of token' }, expect.anything());
+      expect(resolveSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('headers', async () => {
+      const client = initApollo({}, { ...apollo, headers: () => ({ 'x-hackers': '999' }) });
+      execute(client.link, { query: gql`query { me { id name } }` }).subscribe({});
+
+      let resolve;
+      const promise = new Promise((__) => { resolve = __; });
+      resolveSpy.mockImplementationOnce(resolve);
+      await promise;
+
+      expect(resolveSpy).toHaveBeenLastCalledWith(undefined, {}, { 'x-hackers': '999' }, expect.anything());
       expect(resolveSpy).toHaveBeenCalledTimes(1);
     });
 

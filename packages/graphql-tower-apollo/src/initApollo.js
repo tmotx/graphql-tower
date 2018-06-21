@@ -16,12 +16,13 @@ import localStorage from './localStorage';
 
 function create(cache, {
   httpUri, wsUri,
-  authorization, context,
+  headers: takeHeaders, authorization, context,
   cacheResolvers, dataIdFromObject, introspectionQueryResultData,
   ...options
 } = {}) {
   let client;
 
+  const thunkHeaders = thunk(takeHeaders);
   const thunkAuthorization = thunk(authorization || ((server) => {
     const cookies = cookie.parse(get(server, ['req', 'headers', 'cookie'], ''));
     if (cookies.access_token) return `Bearer ${cookies.access_token}`;
@@ -36,8 +37,13 @@ function create(cache, {
 
   // Create an http link:
   link = new ApolloLink((operation, forward) => {
-    operation.setContext(({ headers }) =>
-      ({ headers: { ...headers, authorization: thunkAuthorization(context) } }));
+    operation.setContext(({ headers }) => ({
+      headers: {
+        ...headers,
+        ...thunkHeaders(context, headers),
+        authorization: thunkAuthorization(context),
+      },
+    }));
     return forward(operation).map((response) => {
       const { response: { headers } } = operation.getContext();
       const refreshToken = headers.get('x-refresh-token');
@@ -53,7 +59,10 @@ function create(cache, {
       uri: wsUri,
       options: {
         reconnect: true,
-        connectionParams: () => ({ authorization: thunkAuthorization(context) }),
+        connectionParams: () => ({
+          ...thunkHeaders(context),
+          authorization: thunkAuthorization(context),
+        }),
       },
     });
 
