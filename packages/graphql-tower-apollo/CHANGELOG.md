@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.9"></a>
+## [3.38.9](https://github.com/tmotx/graphql-tower/compare/v3.38.8...v3.38.9) (2018-06-21)
+
+
+### Bug Fixes
+
+* **apollo:** support hackers on initApollo ([7059565](https://github.com/tmotx/graphql-tower/commit/7059565))
+
+
+
+
 <a name="3.38.4"></a>
 ## [3.38.4](https://github.com/tmotx/graphql-tower/compare/v3.38.3...v3.38.4) (2018-04-18)
 
