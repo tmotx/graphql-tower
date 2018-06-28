@@ -214,7 +214,7 @@ exports[`model model search 2`] = `
 Array [
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for action, new for action, DATE, 10) returning *",
   "insert into default_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for search, new for search, DATE, 10) returning *",
-  "select ts_rank(keyword, new) as rank, *, count(*) OVER() AS total_count from default_table where keyword @@ to_tsquery(new) and deleted_at is null order by rank desc limit 1000",
+  "select ts_rank(keyword, query) as rank, *, count(*) OVER() AS total_count from default_table , to_tsquery('new|food&star') as query where keyword @@ query and deleted_at is null order by rank desc limit 1000",
 ]
 `;
 

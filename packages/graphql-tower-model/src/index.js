@@ -558,8 +558,10 @@ export default class Model {
   search(keyword) {
     const { database, keywordAttribute } = this.constructor;
     const { queryBuilder } = this;
-    queryBuilder.select(database.raw(`ts_rank(${keywordAttribute}, ?) as rank`, keyword));
-    queryBuilder.where(database.raw(`${keywordAttribute} @@ to_tsquery(?)`, keyword));
+    const query = _.trim(_.replace(keyword, /[ &|)(]+/g, text => (/&/.test(text) ? '&' : '|')), '|&)(');
+    queryBuilder.select(database.raw(`ts_rank(${keywordAttribute}, query) as rank`));
+    queryBuilder.joinRaw(database.raw(', to_tsquery(?) as query', query));
+    queryBuilder.whereRaw(`${keywordAttribute} @@ query`);
     queryBuilder.orderBy('rank', 'desc');
     return this;
   }

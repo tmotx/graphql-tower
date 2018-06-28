@@ -654,7 +654,7 @@ describe('model', () => {
       await (new Default({ name: 'new for action' })).save('10');
       await (new Default({ name: 'new for search' })).save('10');
       const model = new Default();
-      model.search('new');
+      model.search('new (food & star)');
 
       const results = await model.fetchAll();
       expect(results.totalCount).toBe(2);
