@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.10"></a>
+## [3.38.10](https://github.com/tmotx/graphql-tower/compare/v3.38.9...v3.38.10) (2018-06-28)
+
+
+### Bug Fixes
+
+* **apollo:** fix testing on withData ([506d608](https://github.com/tmotx/graphql-tower/commit/506d608))
+
+
+
+
 <a name="3.38.9"></a>
 ## [3.38.9](https://github.com/tmotx/graphql-tower/compare/v3.38.8...v3.38.9) (2018-06-21)
 

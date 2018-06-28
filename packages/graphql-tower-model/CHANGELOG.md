@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.10"></a>
+## [3.38.10](https://github.com/tmotx/graphql-tower/compare/v3.38.9...v3.38.10) (2018-06-28)
+
+
+### Bug Fixes
+
+* **model:** improve search performance ([ba0b1c2](https://github.com/tmotx/graphql-tower/commit/ba0b1c2))
+
+
+
+
 <a name="3.37.0"></a>
 # [3.37.0](https://github.com/tmotx/graphql-tower/compare/v3.36.7...v3.37.0) (2018-04-01)
 

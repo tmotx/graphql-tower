@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-apollo",
-  "version": "3.38.9",
+  "version": "3.38.10",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
