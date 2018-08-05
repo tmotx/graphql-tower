@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.11"></a>
+## [3.38.11](https://github.com/tmotx/graphql-tower/compare/v3.38.10...v3.38.11) (2018-08-05)
+
+
+### Bug Fixes
+
+* **model:** support valueOf on columns ([ada238f](https://github.com/tmotx/graphql-tower/commit/ada238f))
+
+
+
+
 <a name="3.38.10"></a>
 ## [3.38.10](https://github.com/tmotx/graphql-tower/compare/v3.38.9...v3.38.10) (2018-06-28)
 
