@@ -25,6 +25,13 @@ const database = knex({
   },
 });
 
+class Like {
+  value = 99;
+  valueOf() {
+    return this.value;
+  }
+}
+
 class User extends Model {
   static database = database;
 
@@ -178,7 +185,7 @@ describe('Columns', () => {
       archiveBirthday: new Date('2049-01-01'),
       archiveCheckAt: new Date('2049-04-01T10:00:00'),
       archiveItems: [20, 49, 49],
-      numberOflike: 99,
+      numberOflike: new Like(),
       nothing: 'xyz',
       enabled: new Date('2020-12-31'),
     });

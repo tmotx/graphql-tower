@@ -1,8 +1,7 @@
+import _ from 'lodash';
 import crypto from 'crypto';
 import set from 'lodash/set';
 import map from 'lodash/map';
-import isPlainObject from 'lodash/isPlainObject';
-import identity from 'lodash/identity';
 import { GoneDataError } from 'graphql-tower-errors';
 
 function isType(method) {
@@ -26,7 +25,7 @@ export class ValueColumn {
   }
 
   get serialize() {
-    return (this._.serialize.load || this._.serialize).bind(this._.serialize);
+    return this._.serialize;
   }
 
   get isModel() {
@@ -40,16 +39,19 @@ export class ValueColumn {
   }
 
   fromModel(value) {
-    if (value === null || value === undefined) return null;
+    if (_.isNil(value)) return null;
 
-    if (this.isModel) return this._.serialize.fromModel(value);
+    if (this.isModel) return this.serialize.fromModel(value);
 
-    return this.serialize(value);
+    return this.serialize(value.valueOf ? value.valueOf() : value);
   }
 
   toModel(value, { cache }) {
-    if (value === null || value === undefined) return null;
-    return this.serialize(value, GoneDataError, cache);
+    if (_.isNil(value)) return null;
+
+    if (this.isModel) return this.serialize.load(value, GoneDataError, cache);
+
+    return this.serialize(value);
   }
 
   set(value, data) {
@@ -63,7 +65,7 @@ export class ValueColumn {
 
 export class HashColumn extends ValueColumn {
   set(value, ...args) {
-    if (value === null || value === undefined) {
+    if (_.isNil(value)) {
       super.set(null, ...args);
       return;
     }
@@ -76,7 +78,7 @@ export class HashColumn extends ValueColumn {
 
 export class DateColumn extends ValueColumn {
   constructor(type, ...args) {
-    super(identity, ...args);
+    super(_.identity, ...args);
   }
 
   set(value, ...args) {
@@ -139,7 +141,7 @@ export class ArchiveColumn {
   }
 
   getArchive(data) {
-    if (!isPlainObject(data[this._.column])) {
+    if (!_.isPlainObject(data[this._.column])) {
       data[this._.column] = {}; // eslint-disable-line
     }
 
@@ -176,7 +178,7 @@ export class ReadOnlyColumn extends ValueColumn {
   constructor(getter, ...args) {
     super(getter, ...args);
 
-    this.set = identity;
+    this.set = _.identity;
     if (!isType(getter)) {
       this.get = getter.bind(this);
     }
