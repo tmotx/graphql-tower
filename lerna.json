@@ -3,6 +3,6 @@
   "packages": [
     "packages/*"
   ],
-  "version": "3.39.2",
+  "version": "3.39.3",
   "npmClient": "yarn"
 }
