@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.39.0"></a>
+# [3.39.0](https://github.com/tmotx/graphql-tower/compare/v3.38.11...v3.39.0) (2018-08-10)
+
+
+### Features
+
+* **model:** support view on model ([fc34e3d](https://github.com/tmotx/graphql-tower/commit/fc34e3d))
+
+
+
+
+
 <a name="3.38.11"></a>
 ## [3.38.11](https://github.com/tmotx/graphql-tower/compare/v3.38.10...v3.38.11) (2018-08-05)
 
