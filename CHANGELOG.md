@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.39.2"></a>
+## [3.39.2](https://github.com/tmotx/graphql-tower/compare/v3.39.1...v3.39.2) (2018-08-10)
+
+
+### Bug Fixes
+
+* **model:** fix promise default value on model load ([aa5999c](https://github.com/tmotx/graphql-tower/commit/aa5999c))
+
+
+
+
+
 <a name="3.39.1"></a>
 ## [3.39.1](https://github.com/tmotx/graphql-tower/compare/v3.39.0...v3.39.1) (2018-08-10)
 
