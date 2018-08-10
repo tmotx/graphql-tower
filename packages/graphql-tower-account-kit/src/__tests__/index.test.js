@@ -43,12 +43,23 @@ describe('account kit', () => {
       const reply = await accountKit.getAccountPhone(code);
       expect(reply).toBe(`${prefix}${padStart(mobile, 13, 0)}`);
       expect(fetch).toHaveBeenCalledWith(`https://graph.accountkit.com/v1.1/access_token?grant_type=authorization_code&code=${code}&access_token=AA|tester|server secret`);
-      expect(fetch).toHaveBeenLastCalledWith(`https://graph.accountkit.com/v1.1/me?access_token=${token}&appsecret_proof=${hash}`);
-      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch).toHaveBeenCalledWith(`https://graph.accountkit.com/v1.1/me?access_token=${token}&appsecret_proof=${hash}`);
+      expect(fetch).toHaveBeenLastCalledWith(`https://graph.accountkit.com/v1.1/logout?access_token=${token}`);
+      expect(fetch).toHaveBeenCalledTimes(3);
     });
 
     it('getAccountPhone when throw Error', async () => {
       await expect(accountKit.getAccountPhone(code)).rejects.toEqual(new Error('AccountKit cannot get account information'));
+    });
+
+    it('logout', async () => {
+      await accountKit.logout(token);
+      expect(fetch).toHaveBeenCalledWith(`https://graph.accountkit.com/v1.1/logout?access_token=${token}`);
+      expect(fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('logout when throw Error', async () => {
+      await expect(accountKit.logout(token)).rejects.toEqual(new Error('AccountKit cannot logout'));
     });
   });
 });

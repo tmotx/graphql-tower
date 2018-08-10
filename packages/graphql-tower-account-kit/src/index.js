@@ -36,6 +36,15 @@ export default class AccountKit {
     }
   }
 
+  async logout(token) {
+    try {
+      const query = AccountKit.toQueryString({ access_token: token });
+      await fetch(`${this.host}/logout?${query}`, { method: 'POST' });
+    } catch (e) {
+      throw new UnauthorizedError('AccountKit cannot logout');
+    }
+  }
+
   async getAccountPhone(code) {
     try {
       const token = await this.getAccessToken(code);
@@ -47,6 +56,8 @@ export default class AccountKit {
 
       const res = await fetch(`${this.host}/me?${query}`);
       const { phone: { country_prefix: prefix, national_number: mobile } } = await res.json();
+
+      await this.logout(token);
 
       return `${prefix}${padStart(mobile, 13, 0)}`;
     } catch (e) {
