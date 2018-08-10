@@ -5,10 +5,10 @@ import {
 
 describe('graphql-tower', () => {
   it('export model', async () => {
-    expect(Model.name).toBe('Model');
+    expect(Model).not.toBeUndefined();
   });
 
   it('export global-id', async () => {
-    expect(GlobalId.name).toBe('GlobalId');
+    expect(GlobalId).not.toBeUndefined();
   });
 });

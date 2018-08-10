@@ -258,10 +258,12 @@ describe('model', () => {
       });
 
       it('query', async () => {
-        expect(MainModel.query.toString()).toBe('select * from "model_table"');
+        expect(MainModel.query.toString())
+          .toBe('select * from "model_table"');
 
         const model = new MainModel();
-        expect(model.query.toString()).toBe('select * from "model_table" where "deleted_at" is null');
+        expect(model.query.toString())
+          .toBe('select * from "model_table" where "deleted_at" is null limit 1000');
       });
 
       it('nativeId', async () => {
@@ -314,8 +316,10 @@ describe('model', () => {
     });
 
     it('query', () => {
-      expect(model.query.toString()).toBe('select * from "model_table" where "deleted_at" is null');
-      expect(view.query.toString()).toBe('select * from "model_view" where "deleted_at" is null');
+      expect(model.query.toString())
+        .toBe('select * from "model_table" where "deleted_at" is null limit 1000');
+      expect(view.query.toString())
+        .toBe('select * from "model_view" where "deleted_at" is null limit 1000');
     });
 
     it('mutate', () => {
@@ -437,7 +441,7 @@ describe('model', () => {
         expect(client).toMatchSnapshot();
 
         await expect((new MainModel({ name: 'one' })).fetchAll())
-          .resolves.toEqual(Object.assign([], { totalCount: 0, offset: 0 }));
+          .resolves.toEqual(Object.assign([], { totalCount: 0, offset: 0, limit: 1000 }));
         await expect((new MainModel({ name: 'one' })).fetchAll(NotFoundError))
           .rejects.toEqual(new NotFoundError());
       });

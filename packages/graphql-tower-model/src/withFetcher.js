@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { assertResult } from 'graphql-tower-helper';
 
 export default Parent => class Fetcher extends Parent {
@@ -14,8 +15,6 @@ export default Parent => class Fetcher extends Parent {
   }
 
   async fetchAll(error) {
-    this.limit(1000);
-
     const results = await this.find();
 
     assertResult(results.length, error);
@@ -23,8 +22,8 @@ export default Parent => class Fetcher extends Parent {
   }
 
   async fetchPage({ offset, first } = {}, error) {
-    if (offset) this.offset(offset);
-    if (first) this.limit(first);
+    if (!_.isNil(offset)) this.offset(offset);
+    if (!_.isNil(first)) this.limit(first);
     return this.fetchAll(error);
   }
 

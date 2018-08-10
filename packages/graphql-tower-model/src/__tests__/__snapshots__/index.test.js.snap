@@ -264,7 +264,7 @@ Array [
 
 exports[`model Fetcher fetchPage offset and first 2`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null limit 1000 offset 1",
+  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null limit 2 offset 1",
 ]
 `;
 

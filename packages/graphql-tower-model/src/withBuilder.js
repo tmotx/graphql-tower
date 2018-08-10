@@ -14,36 +14,62 @@ export default (Parent) => {
     constructor(...args) {
       super(...args);
       _.set(this._, ['builderTasks'], []);
+      _.set(this._, ['offset'], 0);
+      _.set(this._, ['limit'], 1000);
     }
 
-    mount(query) {
+    limit(value) {
+      if (!_.isNil(value)) {
+        this._.limit = value;
+        return this;
+      }
+      return this._.limit;
+    }
+
+    offset(value) {
+      if (!_.isNil(value)) {
+        this._.offset = value;
+        return this;
+      }
+      return this._.offset;
+    }
+
+    mount(sql) {
       const {
         idAttribute, keywordAttribute, signify, softDelete,
       } = this.constructor;
 
       _.forEach(_.get(this._, ['builderTasks']), ([key, args]) => {
-        query[key](...args);
+        sql[key](...args);
       });
       _.set(this._, ['builderTasks'], []);
 
-      if (softDelete) query.whereNull('deleted_at');
+      if (softDelete) sql.whereNull('deleted_at');
 
       const values = this.valueOf();
       const id = values[idAttribute];
-      if (id) return query.where(_.snakeCase(idAttribute), id);
+      if (id) return sql.where(_.snakeCase(idAttribute), id);
 
       const data = signify(values);
       delete data[keywordAttribute];
 
       _.forEach(data, (value, key) => {
-        if (!_.isObject(value)) query.where(key, value);
+        if (!_.isObject(value)) sql.where(key, value);
       });
 
-      return query;
+      return sql;
     }
 
     get query() {
       const { query } = this.constructor;
+
+      const offset = this.offset();
+      const limit = this.limit();
+      this.offset(0).limit(1000);
+
+      _.set(query, ['params'], { offset, limit });
+      query.offset(offset).limit(limit);
+
       return this.mount(query);
     }
 
@@ -55,8 +81,9 @@ export default (Parent) => {
     async find() {
       const { database, format } = this.constructor;
       const { query } = this;
+      const { offset, limit } = query.params;
 
-      if (_.get(query, ['_single', 'limit']) !== 1) {
+      if (limit !== 1) {
         query.select(database.raw('*, count(*) OVER() AS total_count'));
       }
 
@@ -68,8 +95,9 @@ export default (Parent) => {
         const model = this.constructor.forge(data);
         return model;
       });
-      results.totalCount = parseInt(totalCount, 10);
-      results.offset = _.get(query, ['_single', 'offset'], 0);
+      _.assign(results, {
+        totalCount: parseInt(totalCount, 10), offset, limit,
+      });
       return results;
     }
 
@@ -99,7 +127,7 @@ export default (Parent) => {
   }
 
   _.forEach([
-    'select', 'joinRaw', 'whereRaw', 'orderByRaw', 'offset', 'limit',
+    'select', 'joinRaw', 'whereRaw', 'orderByRaw',
   ], (key) => {
     Builder.prototype[key] = function queryBuilderRaw(...args) {
       this._.builderTasks.push([key, args]);
