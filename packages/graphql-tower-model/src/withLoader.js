@@ -33,17 +33,20 @@ export default Parent => class Loader extends Parent {
 
   static load(id, error) {
     const nativeId = this.fromGlobalId(id);
-    return Object.assign(Promise.resolve(), {
+
+    const promise = Promise.resolve({});
+    const next = promise.then;
+
+    return Object.assign(promise, {
       nativeId,
-      then: (...args) => {
-        const promise = Promise.resolve().then(() => {
-          if (!nativeId) return null;
-          return this.dataloader
-            .load(nativeId)
-            .then(data => (data ? this.forge(data) : null));
-        }).then(model => assertResult(model, error));
-        return promise.then(...args);
-      },
+      then: (...args) => next.call(promise, () => {
+        if (!nativeId) return null;
+        return this.dataloader
+          .load(nativeId)
+          .then(data => (data ? this.forge(data) : null));
+      })
+        .then(model => assertResult(model, error))
+        .then(...args),
     });
   }
 
