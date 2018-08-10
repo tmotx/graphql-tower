@@ -8,7 +8,7 @@
     "dev-storage-s3": "nodemon ./packages/graphql-tower-storage-s3/src/__develop__/server.js --exec babel-node --ignore pages/*",
     "bootstrap": "rm -rf ./packages/*/node_modules/; yarn install && lerna bootstrap",
     "postbootstrap": "npm run build",
-    "build": "lerna run -- build",
+    "build": "lerna run build --npm-client=yarn",
     "test": "eslint ./packages/*/src; jest --coverage ./packages/*/src --forceExit",
     "predeploy": "npm run build",
     "deploy": "lerna publish --registry=https://registry.npmjs.org/ --conventional-commits --yes"
@@ -47,7 +47,7 @@
     "jest": "^21.2.1",
     "jest-mock-knex": "^1.18.0",
     "knex": "^0.14.2",
-    "lerna": "^2.5.1",
+    "lerna": "^3.0.1",
     "luxon": "^0.2.10",
     "next": "^4.2.0",
     "nodemon": "^1.14.11",
