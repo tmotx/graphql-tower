@@ -10,12 +10,12 @@ export default Parent => class Mutator extends Parent {
     return data;
   }
 
-  async sentInsert(operator, tmpData) {
+  async add(operator, tmpData) {
     const values = { ...this.valueOf(), ...tmpData };
     return this.insert(values, operator);
   }
 
-  async sentUpdate(operator, tmpData) {
+  async modify(operator, tmpData) {
     const changes = { ...this.changes, ...tmpData };
     return this.update(changes, operator);
   }
@@ -27,8 +27,8 @@ export default Parent => class Mutator extends Parent {
   }
 
   async save(...args) {
-    if (this.isNew) return this.sentInsert(...args);
-    return this.sentUpdate(...args);
+    if (this.isNew) return this.add(...args);
+    return this.modify(...args);
   }
 
   async insert(values, operator) {
@@ -68,7 +68,7 @@ export default Parent => class Mutator extends Parent {
 
     const by = this.constructor.checkOperator(operator);
 
-    if (!softDelete) return super.destroy();
+    if (!softDelete) return super.delete();
 
     if (this.valueOf('deletedBy')) return this;
 

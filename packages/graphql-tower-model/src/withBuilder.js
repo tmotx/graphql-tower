@@ -120,7 +120,7 @@ export default (Parent) => {
       return this;
     }
 
-    async destroy() {
+    async delete() {
       const { mutate } = this;
       return mutate.delete();
     }
