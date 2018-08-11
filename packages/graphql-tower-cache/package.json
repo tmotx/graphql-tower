@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-cache",
-  "version": "3.39.5",
+  "version": "3.39.6",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "graphql-tower-errors": "^3.21.3",
-    "graphql-tower-model": "^3.39.5"
+    "graphql-tower-model": "^3.39.6"
   }
 }
