@@ -10,10 +10,6 @@ export default Parent => class Fetcher extends Parent {
     return results[0] ? this.forge(results[0]) : null;
   }
 
-  async fetchOrSave(operator, tempData) {
-    return await this.fetch() || this.save(operator, tempData);
-  }
-
   async fetchAll(error) {
     const results = await this.find();
 

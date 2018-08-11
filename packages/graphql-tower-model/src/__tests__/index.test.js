@@ -417,15 +417,15 @@ describe('model', () => {
       });
     });
 
-    describe('fetchOrInsert', () => {
+    describe('saveIfNotExists', () => {
       it('when existed', async () => {
-        expect((await new MainModel({ name: 'name is one' }).fetchOrSave()).nativeId).toBe(1);
+        expect((await new MainModel({ name: 'name is one' }).saveIfNotExists()).nativeId).toBe(1);
         expect(client).toMatchSnapshot();
         expect(client).toHaveBeenCalledTimes(1);
       });
 
       it('when not existed', async () => {
-        expect((await new MainModel({ name: 'name is new' }).fetchOrSave('10')).nativeId).toBe(3);
+        expect((await new MainModel({ name: 'name is new' }).saveIfNotExists('10')).nativeId).toBe(3);
         expect(client).toMatchSnapshot();
         expect(client).toHaveBeenCalledTimes(2);
       });

@@ -230,19 +230,6 @@ Array [
 ]
 `;
 
-exports[`model Fetcher fetchOrInsert when existed 1`] = `
-Array [
-  "select * from model_table where deleted_at is null and name = name is one limit 1",
-]
-`;
-
-exports[`model Fetcher fetchOrInsert when not existed 1`] = `
-Array [
-  "select * from model_table where deleted_at is null and name = name is new limit 1",
-  "insert into model_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, name is new, name is new, DATE, 10) returning *",
-]
-`;
-
 exports[`model Fetcher fetchPage not set 1`] = `
 Array [
   "name is one",
@@ -265,6 +252,19 @@ Array [
 exports[`model Fetcher fetchPage offset and first 2`] = `
 Array [
   "select *, count(*) OVER() AS total_count from model_table where deleted_at is null limit 2 offset 1",
+]
+`;
+
+exports[`model Fetcher saveIfNotExists when existed 1`] = `
+Array [
+  "select * from model_table where deleted_at is null and name = name is one limit 1",
+]
+`;
+
+exports[`model Fetcher saveIfNotExists when not existed 1`] = `
+Array [
+  "select * from model_table where deleted_at is null and name = name is new limit 1",
+  "insert into model_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, name is new, name is new, DATE, 10) returning *",
 ]
 `;
 

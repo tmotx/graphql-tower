@@ -20,6 +20,12 @@ export default Parent => class Mutator extends Parent {
     return this.update(changes, operator);
   }
 
+  async saveIfNotExists(operator, tempData) {
+    const reply = await this.fetch();
+    if (reply) return this;
+    return this.save(operator, tempData);
+  }
+
   async save(...args) {
     if (this.isNew) return this.sentInsert(...args);
     return this.sentUpdate(...args);
