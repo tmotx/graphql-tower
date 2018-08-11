@@ -714,7 +714,8 @@ describe('model', () => {
       await new MainModel({ name: 'new for action' }).save('10');
       await new MainModel({ name: 'new for search' }).save('10');
       const model = new MainModel();
-      const results = await model.search('new search');
+      model.search('new search');
+      const results = await model.fetchAll();
 
       expect(results.totalCount).toBe(2);
       expect(_.map(results, 'name')).toMatchSnapshot();
