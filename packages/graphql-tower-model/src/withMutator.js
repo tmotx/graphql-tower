@@ -10,28 +10,7 @@ export default Parent => class Mutator extends Parent {
     return data;
   }
 
-  async add(operator, tmpData) {
-    const values = { ...this.valueOf(), ...tmpData };
-    return this.insert(values, operator);
-  }
-
-  async modify(operator, tmpData) {
-    const changes = { ...this.changes, ...tmpData };
-    return this.update(changes, operator);
-  }
-
-  async saveIfNotExists(operator, tempData) {
-    const reply = await this.fetch();
-    if (reply) return this;
-    return this.save(operator, tempData);
-  }
-
-  async save(...args) {
-    if (this.isNew) return this.add(...args);
-    return this.modify(...args);
-  }
-
-  async insert(values, operator) {
+  async add(values, operator) {
     const { hasTimestamps } = this.constructor;
 
     const by = this.constructor.checkOperator(operator);
@@ -47,10 +26,10 @@ export default Parent => class Mutator extends Parent {
       _.set(values, ['updatedAt'], at);
     }
 
-    return super.insert(values);
+    return this.insert(values);
   }
 
-  async update(changes, operator) {
+  async modify(changes, operator) {
     const { hasTimestamps } = this.constructor;
 
     const by = this.constructor.checkOperator(operator);
@@ -60,21 +39,31 @@ export default Parent => class Mutator extends Parent {
     if (by) _.set(changes, ['updatedBy'], by);
     if (hasTimestamps) _.set(changes, ['updatedAt'], new Date());
 
-    return super.update(changes);
+    return this.update(changes);
+  }
+
+  async save(operator) {
+    if (this.isNew) return this.add(this.valueOf(), operator);
+    return this.modify(this.changes, operator);
+  }
+
+  async saveIfNotExists(operator) {
+    const reply = await this.fetch();
+    if (reply) return this;
+    return this.save(operator);
   }
 
   async destroy(operator) {
     const { softDelete } = this.constructor;
-
     const by = this.constructor.checkOperator(operator);
 
-    if (!softDelete) return super.delete();
+    if (!softDelete) return this.delete();
 
     if (this.valueOf('deletedBy')) return this;
 
     const data = { deletedAt: new Date() };
     if (by) data.deletedBy = by;
 
-    return super.update(data);
+    return this.update(data);
   }
 };

@@ -6,7 +6,7 @@ export default Parent => class ArrayMutator extends Parent {
 
     const snake = signify(column);
     const changes = _.set({}, snake, database.raw(`array_append(array_remove(${snake}, ?), ?)`, [value, value]));
-    return super.update(changes, operator);
+    return this.modify(changes, operator);
   }
 
   async removeValue(column, value, operator) {
@@ -14,6 +14,6 @@ export default Parent => class ArrayMutator extends Parent {
 
     const snake = signify(column);
     const changes = _.set({}, snake, database.raw(`array_remove(${snake}, ?)`, [value]));
-    return super.update(changes, operator);
+    return this.modify(changes, operator);
   }
 };

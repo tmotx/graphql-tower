@@ -7,7 +7,7 @@ export default Parent => class JSONMutator extends Parent {
     const snake = signify(column);
     const item = _.set({}, key, value);
     const changes = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') || ?`, [item]));
-    return super.update(changes, operator);
+    return this.modify(changes, operator);
   }
 
   async delKeyValue(column, key, operator) {
@@ -15,6 +15,6 @@ export default Parent => class JSONMutator extends Parent {
 
     const snake = signify(column);
     const changes = _.set({}, snake, database.raw(`coalesce(${snake}, '{}') - ?`, [key]));
-    return super.update(changes, operator);
+    return this.modify(changes, operator);
   }
 };

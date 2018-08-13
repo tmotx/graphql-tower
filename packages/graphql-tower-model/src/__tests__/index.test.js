@@ -72,12 +72,10 @@ class MainModel extends Model {
   }
 }
 
-class ViewModel extends Model {
-  static database = database;
-
-  static tableName = 'model_table';
-
+class ViewModel extends MainModel {
   static viewName = 'model_view';
+
+  static softDelete = false;
 
   static hasOperator = false;
 
@@ -91,10 +89,6 @@ class ViewModel extends Model {
     data: new ValueColumn(Object),
     total: new ValueColumn(Number),
   }
-}
-
-class DirectDelete extends ViewModel {
-  static softDelete = false;
 }
 
 describe('model', () => {
@@ -144,28 +138,28 @@ describe('model', () => {
 
   describe('ArrayMutator', () => {
     it('appendValue', async () => {
-      const model = await ViewModel.load(1);
+      const model = await MainModel.load(1);
 
-      await model.appendValue('userIds', '10');
+      await model.appendValue('userIds', '10', 10);
       expect(model.userIds).toEqual(['10']);
 
-      await model.appendValue('userIds', '20');
+      await model.appendValue('userIds', '20', 10);
       expect(model.userIds).toEqual(['10', '20']);
 
-      await model.appendValue('userIds', '10');
+      await model.appendValue('userIds', '10', 10);
       expect(model.userIds).toEqual(['20', '10']);
-      expect((await ViewModel.load(1)).userIds).toEqual(['20', '10']);
+      expect((await MainModel.load(1)).userIds).toEqual(['20', '10']);
 
       expect(client).toMatchSnapshot();
     });
 
     it('removeValue', async () => {
-      const model = await ViewModel.load(2);
+      const model = await MainModel.load(2);
 
-      await model.removeValue('userIds', '10');
+      await model.removeValue('userIds', '10', 10);
       expect(model.userIds).toEqual(['20']);
 
-      expect((await ViewModel.load(2)).userIds).toEqual(['20']);
+      expect((await MainModel.load(2)).userIds).toEqual(['20']);
 
       expect(client).toMatchSnapshot();
     });
@@ -319,12 +313,12 @@ describe('model', () => {
       expect(model.query.toString())
         .toBe('select * from "model_table" where "deleted_at" is null limit 1000');
       expect(view.query.toString())
-        .toBe('select * from "model_view" where "deleted_at" is null limit 1000');
+        .toBe('select * from "model_view" limit 1000');
     });
 
     it('mutate', () => {
       expect(model.mutate.toString()).toBe('select * from "model_table" where "deleted_at" is null');
-      expect(view.mutate.toString()).toBe('select * from "model_table" where "deleted_at" is null');
+      expect(view.mutate.toString()).toBe('select * from "model_table"');
     });
   });
 
@@ -567,7 +561,7 @@ describe('model', () => {
     it('no softDelete', async () => {
       const model = new MainModel({ name: 'for no soft delete load' });
       await (await model.save(10)).destroy(10);
-      expect(await DirectDelete.load(3))
+      expect(await ViewModel.load(3))
         .toEqual(expect.objectContaining({ name: 'for no soft delete load' }));
       expect(client).toMatchSnapshot();
     });
@@ -575,12 +569,12 @@ describe('model', () => {
 
   describe('Incrementer', () => {
     it('single', async () => {
-      const model = await ViewModel.load(1);
+      const model = await MainModel.load(1);
       expect(model.total).toBe(0);
 
       await model.increment('total', 10);
       expect(model.total).toBe(10);
-      expect((await ViewModel.load(1)).total).toBe(10);
+      expect((await MainModel.load(1)).total).toBe(10);
 
       await model.increment('total', 10);
       expect(model.total).toBe(20);
@@ -589,13 +583,13 @@ describe('model', () => {
     });
 
     it('multiple', async () => {
-      const model = await ViewModel.load(1);
+      const model = await MainModel.load(1);
       expect(model.total).toBe(0);
 
       await model.increment({ total: 10 });
       expect(model.total).toBe(10);
 
-      expect((await ViewModel.load(1)).total).toBe(10);
+      expect((await MainModel.load(1)).total).toBe(10);
       await model.increment({ total: 10 });
 
       expect(model.total).toBe(20);
@@ -606,20 +600,20 @@ describe('model', () => {
 
   describe('JSONMutator', () => {
     it('addKeyValue', async () => {
-      const model = await ViewModel.load(1);
+      const model = await MainModel.load(1);
 
       expect(model.valueOf('data')).toBe(null);
-      await model.addKeyValue('data', '10', 'xyz');
+      await model.addKeyValue('data', '10', 'xyz', 10);
       expect(model.valueOf('data')).toEqual({ 10: 'xyz' });
 
       expect(client).toMatchSnapshot();
     });
 
     it('delKeyValue', async () => {
-      const model = await ViewModel.load(2);
+      const model = await MainModel.load(2);
 
       expect(model.valueOf('data')).toEqual({ 10: 'xyz' });
-      await model.delKeyValue('data', '10');
+      await model.delKeyValue('data', '10', 10);
       expect(model.valueOf('data')).toEqual({});
 
       expect(client).toMatchSnapshot();
@@ -640,13 +634,13 @@ describe('model', () => {
         }));
         expect(client).toMatchSnapshot();
 
-        await expect(new MainModel().save(null, { name: 'insert again' }))
+        await expect(new MainModel().save())
           .rejects.toEqual(new Error('operator is required'));
       });
 
       it('no operator', async () => {
-        const model = new ViewModel({});
-        await model.save(null, { name: 'new is no operator insert' });
+        const model = new ViewModel({ name: 'new is no operator insert' });
+        await model.save();
         expect(model.valueOf()).toEqual(expect.objectContaining({
           createdAt: expect.anything(Date),
           createdBy: null,
@@ -663,19 +657,20 @@ describe('model', () => {
 
         model.name = 'name is update';
         await model.save(20);
-        await model.save(20, { name: 'name is action' });
         await model.save(20);
 
         expect(client).toMatchSnapshot();
-        expect(client).toHaveBeenCalledTimes(3);
+        expect(client).toHaveBeenCalledTimes(2);
 
-        await expect(model.save(null, { name: 'update again' }))
+        model.set({ name: 'update again' });
+        await expect(model.save())
           .rejects.toEqual(new Error('operator is required'));
       });
 
       it('no operator', async () => {
         const model = await ViewModel.load(1);
-        await model.save(null, { name: 'name is no operator update' });
+        model.set({ name: 'name is no operator update' });
+        await model.save();
         expect(client).toMatchSnapshot();
       });
     });
@@ -693,15 +688,8 @@ describe('model', () => {
           .rejects.toEqual(new Error('operator is required'));
       });
 
-      it('no operator', async () => {
+      it('no operator and no soft delete', async () => {
         const model = await ViewModel.load(1);
-        await model.destroy();
-        expect(client).toMatchSnapshot();
-        expect(client).toHaveBeenCalledTimes(2);
-      });
-
-      it('is not soft delete', async () => {
-        const model = await DirectDelete.load(1);
         await model.destroy();
         expect(client).toMatchSnapshot();
         expect(client).toHaveBeenCalledTimes(2);

@@ -2,19 +2,19 @@
 
 exports[`model ArrayMutator appendValue 1`] = `
 Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set user_ids = array_append(array_remove(user_ids, 10), 10), updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "update model_table set user_ids = array_append(array_remove(user_ids, 20), 20), updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "update model_table set user_ids = array_append(array_remove(user_ids, 10), 10), updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "select * from model_view where id in (1) and deleted_at is null",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set user_ids = array_append(array_remove(user_ids, 10), 10), keyword = name is one, updated_by = 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "update model_table set user_ids = array_append(array_remove(user_ids, 20), 20), keyword = name is one, updated_by = 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "update model_table set user_ids = array_append(array_remove(user_ids, 10), 10), keyword = name is one, updated_by = 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
 ]
 `;
 
 exports[`model ArrayMutator removeValue 1`] = `
 Array [
-  "select * from model_view where id in (2) and deleted_at is null",
-  "update model_table set user_ids = array_remove(user_ids, 10), updated_at = DATE where deleted_at is null and id = 2 returning *",
-  "select * from model_view where id in (2) and deleted_at is null",
+  "select * from model_table where id in (2) and deleted_at is null",
+  "update model_table set user_ids = array_remove(user_ids, 10), keyword = name is two, updated_by = 10, updated_at = DATE where deleted_at is null and id = 2 returning *",
+  "select * from model_table where id in (2) and deleted_at is null",
 ]
 `;
 
@@ -272,33 +272,33 @@ exports[`model GlobalId integer 1`] = `"invalid global id"`;
 
 exports[`model Incrementer multiple 1`] = `
 Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set total = total + 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set total = total + 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set total = total + 10 where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set total = total + 10 where deleted_at is null and id = 1 returning *",
 ]
 `;
 
 exports[`model Incrementer single 1`] = `
 Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set total = total + 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set total = total + 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set total = total + 10 where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set total = total + 10 where deleted_at is null and id = 1 returning *",
 ]
 `;
 
 exports[`model JSONMutator addKeyValue 1`] = `
 Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set data = coalesce(data, '{}') || {\\"10\\":\\"xyz\\"}, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "select * from model_table where id in (1) and deleted_at is null",
+  "update model_table set data = coalesce(data, '{}') || {\\"10\\":\\"xyz\\"}, keyword = name is one, updated_by = 10, updated_at = DATE where deleted_at is null and id = 1 returning *",
 ]
 `;
 
 exports[`model JSONMutator delKeyValue 1`] = `
 Array [
-  "select * from model_view where id in (2) and deleted_at is null",
-  "update model_table set data = coalesce(data, '{}') - 10, updated_at = DATE where deleted_at is null and id = 2 returning *",
+  "select * from model_table where id in (2) and deleted_at is null",
+  "update model_table set data = coalesce(data, '{}') - 10, keyword = name is two, updated_by = 10, updated_at = DATE where deleted_at is null and id = 2 returning *",
 ]
 `;
 
@@ -324,17 +324,10 @@ Array [
 ]
 `;
 
-exports[`model Mutator destroy is not soft delete 1`] = `
+exports[`model Mutator destroy no operator and no soft delete 1`] = `
 Array [
   "select * from model_view where id in (1)",
   "delete from model_table where id = 1",
-]
-`;
-
-exports[`model Mutator destroy no operator 1`] = `
-Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set deleted_at = DATE where deleted_at is null and id = 1 returning *",
 ]
 `;
 
@@ -354,14 +347,13 @@ exports[`model Mutator sent update of save has operator 1`] = `
 Array [
   "select * from model_table where id in (1) and deleted_at is null",
   "update model_table set name = name is update, keyword = name is update, updated_by = 20, updated_at = DATE where deleted_at is null and id = 1 returning *",
-  "update model_table set name = name is action, keyword = name is action, updated_by = 20, updated_at = DATE where deleted_at is null and id = 1 returning *",
 ]
 `;
 
 exports[`model Mutator sent update of save no operator 1`] = `
 Array [
-  "select * from model_view where id in (1) and deleted_at is null",
-  "update model_table set name = name is no operator update, updated_at = DATE where deleted_at is null and id = 1 returning *",
+  "select * from model_view where id in (1)",
+  "update model_table set name = name is no operator update, updated_at = DATE where id = 1 returning *",
 ]
 `;
 
