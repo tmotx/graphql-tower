@@ -20,7 +20,7 @@ export default Parent => class Loader extends Parent {
     const { idAttribute, softDelete, query } = this;
     const collections = {};
 
-    query.whereIn(this.signify(idAttribute), ids);
+    query.whereIn(this.signify(idAttribute), _.uniq(ids));
     if (softDelete) query.whereNull('deleted_at');
 
     _.forEach(await query, (item) => {

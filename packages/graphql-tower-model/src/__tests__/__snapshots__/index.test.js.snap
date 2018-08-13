@@ -313,7 +313,7 @@ Array [
 exports[`model Loader softDelete 1`] = `
 Array [
   "select * from model_table where id in (1) and deleted_at is null",
-  "select * from model_table where id in (1, 2, 1) and deleted_at is null",
+  "select * from model_table where id in (1, 2) and deleted_at is null",
 ]
 `;
 
