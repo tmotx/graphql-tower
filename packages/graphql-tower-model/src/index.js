@@ -8,6 +8,7 @@ import withArrayMutator from './withArrayMutator';
 import withBuilder from './withBuilder';
 import withBatch from './withBatch';
 import withCache from './withCache';
+import withDefaultValues from './withDefaultValues';
 import withFetcher from './withFetcher';
 import withGlobalId from './withGlobalId';
 import withHash from './withHash';
@@ -183,6 +184,7 @@ export default fp.compose(
   withJSONMutator,
   withIncrementer,
   withSearcher,
+  withDefaultValues,
   withLoader,
   withFetcher,
   withMutator,

@@ -62,6 +62,10 @@ class MainModel extends Model {
 
   static toKeyword = data => data.name;
 
+  static defaultValues = {
+    name: 'go car',
+  }
+
   static columns = {
     name: new ValueColumn(),
     nickName: new ValueColumn(),
@@ -363,6 +367,15 @@ describe('model', () => {
         await expect(BatchInsertWithOperator.batchInsert(rows))
           .rejects.toEqual(new Error('operator is required'));
       });
+    });
+  });
+
+  describe('DefaultValues', () => {
+    it('use default values', async () => {
+      const model = new MainModel();
+      await model.save(10);
+      expect(model.name).toBe('go car');
+      expect((await MainModel.load(3)).name).toBe('go car');
     });
   });
 
