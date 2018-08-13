@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.39.8"></a>
+## [3.39.8](https://github.com/tmotx/graphql-tower/compare/v3.39.7...v3.39.8) (2018-08-13)
+
+
+### Bug Fixes
+
+* **modal:** support default values on static ([6c206e6](https://github.com/tmotx/graphql-tower/commit/6c206e6))
+
+
+
+
+
 <a name="3.39.7"></a>
 ## [3.39.7](https://github.com/tmotx/graphql-tower/compare/v3.39.6...v3.39.7) (2018-08-13)
 
