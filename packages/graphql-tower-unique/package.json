@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-unique",
-  "version": "3.6.2",
+  "version": "3.39.10",
   "description": "graphql-tower-unique",
   "main": "lib/index.js",
   "scripts": {

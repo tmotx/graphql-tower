@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-helper",
-  "version": "3.37.0",
+  "version": "3.39.10",
   "description": "graphql-tower-helper",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,6 @@
     "*.js"
   ],
   "devDependencies": {
-    "graphql-tower-errors": "^3.21.3"
+    "graphql-tower-errors": "^3.39.10"
   }
 }

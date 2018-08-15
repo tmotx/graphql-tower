@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-apollo",
-  "version": "3.38.10",
+  "version": "3.39.10",
   "description": "graphql-tower-apollo",
   "main": "lib/index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "apollo-utilities": "^1.0.3",
     "cookie": "^0.3.1",
     "global": "^4.3.2",
-    "graphql-tower-helper": "^3.37.0",
+    "graphql-tower-helper": "^3.39.10",
     "isomorphic-unfetch": "^2.0.0",
     "lodash": "^4.17.4",
     "recompose": "^0.26.0",
@@ -44,6 +44,6 @@
   },
   "devDependencies": {
     "graphql-subscriptions": "^0.5.5",
-    "graphql-tower-queries": "^3.32.6"
+    "graphql-tower-queries": "^3.39.10"
   }
 }

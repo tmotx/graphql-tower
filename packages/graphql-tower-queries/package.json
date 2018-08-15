@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-queries",
-  "version": "3.32.6",
+  "version": "3.39.10",
   "description": "graphql-tower-queries",
   "main": "lib/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "lib"
   ],
   "dependencies": {
-    "graphql-tower-errors": "^3.21.3",
+    "graphql-tower-errors": "^3.39.10",
     "iterall": "^1.1.3",
     "lodash": "^4.17.4"
   },

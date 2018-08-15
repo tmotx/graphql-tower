@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-global-id",
-  "version": "3.3.3",
+  "version": "3.39.10",
   "description": "graphql-tower-global-id",
   "main": "lib/index.js",
   "scripts": {
