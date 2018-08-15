@@ -168,6 +168,13 @@ Object {
 }
 `;
 
+exports[`model DefaultValues save use default values 1`] = `
+Array [
+  "insert into model_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, DEFAULT, go car, DATE, 10) returning *",
+  "select * from model_table where id in (3) and deleted_at is null",
+]
+`;
+
 exports[`model Fetcher fetch fetch one 1`] = `
 Object {
   "createdAt": null,

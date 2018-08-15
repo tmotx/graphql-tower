@@ -371,10 +371,16 @@ describe('model', () => {
   });
 
   describe('DefaultValues', () => {
-    it('use default values', async () => {
+    it('save use default values', async () => {
       const model = new MainModel();
       await model.save(10);
       expect(model.name).toBe('go car');
+      expect((await MainModel.load(3)).name).toBe('go car');
+      expect(client).toMatchSnapshot();
+    });
+
+    it('batch insert use default values', async () => {
+      await MainModel.batchInsert([{ nickName: 'aux' }], 10);
       expect((await MainModel.load(3)).name).toBe('go car');
     });
   });

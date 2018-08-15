@@ -2,9 +2,9 @@ import _ from 'lodash';
 
 export default Parent => class Builder extends Parent {
   static async batchInsert(rows, operator) {
-    const { hasTimestamps } = this;
+    const { hasTimestamps, signify } = this;
 
-    let data = rows;
+    let data = _.map(rows, signify);
 
     const by = this.checkOperator(operator);
     if (by) {

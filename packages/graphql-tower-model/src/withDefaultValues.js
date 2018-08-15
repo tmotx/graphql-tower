@@ -8,15 +8,29 @@ export default Parent => class DefaultValues extends Parent {
     this._defaultValues = thunkPromise(values);
   }
 
-  async save(...args) {
-    const { _defaultValues } = this.constructor;
-    if (this.isNew && _defaultValues) {
-      const values = await _defaultValues(this.valueOf());
-      _.forEach(values, (value, name) => {
-        if (_.isNil(this[name])) this[name] = value;
-      });
+  static async batchInsert(rows, operator, cache) {
+    const { _defaultValues } = this;
+
+    let data = rows;
+    if (_defaultValues) {
+      data = await Promise.all(_.map(rows, async (row) => {
+        const defaults = await _defaultValues(row, cache);
+        return _.defaultsDeep(row, defaults);
+      }));
     }
 
-    return super.save(...args);
+    return super.batchInsert(data, operator, cache);
+  }
+
+  async add(values, operator) {
+    const { _defaultValues } = this.constructor;
+
+    let data = values;
+    if (_defaultValues) {
+      const defaults = await _defaultValues(values, this.cache);
+      data = _.defaultsDeep(values, defaults);
+    }
+
+    return super.add(data, operator);
   }
 };
