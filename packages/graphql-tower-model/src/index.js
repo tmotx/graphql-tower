@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import fp from 'lodash/fp';
-import { thunk } from 'graphql-tower-helper';
+import { thunk } from 'thelper';
 import { PrimaryKeyColumn, DateTimeColumn, ValueColumn } from './columns';
 import withArrayMutator from './withArrayMutator';
 import withBuilder from './withBuilder';

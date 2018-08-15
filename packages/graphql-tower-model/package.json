@@ -24,7 +24,8 @@
     "graphql-tower-errors": "^3.21.3",
     "graphql-tower-global-id": "^3.3.3",
     "graphql-tower-helper": "^3.37.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "thelper": "^1.0.0"
   },
   "peerDependencies": {
     "knex": "^0.14.2"

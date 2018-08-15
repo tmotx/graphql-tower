@@ -1,6 +1,6 @@
 {
   "presets": ["react-native"],
   "plugins": [
-    ["lodash", { "id": ["lodash"] }]
+    ["lodash", { "id": ["lodash", "thelper"] }]
   ]
 }

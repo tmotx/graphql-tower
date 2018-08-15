@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_models", "__models"] }] */
 import _ from 'lodash';
-import { thunk } from 'graphql-tower-helper';
+import { thunk } from 'thelper';
 import { fromGlobalId } from 'graphql-tower-global-id';
 
 export default class MixedModel {
