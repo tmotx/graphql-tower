@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-redis",
   "version": "3.38.7",
-  "description": "",
+  "description": "graphql-tower-redis",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

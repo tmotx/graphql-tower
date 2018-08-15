@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-account-kit",
   "version": "3.21.3",
-  "description": "",
+  "description": "graphql-tower-account-kit",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

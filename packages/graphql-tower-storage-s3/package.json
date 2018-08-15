@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-storage-s3",
   "version": "3.37.0",
-  "description": "",
+  "description": "graphql-tower-storage-s3",
   "main": "lib/index.js",
   "scripts": {
     "dev": "nodemon ./src/__develop__/server.js --exec babel-node --ignore pages/*",

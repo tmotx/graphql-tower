@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-queries",
   "version": "3.32.6",
-  "description": "",
+  "description": "graphql-tower-queries",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

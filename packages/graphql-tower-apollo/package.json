@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-apollo",
   "version": "3.38.10",
-  "description": "",
+  "description": "graphql-tower-apollo",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

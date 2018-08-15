@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-jwt",
   "version": "3.28.9",
-  "description": "",
+  "description": "graphql-tower-jwt",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

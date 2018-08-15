@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-global-id",
   "version": "3.3.3",
-  "description": "",
+  "description": "graphql-tower-global-id",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

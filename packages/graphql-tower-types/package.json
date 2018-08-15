@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-types",
   "version": "3.38.8",
-  "description": "",
+  "description": "graphql-tower-types",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

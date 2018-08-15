@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-errors",
   "version": "3.21.3",
-  "description": "",
+  "description": "graphql-tower-errors",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"

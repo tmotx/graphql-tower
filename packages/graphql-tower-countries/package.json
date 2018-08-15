@@ -1,7 +1,7 @@
 {
   "name": "graphql-tower-countries",
   "version": "3.35.0",
-  "description": "",
+  "description": "graphql-tower-countries",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib/* && babel src --ignore __tests__ --out-dir lib"
