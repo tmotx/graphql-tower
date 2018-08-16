@@ -261,7 +261,7 @@ describe('model', () => {
 
         const model = new MainModel();
         expect(model.query.toString())
-          .toBe('select * from "model_table" where "deleted_at" is null limit 1000');
+          .toBe('select * from "model_table" where "deleted_at" is null');
       });
 
       it('nativeId', async () => {
@@ -315,9 +315,9 @@ describe('model', () => {
 
     it('query', () => {
       expect(model.query.toString())
-        .toBe('select * from "model_table" where "deleted_at" is null limit 1000');
+        .toBe('select * from "model_table" where "deleted_at" is null');
       expect(view.query.toString())
-        .toBe('select * from "model_view" limit 1000');
+        .toBe('select * from "model_view"');
     });
 
     it('mutate', () => {
@@ -454,7 +454,7 @@ describe('model', () => {
         expect(client).toMatchSnapshot();
 
         await expect((new MainModel({ name: 'one' })).fetchAll())
-          .resolves.toEqual(Object.assign([], { totalCount: 0, offset: 0, limit: 1000 }));
+          .resolves.toEqual(Object.assign([], { totalCount: 0, offset: null, limit: null }));
         await expect((new MainModel({ name: 'one' })).fetchAll(NotFoundError))
           .rejects.toEqual(new NotFoundError());
       });
@@ -471,7 +471,7 @@ describe('model', () => {
       it('offset and first', async () => {
         const model = new MainModel();
         const results = await model.fetchPage({ offset: 1, first: 2 });
-        expect(results.totalCount).toBe(2);
+        expect(results).toEqual(expect.objectContaining({ totalCount: 2, offset: 1, limit: 2 }));
         expect(_.map(results, data => data.name)).toMatchSnapshot();
         expect(client).toMatchSnapshot();
       });

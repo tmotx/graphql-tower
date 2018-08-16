@@ -13,9 +13,11 @@ export default (Parent) => {
 
     constructor(...args) {
       super(...args);
-      _.set(this._, ['builderTasks'], []);
-      _.set(this._, ['offset'], 0);
-      _.set(this._, ['limit'], 1000);
+      _.assign(this._, {
+        builderTasks: [],
+        offset: null,
+        limit: null,
+      });
     }
 
     limit(value) {
@@ -62,13 +64,12 @@ export default (Parent) => {
 
     get query() {
       const { query } = this.constructor;
-
-      const offset = this.offset();
-      const limit = this.limit();
-      this.offset(0).limit(1000);
+      const { offset, limit } = this._;
 
       _.set(query, ['params'], { offset, limit });
-      query.offset(offset).limit(limit);
+      if (offset) query.offset(offset);
+      if (limit) query.limit(limit);
+      _.assign(this._, { offset: null, limit: null });
 
       return this.mount(query);
     }
@@ -81,7 +82,7 @@ export default (Parent) => {
     async find() {
       const { database, format } = this.constructor;
       const { query } = this;
-      const { offset, limit } = query.params;
+      const { limit } = query.params;
 
       if (limit !== 1) {
         query.select(database.raw('*, count(*) OVER() AS total_count'));
@@ -96,8 +97,8 @@ export default (Parent) => {
         return model;
       });
       _.assign(results, {
-        totalCount: parseInt(totalCount, 10), offset, limit,
-      });
+        totalCount: parseInt(totalCount, 10),
+      }, query.params);
       return results;
     }
 

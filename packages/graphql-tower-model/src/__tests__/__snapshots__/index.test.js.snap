@@ -233,7 +233,7 @@ Array [
 
 exports[`model Fetcher fetchAll no cache 2`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null and name = name is one limit 1000",
+  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null and name = name is one",
 ]
 `;
 
@@ -246,7 +246,7 @@ Array [
 
 exports[`model Fetcher fetchPage not set 2`] = `
 Array [
-  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null limit 1000",
+  "select *, count(*) OVER() AS total_count from model_table where deleted_at is null",
 ]
 `;
 
@@ -375,6 +375,6 @@ exports[`model Searcher search 2`] = `
 Array [
   "insert into model_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for action, new for action, DATE, 10) returning *",
   "insert into model_table (created_at, created_by, keyword, name, updated_at, updated_by) values (DATE, 10, new for search, new for search, DATE, 10) returning *",
-  "select ts_rank(keyword, query) as rank, *, count(*) OVER() AS total_count from model_table , to_tsquery('new|search') as query where keyword @@ query and deleted_at is null order by rank desc limit 1000",
+  "select ts_rank(keyword, query) as rank, *, count(*) OVER() AS total_count from model_table , to_tsquery('new|search') as query where keyword @@ query and deleted_at is null order by rank desc",
 ]
 `;

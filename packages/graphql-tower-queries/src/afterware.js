@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import pick from 'lodash/pick';
 
 export function pagination(payload, args, context, info, results) {
   const { first, after } = args;
@@ -17,5 +16,9 @@ export function pagination(payload, args, context, info, results) {
 }
 
 export function collections(payload, args, context, info, results) {
-  return results.fetchPage(pick(args, ['after', 'offset', 'first']));
+  const { first } = args;
+  return results.fetchPage({
+    ..._.pick(args, ['after', 'offset']),
+    first: _.inRange(first, 1, 1000) ? first : 1000,
+  });
 }
