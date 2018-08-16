@@ -389,7 +389,6 @@ describe('model', () => {
     it('prime && clear', async () => {
       const cache = { prime: jest.fn(), clear: jest.fn() };
       const model = new MainModel({}, { cache });
-      model.cache = cache;
       model.prime();
       expect(cache.prime).toHaveBeenCalledTimes(0);
       model.clear();
@@ -400,6 +399,16 @@ describe('model', () => {
       expect(cache.prime).toHaveBeenCalledTimes(1);
       model.clear();
       expect(cache.clear).toHaveBeenCalledTimes(1);
+    });
+
+    it('load', async () => {
+      const cache = { load: jest.fn(() => new MainModel({ id: 2 })) };
+      const model = MainModel.load(2, null, cache);
+      expect(model.nativeId).toBe(2);
+
+      await model;
+      expect(cache.load).toHaveBeenCalledWith('iNe9OVLx9dUZwc9SxLDFCEkGEk', null);
+      expect(cache.load).toHaveBeenCalledTimes(1);
     });
   });
 
