@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-apollo",
-  "version": "3.39.10",
+  "version": "3.39.11",
   "description": "graphql-tower-apollo",
   "main": "lib/index.js",
   "scripts": {
@@ -44,6 +44,6 @@
   },
   "devDependencies": {
     "graphql-subscriptions": "^0.5.5",
-    "graphql-tower-queries": "^3.39.10"
+    "graphql-tower-queries": "^3.39.11"
   }
 }
