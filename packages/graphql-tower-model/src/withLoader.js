@@ -50,7 +50,7 @@ export default Parent => class Loader extends Parent {
     });
   }
 
-  static async loadMany(ids, error) {
-    return Promise.all(_.map(ids, id => this.load(id, error)));
+  static async loadMany(ids, ...args) {
+    return Promise.all(_.map(ids, id => this.load(id, ...args)));
   }
 };
