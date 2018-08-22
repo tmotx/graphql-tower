@@ -19,6 +19,7 @@ import withMutator from './withMutator';
 import withSearcher from './withSearcher';
 
 export * from './columns';
+export { default as DataCache } from './DataCache';
 export { default as MixedModel } from './MixedModel';
 
 class Model {

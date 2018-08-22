@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { assertResult } from 'graphql-tower-helper';
 
 export default (Parent) => {
   class Builder extends Parent {
@@ -102,23 +103,21 @@ export default (Parent) => {
       return results;
     }
 
-    async insert(values) {
+    async insert(values, error) {
       const { mutate, signify } = this.constructor;
       const [row] = await mutate.insert(signify(values), '*');
-      if (!row) throw new Error();
+      assertResult(row, error);
 
-      this.merge(row);
-      return this;
+      return row ? this.merge(row) : null;
     }
 
-    async update(changes) {
+    async update(changes, error) {
       const { signify } = this.constructor;
       const { mutate } = this;
       const [row] = await mutate.update(signify(changes)).returning('*');
-      if (!row) throw new Error();
+      assertResult(row, error);
 
-      this.merge(row);
-      return this;
+      return row ? this.merge(row) : null;
     }
 
     async delete() {

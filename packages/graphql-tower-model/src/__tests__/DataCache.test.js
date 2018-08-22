@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import knex, { client } from 'knex';
-import Model, { ValueColumn } from 'graphql-tower-model';
 import { toGlobalId } from 'graphql-tower-global-id';
 import { NotFoundError } from 'graphql-tower-errors';
-import { DataCache } from '../';
+import Model, { DataCache, ValueColumn } from '../';
 
 const database = knex({
   client: 'pg',
@@ -36,12 +35,6 @@ class House extends Model {
 }
 
 class Cache extends DataCache {
-  static Car = Car;
-  static House = House;
-}
-
-class TTLCache extends DataCache {
-  static ttl = true;
   static Car = Car;
   static House = House;
 }
@@ -170,29 +163,5 @@ describe('DataCache', () => {
 
     expect(client).toMatchSnapshot();
     expect(client).toHaveBeenCalledTimes(1);
-  });
-
-  describe('TTLCache', () => {
-    it('cache', async () => {
-      const cache = new TTLCache();
-
-      client.mockReturnValueOnce([{ id: '1', name: '1 of car' }]);
-      await cache.load(toGlobalId('Car', '1'));
-
-      client.mockReturnValueOnce([{ id: '1', name: '1 of house' }]);
-      await cache.load(toGlobalId('House', '1'));
-
-      client.mockReturnValueOnce([{ id: '3', name: '3 of car' }]);
-      client.mockReturnValueOnce([{ id: '2', name: '2 of house' }, { id: '4', name: '4 of house' }]);
-
-      await Promise.all([
-        cache.load(toGlobalId('Car', '1')),
-        cache.load(toGlobalId('House', '2')),
-        cache.loadMany([toGlobalId('Car', '3'), toGlobalId('House', '1'), toGlobalId('House', '4')]),
-      ]);
-
-      expect(client).toMatchSnapshot();
-      expect(client).toHaveBeenCalledTimes(4);
-    });
   });
 });

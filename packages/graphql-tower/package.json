@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "graphql-tower-account-kit": "^3.39.10",
-    "graphql-tower-cache": "^3.39.13",
     "graphql-tower-errors": "^3.39.10",
     "graphql-tower-global-id": "^3.39.10",
     "graphql-tower-helper": "^3.39.10",
