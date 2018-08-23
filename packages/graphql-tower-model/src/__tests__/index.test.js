@@ -402,13 +402,14 @@ describe('model', () => {
     });
 
     it('load', async () => {
-      const cache = { load: jest.fn(() => new MainModel({ id: 2 })) };
-      const model = MainModel.load(2, null, cache);
-      expect(model.nativeId).toBe(2);
+      const cache = { loadMain: jest.fn(() => new MainModel({ id: 2 })) };
+      const model = new MainModel({}, { cache });
+      const main = model.loadMain('2');
+      expect(main.nativeId).toBe('2');
 
-      await model;
-      expect(cache.load).toHaveBeenCalledWith('iNe9OVLx9dUZwc9SxLDFCEkGEk', null);
-      expect(cache.load).toHaveBeenCalledTimes(1);
+      await main;
+      expect(cache.loadMain).toHaveBeenCalledWith('2');
+      expect(cache.loadMain).toHaveBeenCalledTimes(1);
     });
   });
 

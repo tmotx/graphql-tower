@@ -16,13 +16,17 @@ export default class DataCache {
   }
 
   static get(target, name) {
-    if (target[name]) return target[name];
+    if (!_.isUndefined(target[name])) return target[name];
+
+    if (!_.isString(name)) return undefined;
 
     const loader = /^load(.+)$/ig.exec(name);
-    if (loader) return (...args) => target.load(...args, loader[1]);
-
-    const ClassName = _.upperFirst(name);
-    if (target.constructor[ClassName]) return target.create(ClassName);
+    const className = _.upperFirst(loader ? loader[1] : name);
+    const Model = target.constructor[className];
+    if (Model) {
+      if (loader) return (id, error) => target.loadModel(id, error, Model);
+      return target.create(className);
+    }
 
     return undefined;
   }
@@ -34,34 +38,56 @@ export default class DataCache {
   dataloader = null;
 
   constructor() {
-    const { loader } = this.constructor;
+    const { loader, get, set } = this.constructor;
 
     this.dataloader = new DataLoader(
       loader.bind(this.constructor),
       { cacheMap: new Map() },
     );
 
-    return new Proxy(this, {
-      get: DataCache.get,
-      set: DataCache.set,
+    return new Proxy(this, { get, set });
+  }
+
+  async loadModel(key, error, Model) {
+    const id = Model.toGlobalId(key);
+    const nativeId = Model.fromGlobalId(key);
+
+    const promise = Promise.resolve({});
+    const next = promise.then;
+
+    return Object.assign(promise, {
+      id,
+      nativeId,
+      then: (resolve, rejects) => next
+        .call(promise, async () => {
+          const model = await this.load(id, error);
+          if (model && model.constructor !== Model) return null;
+          return model;
+        })
+        .then(model => assertResult(model, error))
+        .then(resolve, rejects),
     });
   }
 
-  async load(id, error, type) {
-    return Promise.resolve()
-      .then(async () => {
-        const model = await this.dataloader.load(id);
-        if (!model) return null;
+  async load(id, error) {
+    const promise = Promise.resolve({});
+    const next = promise.then;
 
-        const Type = type || error;
-        if ((Type && typeof Type === 'string') && model.constructor.displayName !== Type) return null;
-        return model.clone({ cache: this });
-      })
-      .then(model => assertResult(model, error));
+    return Object.assign(promise, {
+      id,
+      then: (resolve, rejects) => next
+        .call(promise, async () => {
+          const model = await this.dataloader.load(id);
+          if (!model) return null;
+          return model.clone({ cache: this });
+        })
+        .then(model => assertResult(model, error))
+        .then(resolve, rejects),
+    });
   }
 
-  async loadMany(ids, error, type) {
-    return Promise.all(_.map(ids, id => this.load(id, error, type)));
+  async loadMany(ids, ...args) {
+    return Promise.all(_.map(ids, id => this.load(id, ...args)));
   }
 
   create(name) {

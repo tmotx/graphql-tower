@@ -52,8 +52,8 @@ describe('DataCache', () => {
       client.mockReturnValueOnce([{ id: '1', name: '1 of house' }]);
       await cache.load(toGlobalId('House', '1'));
 
-      client.mockReturnValueOnce([{ id: '3', name: '3 of car' }]);
       client.mockReturnValueOnce([{ id: '2', name: '2 of house' }, { id: '4', name: '4 of house' }]);
+      client.mockReturnValueOnce([{ id: '3', name: '3 of car' }]);
 
       await Promise.all([
         cache.loadCar(toGlobalId('Car', '1')),
@@ -90,18 +90,11 @@ describe('DataCache', () => {
     await expect(cache.load(toGlobalId('Car', '1'), NotFoundError))
       .rejects.toEqual(new NotFoundError());
 
-    client.mockReturnValueOnce([{ id: '2', name: '2 of car' }]);
-
-    await expect(cache.load(toGlobalId('Car', '2'), 'House')).resolves.toBeNull();
-    await expect(cache.loadHouse(toGlobalId('Car', '2'))).resolves.toBeNull();
-
-    await expect(cache.load(toGlobalId('Car', '2'), NotFoundError, 'House'))
-      .rejects.toEqual(new NotFoundError());
-    await expect(cache.loadHouse(toGlobalId('Car', '2'), NotFoundError))
-      .rejects.toEqual(new NotFoundError());
+    await expect(cache.loadHouse(toGlobalId('Car', '2')))
+      .rejects.toEqual(new TypeError('invalid global id'));
 
     expect(client).toMatchSnapshot();
-    expect(client).toHaveBeenCalledTimes(2);
+    expect(client).toHaveBeenCalledTimes(1);
   });
 
   describe('prime', async () => {

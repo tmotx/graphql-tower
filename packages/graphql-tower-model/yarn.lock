@@ -16,27 +16,27 @@ dataloader@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.3.0.tgz#6fec5be4b30a712e4afd30b86b4334566b97673b"
 
-graphql-tower-errors@^3.21.3:
-  version "3.21.3"
-  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.21.3.tgz#10422a2c7e4f99e812ef78e114bd1230597d561f"
+graphql-tower-errors@^3.39.10:
+  version "3.39.10"
+  resolved "https://registry.yarnpkg.com/graphql-tower-errors/-/graphql-tower-errors-3.39.10.tgz#d6043f03d801cf887eaacfae42bf7247fd235700"
 
-graphql-tower-global-id@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.3.3.tgz#5741ce5561dc1075264c2c905da617eca96e7884"
+graphql-tower-global-id@^3.39.10:
+  version "3.39.10"
+  resolved "https://registry.yarnpkg.com/graphql-tower-global-id/-/graphql-tower-global-id-3.39.10.tgz#69dc4c89fc9a54e94b314cdd09ff9290915ab61b"
   dependencies:
     base-x "^3.0.2"
     bignumber.js "^4.1.0"
     lodash "^4.17.4"
 
-graphql-tower-helper@^3.37.0:
-  version "3.37.0"
-  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.37.0.tgz#809b0d7c6654b9684af507a08a60019b1f985d50"
+graphql-tower-helper@^3.39.10:
+  version "3.39.10"
+  resolved "https://registry.yarnpkg.com/graphql-tower-helper/-/graphql-tower-helper-3.39.10.tgz#8c8a3e1c91be2713c0fbb18cfd625fdade65544c"
 
-graphql-tower-queries@^3.32.6:
-  version "3.32.6"
-  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.32.6.tgz#fbebc2424612d2f15cd8af06793cdd95db631beb"
+graphql-tower-queries@^3.39.11:
+  version "3.39.11"
+  resolved "https://registry.yarnpkg.com/graphql-tower-queries/-/graphql-tower-queries-3.39.11.tgz#0dbc3ee1a6477c950465eba7d3a89c990d4b12f5"
   dependencies:
-    graphql-tower-errors "^3.21.3"
+    graphql-tower-errors "^3.39.10"
     iterall "^1.1.3"
     lodash "^4.17.4"
 
@@ -52,6 +52,6 @@ safe-buffer@^5.0.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
 
-thelper@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/thelper/-/thelper-1.0.0.tgz#96b0cbec2f52eb01839e912adcc164ce33760aa3"
+thelper@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/thelper/-/thelper-1.1.1.tgz#d4a72f80b9aec47a469499c5e1ebda1c6f72c59b"
