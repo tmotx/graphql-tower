@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower",
-  "version": "3.39.13",
+  "version": "3.40.0",
   "description": "graphql-tower",
   "main": "lib/index.js",
   "scripts": {
@@ -28,9 +28,9 @@
     "graphql-tower-global-id": "^3.39.10",
     "graphql-tower-helper": "^3.39.10",
     "graphql-tower-jwt": "^3.39.10",
-    "graphql-tower-model": "^3.39.13",
+    "graphql-tower-model": "^3.40.0",
     "graphql-tower-queries": "^3.39.11",
-    "graphql-tower-types": "^3.39.10",
+    "graphql-tower-types": "^3.40.0",
     "graphql-tower-unique": "^3.39.10"
   }
 }

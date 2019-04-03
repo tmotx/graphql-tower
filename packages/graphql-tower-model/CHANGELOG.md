@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.40.0](https://github.com/tmotx/graphql-tower/compare/v3.39.13...v3.40.0) (2019-04-03)
+
+
+### Features
+
+* **model:** use Proxy on DataCache ([fb1ee5a](https://github.com/tmotx/graphql-tower/commit/fb1ee5a))
+
+
+
+
+
 <a name="3.39.13"></a>
 ## [3.39.13](https://github.com/tmotx/graphql-tower/compare/v3.39.12...v3.39.13) (2018-08-17)
 
