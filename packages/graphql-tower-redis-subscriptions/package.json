@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-redis-subscriptions",
-  "version": "3.38.7",
+  "version": "3.38.12",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -16,12 +16,9 @@
     "url": "https://github.com/tmotx/graphql-tower/issues"
   },
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
-  "files": [
-    "lib"
-  ],
   "dependencies": {
     "graphql-subscriptions": "^0.5.5",
-    "graphql-tower-redis": "^3.38.7",
+    "graphql-tower-redis": "^3.38.12",
     "lodash": "^4.17.4"
   }
 }

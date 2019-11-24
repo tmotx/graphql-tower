@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-global-id",
-  "version": "3.3.3",
+  "version": "3.38.12",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -16,9 +16,6 @@
     "url": "https://github.com/tmotx/graphql-tower/issues"
   },
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
-  "files": [
-    "lib"
-  ],
   "dependencies": {
     "base-x": "^3.0.2",
     "bignumber.js": "^4.1.0",

@@ -1,6 +1,6 @@
 {
   "name": "graphql-tower-faker",
-  "version": "3.38.9",
+  "version": "3.38.12",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -16,9 +16,6 @@
     "url": "https://github.com/tmotx/graphql-tower/issues"
   },
   "homepage": "https://github.com/tmotx/graphql-tower#readme",
-  "files": [
-    "lib"
-  ],
   "dependencies": {
     "chalk": "^2.3.0",
     "cors": "^2.8.4",
@@ -26,9 +23,9 @@
     "express-graphql": "^0.6.11",
     "faker": "^4.1.0",
     "graphql-subscriptions": "^0.5.6",
-    "graphql-tower-global-id": "^3.3.3",
-    "graphql-tower-helper": "^3.37.0",
-    "graphql-tower-types": "^3.38.8",
+    "graphql-tower-global-id": "^3.38.12",
+    "graphql-tower-helper": "^3.38.12",
+    "graphql-tower-types": "^3.38.12",
     "lodash": "^4.17.4",
     "opn": "^5.1.0",
     "subscriptions-transport-ws": "^0.9.4"
