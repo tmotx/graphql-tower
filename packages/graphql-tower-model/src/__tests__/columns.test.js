@@ -1,7 +1,6 @@
 import knex, { client } from 'knex';
 import _ from 'lodash';
 import { toGlobalId } from 'graphql-tower-global-id';
-import { GoneDataError } from 'graphql-tower-errors';
 import Model, {
   ValueColumn,
   HashColumn,
@@ -156,7 +155,7 @@ describe('Columns', () => {
 
   it('when model not found', async () => {
     const column = Column.forge({ archive: { buyerId: '10' } });
-    await expect(column.archiveBuyer).rejects.toEqual(new GoneDataError());
+    expect(await column.archiveBuyer).toBe(null);
   });
 
   it('save to postgres', async () => {

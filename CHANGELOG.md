@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="3.38.14"></a>
+## [3.38.14](https://github.com/tmotx/graphql-tower/compare/v3.38.11...v3.38.14) (2020-05-19)
+
+
+
+
+**Note:** Version bump only for package graphql-tower
+
+<a name="3.38.13"></a>
+## [3.38.13](https://github.com/tmotx/graphql-tower/compare/v3.38.12...v3.38.13) (2020-05-19)
+
+
+
+
+**Note:** Version bump only for package graphql-tower
+
 <a name="3.38.11"></a>
 ## [3.38.11](https://github.com/tmotx/graphql-tower/compare/v3.38.10...v3.38.11) (2018-08-05)
 

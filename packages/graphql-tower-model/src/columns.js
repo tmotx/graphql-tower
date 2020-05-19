@@ -2,7 +2,6 @@ import _ from 'lodash';
 import crypto from 'crypto';
 import set from 'lodash/set';
 import map from 'lodash/map';
-import { GoneDataError } from 'graphql-tower-errors';
 
 function isType(method) {
   const keyword = /^function ([A-Z][a-z]+)/.exec(method);
@@ -49,7 +48,7 @@ export class ValueColumn {
   toModel(value, { cache }) {
     if (_.isNil(value)) return null;
 
-    if (this.isModel) return this.serialize.load(value, GoneDataError, cache);
+    if (this.isModel) return this.serialize.load(value, null, cache);
 
     return this.serialize(value);
   }
